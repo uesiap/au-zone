@@ -180,14 +180,14 @@
                 <p class="form-label" style="color: black; font-size: 12px">Select Student or Graduate.</p>
                 <select class="form-control" id="category" name="category" required>
                     <option value="" disabled selected>Select here</option>
-                    <option value="student">Student</option>
-                    <option value="graduate">Graduate</option>
+                    <option value="student">👨‍🎓 Student</option>
+                    <option value="graduate">🧔 Graduate</option>
                 </select>
             </div>
 
             <div id="dynamicFields"></div>
             <div class="divider"></div>
-            <input type="submit" value="Submit" class="btn btn-primary" style="display: block; margin: 0 auto;">
+            <input type="submit" value="Submit " class="btn btn-primary" style="display: block; margin: 0 auto;">
 
         </form>
 
@@ -208,7 +208,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        Are you sure you want to submit the form? <br>This action cannot be undone.
+                        ✌🏻 Are you sure you want to submit the form? <br>This action cannot be undone.
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -324,22 +324,22 @@
                     </div>
                     <!-- Add gender selection for students -->
                     <div class="mb-3">
-                        <label for="gender" class="form-label">Gender:</label>
+                        <label for="gender" class="form-label">🧑|👧 Gender:</label>
                         <select class="form-control" id="gender" name="gender" required>
                             <option value="" disabled selected>Select Gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
+                            <option value="male">🧑 Male</option>
+                            <option value="female">👧 Female</option>
                             </select>
                     </div>
                     <div class="divider"></div>
-                    <h4 class="form-label">Praising Points</h4>
+                    <h4 class="form-label">🙌🏻 Praising Points</h4>
                     <p class="form-label" style="color: black; font-size: 12px">To delete extra field if you added. Long press on its Number.</p>
                     <div id="praisingPointsContainer">
                         ${generateDynamicFields('praisingPoints', 2)}
                     </div>
                     <button type="button" class="btn btn-outline-primary mb-3" onclick="addField('praisingPoints', 'praisingPointsContainer')">Add More Praising Points</button>
                     <div class="divider"></div>
-                    <h4 class="form-label">Prayer Points</h4>
+                    <h4 class="form-label">🙏🏻 Prayer Points</h4>
                     <p class="form-label" style="color: black; font-size: 12px">To delete extra field if you added. Long press on its Number.</p>
                     <div id="prayerPointsContainer">
                         ${generateDynamicFields('prayerPoints', 3)}
@@ -360,7 +360,7 @@
                     <div class="divider"></div>
                     <h4 class="form-label">Family Members</h4>
                     <div class="mb-3">
-                        <label for="father" class="form-label">Father Name:</label>
+                        <label for="father" class="form-label">👨‍🍼 Father Name:</label>
                     <p>Mention If have, Otherwise leave it</p>
                         <div class="input-group">
                             <input type="text" class="form-control" id="father" name="father">
@@ -370,7 +370,7 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="mother" class="form-label">Mother Name:</label>
+                        <label for="mother" class="form-label">👩‍🍼 Mother Name:</label>
                         <p>Mention If have, Otherwise leave it</p>
                         <div class="input-group">
                             <input type="text" class="form-control" id="mother" name="mother">
@@ -380,7 +380,7 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="sons" class="form-label">Sons Names:</label>
+                        <label for="sons" class="form-label">🧑 Sons Names:</label>
                         <p>Mention If have, Otherwise leave it</p>
                         <div class="input-group">
                             <input type="text" class="form-control" id="sons" name="sons">
@@ -390,7 +390,7 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="daughters" class="form-label">Daughters Names:</label>
+                        <label for="daughters" class="form-label">👧 Daughters Names:</label>
                         <p>Mention If have, Otherwise leave it</p>
                         <div class="input-group">
                             <input type="text" class="form-control" id="daughters" name="daughters">
@@ -400,21 +400,22 @@
                         </div>
                     </div>
                     <div class="divider"></div>
-                    <h4 class="form-label">Praising Points</h4>
+                    <h4 class="form-label">🙌🏻 Praising Points</h4>
                     <p class="form-label" style="color: black; font-size: 12px">To delete extra field if you added. Long press on its Number.</p>
                     <div id="praisingPointsContainer">
                         ${generateDynamicFields('praisingPoints', 2)}
                     </div>
                     <button type="button" class="btn btn-outline-primary mb-3" onclick="addField('praisingPoints', 'praisingPointsContainer')">Add More Praising Points</button>
                     <div class="divider"></div>
-                    <h4 class="form-label">Prayer Points</h4>
+                    <h4 class="form-label">🙏🏻 Prayer Points</h4>
                     <p class="form-label" style="color: black; font-size: 12px">To delete extra field if you added. Long press on its Number.</p>
                     <div id="prayerPointsContainer">
                         ${generateDynamicFields('prayerPoints', 3)}
                     </div>
                     <button type="button" class="btn btn-outline-primary mb-3" onclick="addField('prayerPoints', 'prayerPointsContainer')">Add More Prayer Points</button>
                     <div class="divider"></div>
-                    <h4 class="form-label">Apartment & Area Name</h4>
+                    <h4 class="form-label">🏠 House Area</h4>
+                    <p class="form-label" style="color: black; font-size: 12px">Mention Area only.</p>
                     <div class="mb-3">
                         <!--<label for="apartment" class="form-label">Enter Apartment Name & Area Name:</label> -->
                         <div class="input-group">
