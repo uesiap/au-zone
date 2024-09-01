@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta property="og:site_name" content="Melam Rahul">        
+    <meta property="og:site_name" content="Melam Rahul">
     <meta property="og:title" content="AU Zone EU & EGF Prayer Requests Submit Page.">
     <meta property="og:description" content="Sis.Joycy & Sis.Beulah Deepthi, Prayer Secretaries">
     <meta property="og:url" content="https://Melam.Rahul">
@@ -536,7 +535,13 @@
                     const combinedClassBranch = `${classYear}, ${branch}`;
 
                     // Create a unique identifier for the student
-                    const studentId = name.replace(/\s+/g, '_').toLowerCase();
+                    // Function to generate a valid student ID
+                    const studentId = name
+                        .trim()                           // Remove leading and trailing whitespace
+                        .replace(/[^\w\s]/g, '')          // Remove all non-alphanumeric characters except spaces
+                        .replace(/\s+/g, '_')             // Replace one or more spaces with a single underscore
+                        .toLowerCase();                   // Convert to lowercase
+
 
                     // Store student details
                     db.ref(`${year}/${month}/students/details/${studentId}`).set({
@@ -579,7 +584,12 @@
                     const familyMembers = `${father}, ${mother}, ${sons}, ${daughters}`;
 
                     // Create a unique identifier for the graduate
-                    const graduateId = name.replace(/\s+/g, '_').toLowerCase();
+                    const graduateId = name
+                        .trim()                         // Remove leading and trailing whitespace
+                        .replace(/[^\w\s]/g, '')        // Remove all non-alphanumeric characters except spaces
+                        .replace(/\s+/g, '_')           // Replace all spaces and tabs with an underscore
+                        .toLowerCase();                 // Convert to lowercase
+
 
                     // Store graduate details
                     db.ref(`${year}/${month}/graduates/details/${graduateId}`).set({
