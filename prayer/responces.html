@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retrieve Prayer Requests</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <style>
+        /* Increase the overall font size of the page */
+        body {
+            font-size: 0.8rem; /* Adjust this value as needed */
+            line-height: 1.2; /* Maintain a comfortable line height */
+        }
+
+        /* Reduce spacing below each line of text */
+        p, h5, li {
+            margin-bottom: 0.25rem; /* Further reduce spacing */
+        }
+
+        .student-container {
+            margin-bottom: 0.5rem; /* Reduce spacing between student containers */
+        }
+
+        /* Align data to the left and move content up */
+        .container {
+            max-width: 100%; /* Allow the container to use full width */
+            margin-top: 1.5rem; /* Move the content up */
+        }
+
+        #dataContainer {
+            margin-left: 0; /* Align to the left */
+            padding-left: 0; /* Remove padding on the left */
+        }
+
+        ul {
+            padding-left: 1rem; /* Adjust padding if needed */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="dataContainer" class="row mt-3"></div>
+    </div>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAaQdWKBdtqqe3pu9XDdPoFuvcEm2YG_wA",
+            authDomain: "melam-rahul.firebaseapp.com",
+            projectId: "melam-rahul",
+            storageBucket: "melam-rahul.appspot.com",
+            messagingSenderId: "742315739002",
+            appId: "1:742315739002:web:329ea957fa38f66ab078c3",
+            measurementId: "G-SCNKZYJ3TT"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // Automatically select year, month, and category
+        const year = '2024';  // Example year
+        const month = '9';    // Example month (September)
+        const category = 'student';  // Example category
+
+        function retrieveData() {
+            const path = category === 'student' ? `students` : `graduates`;
+            const dataContainer = document.getElementById('dataContainer');
+
+            // Clear previous data
+            dataContainer.innerHTML = '';
+
+            // Retrieve student or graduate data
+            db.ref(`${year}/${month}/${path}/details`).once('value')
+                .then(snapshot => {
+                    const details = snapshot.val();
+                    if (details) {
+                        // Sort students by gender (females first, then males)
+                        const sortedDetails = Object.keys(details)
+                            .map(key => ({ id: key, data: details[key] }))
+                            .sort((a, b) => a.data.gender.localeCompare(b.data.gender))  // Assuming gender is 'female' or 'male'
+                            .map(student => student.id);
+
+                        const detailsHtml = sortedDetails.map(studentId => {
+                            const studentData = details[studentId];
+
+                            // Retrieve praising points for the student
+                            return db.ref(`${year}/${month}/${path}/PraisingPoints/${studentId}/points`).once('value')
+                                .then(praisingSnapshot => {
+                                    const praisingPoints = praisingSnapshot.val() || {};
+                                    const praisingPointsHtml = Object.keys(praisingPoints).map(ppKey => `
+                                        <li>${praisingPoints[ppKey]}</li>
+                                    `).join('');
+
+                                    // Retrieve prayer points for the student
+                                    return db.ref(`${year}/${month}/${path}/PrayerPoints/${studentId}/points`).once('value')
+                                        .then(prayerSnapshot => {
+                                            const prayerPoints = prayerSnapshot.val() || {};
+                                            const prayerPointsHtml = Object.keys(prayerPoints).map(prayerKey => `
+                                                <li>${prayerPoints[prayerKey]}</li>
+                                            `).join('');
+
+                                            // Generate HTML for the student
+                                            return `
+                                                <div class="col-md-6 student-container">
+                                                    <p style="font-weight: bold">${studentData.name}</p>
+                                                    <p><strong>Course:</strong> ${studentData.classAndBranch}</p>
+                                                    <p><strong>Praising Points:</strong></p>
+                                                    <ul>${praisingPointsHtml}</ul>
+                                                    <p><strong>Prayer Points:</strong></p>
+                                                    <ul>${prayerPointsHtml}</ul>
+                                                    <hr>
+                                                </div>
+                                            `;
+                                        })
+                                        .catch(error => {
+                                            console.error('Error retrieving prayer points:', error);
+                                            return `<p>Error retrieving prayer points for ${studentId}</p>`;
+                                        });
+                                })
+                                .catch(error => {
+                                    console.error('Error retrieving praising points:', error);
+                                    return `<p>Error retrieving praising points for ${studentId}</p>`;
+                                });
+                        });
+
+                        // Wait for all student data promises to resolve
+                        Promise.all(detailsHtml).then(studentsHtml => {
+                            dataContainer.innerHTML += `${studentsHtml.join('')}`;
+                        });
+                    } else {
+                        dataContainer.innerHTML += `<p>No ${category} details found for ${month} ${year}.</p>`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error retrieving student or graduate data:', error);
+                    dataContainer.innerHTML += `<p>Error retrieving data for ${month} ${year}.</p>`;
+                });
+        }
+
+        // Call the function to retrieve data
+        retrieveData();
+    </script>
+</body>
+
+</html>
