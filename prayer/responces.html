@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,32 +11,43 @@
     <style>
         /* Increase the overall font size of the page */
         body {
-            font-size: 0.8rem; /* Adjust this value as needed */
-            line-height: 1.2; /* Maintain a comfortable line height */
+            font-size: 0.8rem;
+            /* Adjust this value as needed */
+            line-height: 1.2;
+            /* Maintain a comfortable line height */
         }
 
         /* Reduce spacing below each line of text */
-        p, h5, li {
-            margin-bottom: 0.25rem; /* Further reduce spacing */
+        p,
+        h5,
+        li {
+            margin-bottom: 0.25rem;
+            /* Further reduce spacing */
         }
 
         .student-container {
-            margin-bottom: 0.5rem; /* Reduce spacing between student containers */
+            margin-bottom: 0.5rem;
+            /* Reduce spacing between student containers */
         }
 
         /* Align data to the left and move content up */
         .container {
-            max-width: 100%; /* Allow the container to use full width */
-            margin-top: 1.5rem; /* Move the content up */
+            max-width: 100%;
+            /* Allow the container to use full width */
+            margin-top: 1.5rem;
+            /* Move the content up */
         }
 
         #dataContainer {
-            margin-left: 0; /* Align to the left */
-            padding-left: 0; /* Remove padding on the left */
+            margin-left: 0;
+            /* Align to the left */
+            padding-left: 0;
+            /* Remove padding on the left */
         }
 
         ul {
-            padding-left: 1rem; /* Adjust padding if needed */
+            padding-left: 1rem;
+            /* Adjust padding if needed */
         }
     </style>
 </head>
@@ -63,10 +73,12 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // Automatically select year, month, and category
-        const year = '2024';  // Example year
-        const month = '9';    // Example month (September)
-        const category = 'student';  // Example category
+        // Fetch current year and month
+        const currentDate = new Date(); // Get the current date and time
+        const year = currentDate.getFullYear(); // Get the full year (e.g., 2024)
+        const month = currentDate.getMonth() + 1; // Get the month (0-11), add 1 to make it 1-12
+
+        const category = 'student'; // Example category
 
         function retrieveData() {
             const path = category === 'student' ? `students` : `graduates`;
@@ -82,8 +94,11 @@
                     if (details) {
                         // Sort students by gender (females first, then males)
                         const sortedDetails = Object.keys(details)
-                            .map(key => ({ id: key, data: details[key] }))
-                            .sort((a, b) => a.data.gender.localeCompare(b.data.gender))  // Assuming gender is 'female' or 'male'
+                            .map(key => ({
+                                id: key,
+                                data: details[key]
+                            }))
+                            .sort((a, b) => a.data.gender.localeCompare(b.data.gender)) // Assuming gender is 'female' or 'male'
                             .map(student => student.id);
 
                         const detailsHtml = sortedDetails.map(studentId => {
