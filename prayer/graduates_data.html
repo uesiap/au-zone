@@ -108,8 +108,8 @@
             let timer; // Declare timer variable in the function scope
             const target = event.target;
 
-            // Start timer on touchstart
-            target.ontouchstart = function () {
+            // Start timer on touchstart or mousedown
+            const startTimer = () => {
                 timer = setTimeout(() => {
                     const deleteDialog = new bootstrap.Modal(document.getElementById('confirmationDialog'));
                     deleteDialog.show();
@@ -132,7 +132,6 @@
                                     studentElement.remove();
                                 }
                                 deleteDialog.hide();
-                                window.location.reload();
                             })
                             .catch(error => {
                                 console.error("Error deleting graduate data:", error);
@@ -141,10 +140,14 @@
                 }, 700); // 0.7-second delay for long press
             };
 
-            // Clear timer on touchend
-            target.ontouchend = function () {
-                clearTimeout(timer);
-            };
+            // Clear timer on touchend or mouseup
+            const clearTimer = () => clearTimeout(timer);
+
+            // Add event listeners
+            target.addEventListener('mousedown', startTimer);
+            target.addEventListener('mouseup', clearTimer);
+            target.addEventListener('touchstart', startTimer);
+            target.addEventListener('touchend', clearTimer);
         }
 
         function retrieveData() {
@@ -191,10 +194,9 @@
                                                 <div class="col-md-6 student-container" data-student-id="${studentId}" 
                                                     style="cursor: pointer;" 
                                                     ontouchstart="handleLongPress(event, '${studentId}')" 
-                                                    onmousedown="handleLongPress(event, '${studentId}')" 
-                                                    onmouseup="clearTimeout(timer)"
-                                                    ontouchend="clearTimeout(timer)">
-                                                    <p><strong>${index + 1}. ${studentData.name}</strong></p>                                                                                                    <p><strong>Praising Points:</strong></p>
+                                                    onmousedown="handleLongPress(event, '${studentId}')">
+                                                    <p><strong>${index + 1}. ${studentData.name}</strong></p>
+                                                    <p><strong>Praising Points:</strong></p>
                                                     <ul>${praisingPointsHtml}</ul>
                                                     <p><strong>Prayer Points:</strong></p>
                                                     <ul>${prayerPointsHtml}</ul>
@@ -230,7 +232,7 @@
         // Call retrieveData when the page loads
         document.addEventListener('DOMContentLoaded', retrieveData);
     </script>
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
