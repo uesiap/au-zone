@@ -85,16 +85,14 @@
                 <tr>
                     <th style="text-align: center;" class="checkbox-column">
                         <div style="display: flex; flex-direction: row; gap: 4px;">
-                        <button class="btn btn-danger btn-sm" id="bulkDelete" style="display: none; margin-bottom: 5px; height: 40px; width: 40px;"><i class="fa-solid fa-trash"></i></button> 
-<button class="btn btn-secondary btn-sm" id="cancelSelection" onclick="closefun()" style="display: none; margin-bottom: 5px;height: 40px; width: 40px; font-size: 20px">
-   <i class="fa-solid fa-xmark"></i></button>
-   </div>
-                        <div style="display: flex; flex-direction: row; gap: 4px; margin-top: 10px">
-                           
-                        <label style="font-size: 13px; font-weight: 400">Select All</label>                        <input type="checkbox" id="selectAll">
+                            <button class="btn btn-danger btn-sm" id="bulkDelete" style="display: none; margin-bottom: 5px; height: 40px; width: 40px;"><i class="fa-solid fa-trash"></i></button>
+                            <button class="btn btn-secondary btn-sm" id="cancelSelection" onclick="closefun()" style="display: none; margin-bottom: 5px;height: 40px; width: 40px; font-size: 20px"><i class="fa-solid fa-xmark"></i></button>
                         </div>
-                     <br>
-                     
+                        <div style="display: flex; flex-direction: row; gap: 4px; margin-top: 10px">
+                            <label style="font-size: 13px; font-weight: 400">Select All</label>
+                            <input type="checkbox" id="selectAll">
+                        </div>
+                        <br>
                     </th>
                     <th style="text-align: center;">Student Name</th>
                     <th style="text-align: center;">Praising Points</th>
@@ -264,12 +262,15 @@
         document.addEventListener('DOMContentLoaded', () => {
             retrieveData();
             document.getElementById('bulkDelete').addEventListener('click', handleBulkDelete);
+
+            document.getElementById('selectAll').addEventListener('change', function() {
+                const isChecked = this.checked;
+                document.querySelectorAll('input[type="checkbox"].student-checkbox').forEach(checkbox => {
+                    checkbox.checked = isChecked;
+                });
+            });
         });
     </script>
-    <script defer>
-            localStorage.clear();
-    </script>
-    
 </body>
 
 </html>
