@@ -12,27 +12,25 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <style>
-        /* Increase the overall font size of the page */
         body {
+            -webkit-tap-highlight-color: transparent; /* For iOS Safari */
+            tap-highlight-color: transparent; /* For other browsers */
+            -webkit-touch-callout: none; /* Disable long press on mobile */
+            -webkit-user-select: none; /* Disable selection */
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
             font-size: 0.8rem;
             line-height: 1.2;
         }
 
-        /* Reduce spacing below each line of text */
-        p,
-        h5,
-        li {
-            margin-bottom: 0.25rem;
-        }
-
         .student-container {
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
         }
 
-        /* Align data to the left and move content up */
         .container {
             max-width: 100%;
-            margin-top: 0.8rem;
+            margin-top: 1rem;
         }
 
         #dataContainer {
@@ -43,13 +41,46 @@
         ul {
             padding-left: 1rem;
         }
+
+        table {
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        th, td {
+            padding: 0.5rem;
+            vertical-align: top;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        td {
+            border-top: 1px solid #dee2e6;
+        }
+
+        .modal-footer button {
+            margin-right: 1rem;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h4>Students Prayer Requests</h4> <!-- Added title -->
-        <div id="dataContainer" class="row mt-3"></div>
+        <h4>Students Prayer Requests</h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Praising Points</th>
+                    <th>Prayer Points</th>
+                </tr>
+            </thead>
+            <tbody id="dataContainer"></tbody>
+        </table>
     </div>
 
     <!-- Confirmation Dialog -->
@@ -87,25 +118,23 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // Fetch current year and month
         const currentDate = new Date();
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth() + 1;
 
-        const category = 'student'; // Example category
+        const category = 'student'; 
 
-        let deleteStudentId = null; // Track the student ID to delete
+        let deleteStudentId = null; 
 
-        // Function to handle long press for delete confirmation
         function handleLongPress(event, studentId) {
             let timer;
-            deleteStudentId = studentId; // Set the student ID to delete when confirmed
+            deleteStudentId = studentId; 
 
             const startLongPress = () => {
                 timer = setTimeout(() => {
                     const deleteDialog = new bootstrap.Modal(document.getElementById('confirmationDialog'));
                     deleteDialog.show();
-                }, 700); // 0.7-second delay for long press
+                }, 700); 
             };
 
             const cancelLongPress = () => {
@@ -129,8 +158,9 @@
                         if (studentElement) {
                             studentElement.remove();
                         }
-                        deleteStudentId = null; // Reset after deletion
-                    })
+                        deleteStudentId = null;
+                        window.location.reload();              
+                             })
                     .catch(error => {
                         console.error("Error deleting student data:", error);
                     });
@@ -140,16 +170,12 @@
         function retrieveData() {
             const path = category === 'student' ? `students` : `graduates`;
             const dataContainer = document.getElementById('dataContainer');
-
-            // Clear previous data
             dataContainer.innerHTML = '';
 
-            // Retrieve student or graduate data
             db.ref(`${year}/${month}/${path}/details`).once('value')
                 .then(snapshot => {
                     const details = snapshot.val();
                     if (details) {
-                        // Sort students by gender (females first, then males)
                         const sortedDetails = Object.keys(details)
                             .map(key => ({
                                 id: key,
@@ -161,7 +187,6 @@
                         const detailsPromises = sortedDetails.map((studentId, index) => {
                             const studentData = details[studentId];
 
-                            // Retrieve praising points for the student
                             return db.ref(`${year}/${month}/${path}/PraisingPoints/${studentId}/points`).once('value')
                                 .then(praisingSnapshot => {
                                     const praisingPoints = praisingSnapshot.val() || {};
@@ -169,7 +194,6 @@
                                         <li>${praisingPoints[ppKey]}</li>
                                     `).join('');
 
-                                    // Retrieve prayer points for the student
                                     return db.ref(`${year}/${month}/${path}/PrayerPoints/${studentId}/points`).once('value')
                                         .then(prayerSnapshot => {
                                             const prayerPoints = prayerSnapshot.val() || {};
@@ -177,50 +201,46 @@
                                                 <li>${prayerPoints[prayerKey]}</li>
                                             `).join('');
 
-                                            // Generate HTML for the student with numbering
                                             return `
-                                                <div class="col-md-6 student-container" data-student-id="${studentId}" 
-                                                    style="cursor: pointer;"
+                                                <tr class="student-container" data-student-id="${studentId}"
                                                     ontouchstart="handleLongPress(event, '${studentId}')"
                                                     onmousedown="handleLongPress(event, '${studentId}')">
-                                                    <p><strong>${index + 1}. ${studentData.name}</strong></p>
-                                                    <p><strong>Course:</strong> ${studentData.classAndBranch}</p>
-                                                    ${category === 'student' ? `<p><strong>Phone:</strong> ${studentData.phoneNumber}</p>` : ''}
-                                                    <p><strong>Praising Points:</strong></p>
-                                                    <ul>${praisingPointsHtml}</ul>
-                                                    <p><strong>Prayer Points:</strong></p>
-                                                    <ul>${prayerPointsHtml}</ul>
-                                                    <hr>
-                                                </div>
+                                                    <td>
+                                                        <strong>${index + 1}. ${studentData.name}</strong><br>
+                                                        <strong></strong> ${studentData.classAndBranch}<br>
+                                                        ${category === 'student' ? `<strong></strong> ${studentData.phoneNumber}<br>` : ''}
+                                                    </td>
+                                                    <td><ul>${praisingPointsHtml}</ul></td>
+                                                    <td><ul>${prayerPointsHtml}</ul></td>
+                                                </tr>
                                             `;
                                         })
                                         .catch(error => {
                                             console.error('Error retrieving prayer points:', error);
-                                            return `<p>Error retrieving prayer points for ${studentId}</p>`;
+                                            return `<tr><td colspan="3">Error retrieving prayer points for ${studentId}</td></tr>`;
                                         });
                                 })
                                 .catch(error => {
                                     console.error('Error retrieving praising points:', error);
-                                    return `<p>Error retrieving praising points for ${studentId}</p>`;
+                                    return `<tr><td colspan="3">Error retrieving praising points for ${studentId}</td></tr>`;
                                 });
                         });
 
-                        // Wait for all promises to resolve and then render all students
                         Promise.all(detailsPromises)
                             .then(studentHtmlArray => {
                                 dataContainer.innerHTML = studentHtmlArray.join('');
                             })
                             .catch(error => {
                                 console.error('Error processing student data:', error);
-                                dataContainer.innerHTML = '<p>Error processing student data</p>';
+                                dataContainer.innerHTML = '<tr><td colspan="3">Error processing student data</td></tr>';
                             });
                     } else {
-                        dataContainer.innerHTML = '<p>No students or graduates found.</p>';
+                        dataContainer.innerHTML = '<tr><td colspan="3">No students or graduates found.</td></tr>';
                     }
                 })
                 .catch(error => {
                     console.error('Error retrieving student or graduate data:', error);
-                    dataContainer.innerHTML = '<p>Error retrieving student or graduate data.</p>';
+                    dataContainer.innerHTML = '<tr><td colspan="3">Error retrieving student or graduate data.</td></tr>';
                 });
         }
 
