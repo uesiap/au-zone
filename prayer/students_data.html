@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -71,7 +72,7 @@ tr {
 }
 
 td p, td ul, td li {
-    margin: 0;
+    margin-left: 8px;
     padding: 0;
 }
 
@@ -87,9 +88,9 @@ td p, td ul, td li {
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>Student Name</th>
-                    <th>Praising Points</th>
-                    <th>Prayer Points</th>
+                    <th style="text-align: center;">Student Name</th>
+                    <th style="text-align: center;">Praising Points</th>
+                    <th style="text-align: center;">Prayer Points</th>
                 </tr>
             </thead>
             <tbody id="dataContainer"></tbody>
@@ -116,152 +117,162 @@ td p, td ul, td li {
     </div>
 
     <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAaQdWKBdtqqe3pu9XDdPoFuvcEm2YG_wA",
-            authDomain: "melam-rahul.firebaseapp.com",
-            projectId: "melam-rahul",
-            storageBucket: "melam-rahul.appspot.com",
-            messagingSenderId: "742315739002",
-            appId: "1:742315739002:web:329ea957fa38f66ab078c3",
-            measurementId: "G-SCNKZYJ3TT"
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyAaQdWKBdtqqe3pu9XDdPoFuvcEm2YG_wA",
+        authDomain: "melam-rahul.firebaseapp.com",
+        projectId: "melam-rahul",
+        storageBucket: "melam-rahul.appspot.com",
+        messagingSenderId: "742315739002",
+        appId: "1:742315739002:web:329ea957fa38f66ab078c3",
+        measurementId: "G-SCNKZYJ3TT"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1;
+
+    const category = 'student'; 
+
+    let deleteStudentId = null; 
+
+    function handleLongPress(event, studentId) {
+        let timer;
+        deleteStudentId = studentId; 
+
+        const startLongPress = () => {
+            timer = setTimeout(() => {
+                const deleteDialog = new bootstrap.Modal(document.getElementById('confirmationDialog'));
+                deleteDialog.show();
+            }, 700); 
         };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        const currentDate = new Date();
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth() + 1;
-
-        const category = 'student'; 
-
-        let deleteStudentId = null; 
-
-        function handleLongPress(event, studentId) {
-            let timer;
-            deleteStudentId = studentId; 
-
-            const startLongPress = () => {
-                timer = setTimeout(() => {
-                    const deleteDialog = new bootstrap.Modal(document.getElementById('confirmationDialog'));
-                    deleteDialog.show();
-                }, 700); 
-            };
-
-            const cancelLongPress = () => {
-                clearTimeout(timer);
-            };
-
-            event.target.addEventListener('touchstart', startLongPress);
-            event.target.addEventListener('touchend', cancelLongPress);
-            event.target.addEventListener('mousedown', startLongPress);
-            event.target.addEventListener('mouseup', cancelLongPress);
-        }
-
-        document.getElementById('confirmDelete').onclick = function () {
-            if (deleteStudentId) {
-                const path = category === 'student' ? `students` : `graduates`;
-                db.ref(`${year}/${month}/${path}/details/${deleteStudentId}`).remove()
-                    .then(() => db.ref(`${year}/${month}/${path}/PraisingPoints/${deleteStudentId}`).remove())
-                    .then(() => db.ref(`${year}/${month}/${path}/PrayerPoints/${deleteStudentId}`).remove())
-                    .then(() => {
-                        const studentElement = document.querySelector(`.student-container[data-student-id="${deleteStudentId}"]`);
-                        if (studentElement) {
-                            studentElement.remove();
-                        }
-                        deleteStudentId = null;
-                        window.location.reload();              
-                             })
-                    .catch(error => {
-                        console.error("Error deleting student data:", error);
-                    });
-            }
+        const cancelLongPress = () => {
+            clearTimeout(timer);
         };
 
-        function retrieveData() {
+        event.target.addEventListener('touchstart', startLongPress);
+        event.target.addEventListener('touchend', cancelLongPress);
+        event.target.addEventListener('mousedown', startLongPress);
+        event.target.addEventListener('mouseup', cancelLongPress);
+    }
+
+    document.getElementById('confirmDelete').onclick = function () {
+        if (deleteStudentId) {
             const path = category === 'student' ? `students` : `graduates`;
-            const dataContainer = document.getElementById('dataContainer');
-            dataContainer.innerHTML = '';
-
-            db.ref(`${year}/${month}/${path}/details`).once('value')
-                .then(snapshot => {
-                    const details = snapshot.val();
-                    if (details) {
-                        const sortedDetails = Object.keys(details)
-                            .map(key => ({
-                                id: key,
-                                data: details[key]
-                            }))
-                            .sort((a, b) => a.data.gender.localeCompare(b.data.gender))
-                            .map(student => student.id);
-
-                        const detailsPromises = sortedDetails.map((studentId, index) => {
-                            const studentData = details[studentId];
-
-                            return db.ref(`${year}/${month}/${path}/PraisingPoints/${studentId}/points`).once('value')
-                                .then(praisingSnapshot => {
-                                    const praisingPoints = praisingSnapshot.val() || {};
-                                    const praisingPointsHtml = Object.keys(praisingPoints).map(ppKey => `
-                                        <li>${praisingPoints[ppKey]}</li>
-                                    `).join('');
-
-                                    return db.ref(`${year}/${month}/${path}/PrayerPoints/${studentId}/points`).once('value')
-                                        .then(prayerSnapshot => {
-                                            const prayerPoints = prayerSnapshot.val() || {};
-                                            const prayerPointsHtml = Object.keys(prayerPoints).map(prayerKey => `
-                                                <li>${prayerPoints[prayerKey]}</li>
-                                            `).join('');
-
-                                            return `
-                                                <tr class="student-container" data-student-id="${studentId}"
-                                                    ontouchstart="handleLongPress(event, '${studentId}')"
-                                                    onmousedown="handleLongPress(event, '${studentId}')">
-                                                    <td>
-                                                        <strong>${index + 1}. ${studentData.name}</strong><br>
-                                                        <strong></strong> ${studentData.classAndBranch}<br>
-                                                        ${category === 'student' ? `<strong></strong> ${studentData.phoneNumber}<br>` : ''}
-                                                    </td>
-                                                    <td><ul>${praisingPointsHtml}</ul></td>
-                                                    <td><ul>${prayerPointsHtml}</ul></td>
-                                                </tr>
-                                            `;
-                                        })
-                                        .catch(error => {
-                                            console.error('Error retrieving prayer points:', error);
-                                            return `<tr><td colspan="3">Error retrieving prayer points for ${studentId}</td></tr>`;
-                                        });
-                                })
-                                .catch(error => {
-                                    console.error('Error retrieving praising points:', error);
-                                    return `<tr><td colspan="3">Error retrieving praising points for ${studentId}</td></tr>`;
-                                });
-                        });
-
-                        Promise.all(detailsPromises)
-                            .then(studentHtmlArray => {
-                                dataContainer.innerHTML = studentHtmlArray.join('');
-                            })
-                            .catch(error => {
-                                console.error('Error processing student data:', error);
-                                dataContainer.innerHTML = '<tr><td colspan="3">Error processing student data</td></tr>';
-                            });
-                    } else {
-                        dataContainer.innerHTML = '<tr><td colspan="3">No students or graduates found.</td></tr>';
+            db.ref(`${year}/${month}/${path}/details/${deleteStudentId}`).remove()
+                .then(() => db.ref(`${year}/${month}/${path}/PraisingPoints/${deleteStudentId}`).remove())
+                .then(() => db.ref(`${year}/${month}/${path}/PrayerPoints/${deleteStudentId}`).remove())
+                .then(() => {
+                    const studentElement = document.querySelector(`.student-container[data-student-id="${deleteStudentId}"]`);
+                    if (studentElement) {
+                        studentElement.remove();
                     }
-                })
+                    deleteStudentId = null;
+                    window.location.reload();              
+                         })
                 .catch(error => {
-                    console.error('Error retrieving student or graduate data:', error);
-                    dataContainer.innerHTML = '<tr><td colspan="3">Error retrieving student or graduate data.</td></tr>';
+                    console.error("Error deleting student data:", error);
                 });
         }
+    };
 
-        document.addEventListener('DOMContentLoaded', () => {
-            retrieveData();
-        });
-        localStorage.clear();
-    </script>
+    function retrieveData() {
+        const path = category === 'student' ? `students` : `graduates`;
+        const dataContainer = document.getElementById('dataContainer');
+        dataContainer.innerHTML = '';
+
+        db.ref(`${year}/${month}/${path}/details`).once('value')
+            .then(snapshot => {
+                const details = snapshot.val();
+                if (details) {
+                    const sortedDetails = Object.keys(details)
+                        .map(key => ({
+                            id: key,
+                            data: details[key]
+                        }))
+                        .sort((a, b) => a.data.gender.localeCompare(b.data.gender))
+                        .map(student => student.id);
+
+                    const detailsPromises = sortedDetails.map((studentId, index) => {
+                        const studentData = details[studentId];
+
+                        return db.ref(`${year}/${month}/${path}/PraisingPoints/${studentId}/points`).once('value')
+                            .then(praisingSnapshot => {
+                                const praisingPoints = praisingSnapshot.val() || {};
+                                const praisingPointsHtml = Object.keys(praisingPoints).map(ppKey => `
+                                    <li>${praisingPoints[ppKey]}</li>
+                                `).join('');
+
+                                return db.ref(`${year}/${month}/${path}/PrayerPoints/${studentId}/points`).once('value')
+                                    .then(prayerSnapshot => {
+                                        const prayerPoints = prayerSnapshot.val() || {};
+                                        const prayerPointsHtml = Object.keys(prayerPoints).map(prayerKey => `
+                                            <li>${prayerPoints[prayerKey]}</li>
+                                        `).join('');
+
+                                        return `
+                                            <tr class="student-container" data-student-id="${studentId}"
+                                                ontouchstart="handleLongPress(event, '${studentId}')"
+                                                onmousedown="handleLongPress(event, '${studentId}')">
+                                                <td style="text-align: center;">
+                                                    <strong>${index + 1}. ${studentData.name}</strong><br>
+                                                    <strong></strong> ${studentData.classAndBranch}<br>
+                                                    ${category === 'student' ? `<strong></strong> ${studentData.phoneNumber}<br>` : ''}
+                                                </td>
+                                                <td><ul>${praisingPointsHtml}</ul></td>
+                                                <td><ul>${prayerPointsHtml}</ul></td>
+                                            </tr>
+                                        `;
+                                    })
+                                    .catch(error => {
+                                        console.error('Error retrieving prayer points:', error);
+                                        return `<tr><td colspan="3">Error retrieving prayer points for ${studentId}</td></tr>`;
+                                    });
+                            })
+                            .catch(error => {
+                                console.error('Error retrieving praising points:', error);
+                                return `<tr><td colspan="3">Error retrieving praising points for ${studentId}</td></tr>`;
+                            });
+                    });
+
+                    Promise.all(detailsPromises)
+                        .then(studentHtmlArray => {
+                            dataContainer.innerHTML = studentHtmlArray.join('');
+                        })
+                        .catch(error => {
+                            console.error('Error processing student data:', error);
+                            dataContainer.innerHTML = '<tr><td colspan="3">Error processing student data</td></tr>';
+                        });
+                } else {
+                    dataContainer.innerHTML = '<tr><td colspan="3">No students or graduates found.</td></tr>';
+                }
+            })
+            .catch(error => {
+                console.error('Error retrieving student or graduate data:', error);
+                dataContainer.innerHTML = '<tr><td colspan="3">Error retrieving student or graduate data.</td></tr>';
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        retrieveData();
+        localStorage.clear(); // Clear local storage on page load
+    });
+
+    // Prevent any local storage operations by overriding localStorage methods
+    Object.defineProperty(window, 'localStorage', {
+        value: {
+            getItem: () => null,
+            setItem: () => {},
+            removeItem: () => {},
+            clear: () => {}
+        }
+    });
+</script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
