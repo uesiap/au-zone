@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AU Zone EU Prayer Requests Data - Students</title>
-    <script defer>
+    <script>
         window.onload = function() {
             localStorage.clear();
         };
@@ -265,6 +265,9 @@
             retrieveData();
             document.getElementById('bulkDelete').addEventListener('click', handleBulkDelete);
         });
+    </script>
+    <script defer>
+            localStorage.clear();
     </script>
 </body>
 
