@@ -119,13 +119,17 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        function getQueryParams() {
-    const params = new URLSearchParams(window.location.search);
-    return {
-        year: params.get('year'),
-        month: params.get('month')
-    };
-}
+        function decodeParameter(param) {
+        return atob(param); // Base64 decoding
+    }
+
+    function getQueryParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+            year: params.get('utm') ? decodeParameter(params.get('utm')) : null,
+            month: params.get('auth') ? decodeParameter(params.get('auth')) : null
+        };
+    }
 
 const queryParams = getQueryParams();
 const year = queryParams.year;
