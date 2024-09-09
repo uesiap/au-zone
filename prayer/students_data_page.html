@@ -110,197 +110,188 @@
     </div>
 
     <script>
-    // Firebase configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyAaQdWKBdtqqe3pu9XDdPoFuvcEm2YG_wA",
-        authDomain: "melam-rahul.firebaseapp.com",
-        projectId: "melam-rahul",
-        storageBucket: "melam-rahul.appspot.com",
-        messagingSenderId: "742315739002",
-        appId: "1:742315739002:web:329ea957fa38f66ab078c3",
-        measurementId: "G-SCNKZYJ3TT"
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAaQdWKBdtqqe3pu9XDdPoFuvcEm2YG_wA",
+            authDomain: "melam-rahul.firebaseapp.com",
+            projectId: "melam-rahul",
+            storageBucket: "melam-rahul.appspot.com",
+            messagingSenderId: "742315739002",
+            appId: "1:742315739002:web:329ea957fa38f66ab078c3",
+            measurementId: "G-SCNKZYJ3TT"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        function getQueryParams() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+        year: params.get('year'),
+        month: params.get('month')
     };
+}
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+const queryParams = getQueryParams();
+const year = queryParams.year;
+const month = queryParams.month;
+         const category = 'student';
+         
+        let deleteStudentId = null;
 
-    function getQueryParams() {
-        const params = new URLSearchParams(window.location.search);
-        return {
-            params,
-            year: params.get('year'),
-            month: params.get('month')
-        };
-    }
+        function handleLongPress(event, studentId) {
+            let timer;
+            deleteStudentId = studentId;
 
-    const queryParams = getQueryParams();
-    const year = queryParams.year;
-    const month = queryParams.month;
+            const startLongPress = () => {
+                timer = setTimeout(() => {
+                    document.querySelectorAll('.checkbox-column').forEach(el => el.style.display = 'table-cell');
+                    document.getElementById('bulkDelete').style.display = 'inline-block';
+                    document.getElementById('cancelSelection').style.display = 'inline-block';
 
-    if (year && month) {
-        // Remove parameters from the URL
-        queryParams.params.delete('year');
-        queryParams.params.delete('month');
-        const newUrl = window.location.pathname + (queryParams.params.toString() ? `?${queryParams.params.toString()}` : '');
-        history.replaceState({}, '', newUrl);
-    }
+                    const deleteCheckbox = document.querySelector(`input[type='checkbox'][data-student-id='${studentId}']`);
+                    if (deleteCheckbox) deleteCheckbox.checked = true;
+                }, 700);
+            };
 
-    const category = 'student';
-    let deleteStudentId = null;
+            const cancelLongPress = () => {
+                clearTimeout(timer);
+            };
 
-    function handleLongPress(event, studentId) {
-        let timer;
-        deleteStudentId = studentId;
-
-        const startLongPress = () => {
-            timer = setTimeout(() => {
-                document.querySelectorAll('.checkbox-column').forEach(el => el.style.display = 'table-cell');
-                document.getElementById('bulkDelete').style.display = 'inline-block';
-                document.getElementById('cancelSelection').style.display = 'inline-block';
-
-                const deleteCheckbox = document.querySelector(`input[type='checkbox'][data-student-id='${studentId}']`);
-                if (deleteCheckbox) deleteCheckbox.checked = true;
-            }, 700);
-        };
-
-        const cancelLongPress = () => {
-            clearTimeout(timer);
-        };
-
-        event.target.addEventListener('touchstart', startLongPress);
-        event.target.addEventListener('touchend', cancelLongPress);
-        event.target.addEventListener('mousedown', startLongPress);
-        event.target.addEventListener('mouseup', cancelLongPress);
-    }
-
-    function handleBulkDelete() {
-        const selectedCheckboxes = document.querySelectorAll('input[type="checkbox"].student-checkbox:checked');
-        const deletePromises = [];
-
-        selectedCheckboxes.forEach(checkbox => {
-            const studentId = checkbox.getAttribute('data-student-id');
-            const path = 'students';
-
-            deletePromises.push(
-                db.ref(`${year}/${month}/${path}/details/${studentId}`).remove()
-                    .then(() => db.ref(`${year}/${month}/${path}/PraisingPoints/${studentId}`).remove())
-                    .then(() => db.ref(`${year}/${month}/${path}/PrayerPoints/${studentId}`).remove())
-            );
-        });
-
-        Promise.all(deletePromises)
-            .then(() => {
-                window.location.reload();
-            })
-            .catch(error => console.error("Error deleting selected students:", error));
-    }
-
-    function retrieveData() {
-        const path = category === 'student' ? 'students' : 'graduates';
-        const dataContainer = document.getElementById('dataContainer');
-        dataContainer.innerHTML = '';
-
-        db.ref(`${year}/${month}/${path}/details`).once('value')
-            .then(snapshot => {
-                const details = snapshot.val();
-                if (details) {
-                    const sortedDetails = Object.keys(details)
-                        .map(key => ({
-                            id: key,
-                            data: details[key]
-                        }))
-                        .sort((a, b) => a.data.gender.localeCompare(b.data.gender))
-                        .map(student => student.id);
-
-                    const detailsPromises = sortedDetails.map((studentId, index) => {
-                        const studentData = details[studentId];
-
-                        return db.ref(`${year}/${month}/${path}/PraisingPoints/${studentId}/points`).once('value')
-                            .then(praisingSnapshot => {
-                                const praisingPoints = praisingSnapshot.val() || {};
-                                const praisingPointsHtml = Object.keys(praisingPoints).map(ppKey => `
-                                    <li>${praisingPoints[ppKey]}</li>
-                                `).join('');
-
-                                return db.ref(`${year}/${month}/${path}/PrayerPoints/${studentId}/points`).once('value')
-                                    .then(prayerSnapshot => {
-                                        const prayerPoints = prayerSnapshot.val() || {};
-                                        const prayerPointsHtml = Object.keys(prayerPoints).map(prayerKey => `
-                                            <li>${prayerPoints[prayerKey]}</li>
-                                        `).join('');
-
-                                        return `
-                                            <tr class="student-container" data-student-id="${studentId}"
-                                                ontouchstart="handleLongPress(event, '${studentId}')"
-                                                onmousedown="handleLongPress(event, '${studentId}')">
-                                                <td class="checkbox-column">
-                                                    <input type="checkbox" class="student-checkbox" data-student-id="${studentId}">
-                                                </td>
-                                                <td>
-                                                    <strong>${index + 1}. ${studentData.name}</strong><br>
-                                                    <strong></strong> ${studentData.classAndBranch}<br>
-                                                    ${category === 'student' ? `<strong></strong> ${studentData.phoneNumber}<br>` : ''}
-                                                </td>
-                                                <td><ul>${praisingPointsHtml}</ul></td>
-                                                <td><ul>${prayerPointsHtml}</ul></td>
-                                            </tr>
-                                        `;
-                                    })
-                                    .catch(error => {
-                                        console.error('Error retrieving prayer points:', error);
-                                        return `<tr><td colspan="4">Error retrieving prayer points for ${studentId}</td></tr>`;
-                                    });
-                            })
-                            .catch(error => {
-                                console.error('Error retrieving praising points:', error);
-                                return `<tr><td colspan="4">Error retrieving praising points for ${studentId}</td></tr>`;
-                            });
-                    });
-
-                    Promise.all(detailsPromises)
-                        .then(studentHtmlArray => {
-                            dataContainer.innerHTML = studentHtmlArray.join('');
-                        })
-                        .catch(error => {
-                            console.error('Error processing student data:', error);
-                            dataContainer.innerHTML = '<tr><td colspan="4">Error processing student data</td></tr>';
-                        });
-                } else {
-                    dataContainer.innerHTML = '<tr><td colspan="4">No students found.</td></tr>';
-                }
-            })
-            .catch(error => {
-                console.error('Error retrieving student data:', error);
-                dataContainer.innerHTML = '<tr><td colspan="4">Error retrieving student data.</td></tr>';
-            });
-    }
-
-    function closefun() {
-        document.querySelectorAll('.checkbox-column').forEach(el => el.style.display = 'none');
-        document.getElementById('bulkDelete').style.display = 'none';
-        document.getElementById('cancelSelection').style.display = 'none';
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        if (year && month) {
-            retrieveData();
-        } else {
-            document.getElementById('error-message').textContent = 'Year and month parameters are required.';
-            document.getElementById('error-message').style.display = 'block';
+            event.target.addEventListener('touchstart', startLongPress);
+            event.target.addEventListener('touchend', cancelLongPress);
+            event.target.addEventListener('mousedown', startLongPress);
+            event.target.addEventListener('mouseup', cancelLongPress);
         }
 
-        document.getElementById('bulkDelete').addEventListener('click', handleBulkDelete);
+        function handleBulkDelete() {
+            const selectedCheckboxes = document.querySelectorAll('input[type="checkbox"].student-checkbox:checked');
+            const deletePromises = [];
 
-        document.getElementById('selectAll').addEventListener('change', function() {
-            const isChecked = this.checked;
-            document.querySelectorAll('input[type="checkbox"].student-checkbox').forEach(checkbox => {
-                checkbox.checked = isChecked;
+            selectedCheckboxes.forEach(checkbox => {
+                const studentId = checkbox.getAttribute('data-student-id');
+                const path = 'students';
+
+                deletePromises.push(
+                    db.ref(`${year}/${month}/${path}/details/${studentId}`).remove()
+                        .then(() => db.ref(`${year}/${month}/${path}/PraisingPoints/${studentId}`).remove())
+                        .then(() => db.ref(`${year}/${month}/${path}/PrayerPoints/${studentId}`).remove())
+                );
             });
+
+            Promise.all(deletePromises)
+                .then(() => {
+                    window.location.reload();
+                })
+                .catch(error => console.error("Error deleting selected students:", error));
+        }
+
+        function retrieveData() {
+            const path = category === 'student' ? `students` : `graduates`;
+            const dataContainer = document.getElementById('dataContainer');
+            dataContainer.innerHTML = '';
+
+            db.ref(`${year}/${month}/${path}/details`).once('value')
+                .then(snapshot => {
+                    const details = snapshot.val();
+                    if (details) {
+                        const sortedDetails = Object.keys(details)
+                            .map(key => ({
+                                id: key,
+                                data: details[key]
+                            }))
+                            .sort((a, b) => a.data.gender.localeCompare(b.data.gender))
+                            .map(student => student.id);
+
+                        const detailsPromises = sortedDetails.map((studentId, index) => {
+                            const studentData = details[studentId];
+
+                            return db.ref(`${year}/${month}/${path}/PraisingPoints/${studentId}/points`).once('value')
+                                .then(praisingSnapshot => {
+                                    const praisingPoints = praisingSnapshot.val() || {};
+                                    const praisingPointsHtml = Object.keys(praisingPoints).map(ppKey => `
+                                        <li>${praisingPoints[ppKey]}</li>
+                                    `).join('');
+
+                                    return db.ref(`${year}/${month}/${path}/PrayerPoints/${studentId}/points`).once('value')
+                                        .then(prayerSnapshot => {
+                                            const prayerPoints = prayerSnapshot.val() || {};
+                                            const prayerPointsHtml = Object.keys(prayerPoints).map(prayerKey => `
+                                                <li>${prayerPoints[prayerKey]}</li>
+                                            `).join('');
+
+                                            return `
+                                                <tr class="student-container" data-student-id="${studentId}"
+                                                    ontouchstart="handleLongPress(event, '${studentId}')"
+                                                    onmousedown="handleLongPress(event, '${studentId}')">
+                                                    <td class="checkbox-column">
+                                                        <input type="checkbox" class="student-checkbox" data-student-id="${studentId}">
+                                                    </td>
+                                                    <td>
+                                                        <strong>${index + 1}. ${studentData.name}</strong><br>
+                                                        <strong></strong> ${studentData.classAndBranch}<br>
+                                                        ${category === 'student' ? `<strong></strong> ${studentData.phoneNumber}<br>` : ''}
+                                                    </td>
+                                                    <td><ul>${praisingPointsHtml}</ul></td>
+                                                    <td><ul>${prayerPointsHtml}</ul></td>
+                                                </tr>
+                                            `;
+                                        })
+                                        .catch(error => {
+                                            console.error('Error retrieving prayer points:', error);
+                                            return `<tr><td colspan="4">Error retrieving prayer points for ${studentId}</td></tr>`;
+                                        });
+                                })
+                                .catch(error => {
+                                    console.error('Error retrieving praising points:', error);
+                                    return `<tr><td colspan="4">Error retrieving praising points for ${studentId}</td></tr>`;
+                                });
+                        });
+
+                        Promise.all(detailsPromises)
+                            .then(studentHtmlArray => {
+                                dataContainer.innerHTML = studentHtmlArray.join('');
+                            })
+                            .catch(error => {
+                                console.error('Error processing student data:', error);
+                                dataContainer.innerHTML = '<tr><td colspan="4">Error processing student data</td></tr>';
+                            });
+                    } else {
+                        dataContainer.innerHTML = '<tr><td colspan="4">No students found.</td></tr>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error retrieving student data:', error);
+                    dataContainer.innerHTML = '<tr><td colspan="4">Error retrieving student data.</td></tr>';
+                });
+        }
+
+        function closefun() {
+            document.querySelectorAll('.checkbox-column').forEach(el => el.style.display = 'none');
+            document.getElementById('bulkDelete').style.display = 'none';
+            document.getElementById('cancelSelection').style.display = 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+    const { year, month } = getQueryParams();
+    if (year && month) {
+        retrieveData(year, month);
+    } else {
+        document.getElementById('error-message').textContent = 'Year and month parameters are required.';
+        document.getElementById('error-message').style.display = 'block';
+    }
+
+    document.getElementById('bulkDelete').addEventListener('click', handleBulkDelete);
+
+    document.getElementById('selectAll').addEventListener('change', function() {
+        const isChecked = this.checked;
+        document.querySelectorAll('input[type="checkbox"].student-checkbox').forEach(checkbox => {
+            checkbox.checked = isChecked;
         });
     });
-</script>
-
+});
+    </script>
 </body>
 
 </html>
