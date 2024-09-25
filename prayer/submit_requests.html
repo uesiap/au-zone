@@ -507,15 +507,15 @@
         const month = today.getMonth() + 1;
         const year = today.getFullYear();
 
-        // Separate praising and prayer points based on their class
-        // Filter out empty points
-        const praisingPoints = Array.from(document.querySelectorAll('.praisingPoints-field input'))
+        // Collect all praising points inputs (including dynamically added ones)
+        const praisingPoints = Array.from(document.querySelectorAll('input[name^="praisingPoints"]'))
                                     .map(input => input.value.trim())
-                                    .filter(point => point.length > 0); // Filter empty points
-                                    
-        const prayerPoints = Array.from(document.querySelectorAll('.prayerPoints-field input'))
+                                    .filter(point => point.length > 0); // Filter out empty points
+
+        // Collect all prayer points inputs (including dynamically added ones)
+        const prayerPoints = Array.from(document.querySelectorAll('input[name^="prayerPoints"]'))
                                   .map(input => input.value.trim())
-                                  .filter(point => point.length > 0); // Filter empty points
+                                  .filter(point => point.length > 0); // Filter out empty points
 
         // Function to generate a unique ID based on text
         const generateId = (text, category) => {
@@ -529,7 +529,6 @@
 
         const uniqueId = generateId(name, category); // Pass category to generateId
 
-        // Proceed with saving if the category is valid
         if (category === 'student') {
             const branch = document.getElementById('courseBranch').value;
             const combinedClassBranch = `${branch}`;
@@ -601,8 +600,7 @@
         }
     };
         }
-
-
+        
 
         // Speech recognition setup with dual language detection
         function startDictation(fieldId) {
