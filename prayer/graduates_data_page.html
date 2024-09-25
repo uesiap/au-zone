@@ -142,6 +142,8 @@
 const queryParams = getQueryParams();
 const year = queryParams.year;
 const month = queryParams.month;
+document.getElementById('mnth').textContent = month;
+document.getElementById('yr').textContent = year;
         const category = 'graduate';
 
         function handleLongPress(event, studentId) {
