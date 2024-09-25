@@ -507,9 +507,15 @@
         const month = today.getMonth() + 1;
         const year = today.getFullYear();
 
-        // Separate prayer and praising points based on their class
-        const praisingPoints = Array.from(document.querySelectorAll('.praisingPoints-field input')).map(input => input.value.trim());
-        const prayerPoints = Array.from(document.querySelectorAll('.prayerPoints-field input')).map(input => input.value.trim());
+        // Separate praising and prayer points based on their class
+        // Filter out empty points
+        const praisingPoints = Array.from(document.querySelectorAll('.praisingPoints-field input'))
+                                    .map(input => input.value.trim())
+                                    .filter(point => point.length > 0); // Filter empty points
+                                    
+        const prayerPoints = Array.from(document.querySelectorAll('.prayerPoints-field input'))
+                                  .map(input => input.value.trim())
+                                  .filter(point => point.length > 0); // Filter empty points
 
         // Function to generate a unique ID based on text
         const generateId = (text, category) => {
@@ -523,6 +529,7 @@
 
         const uniqueId = generateId(name, category); // Pass category to generateId
 
+        // Proceed with saving if the category is valid
         if (category === 'student') {
             const branch = document.getElementById('courseBranch').value;
             const combinedClassBranch = `${branch}`;
@@ -536,15 +543,19 @@
                 classAndBranch: combinedClassBranch,
                 phoneNumber: phoneNumber
             }).then(() => {
-                // Store praising points
-                return db.ref(`${year}/${month}/students/PraisingPoints/${uniqueId}`).set({
-                    points: praisingPoints
-                });
+                if (praisingPoints.length > 0) {
+                    // Store praising points if available
+                    return db.ref(`${year}/${month}/students/PraisingPoints/${uniqueId}`).set({
+                        points: praisingPoints
+                    });
+                }
             }).then(() => {
-                // Store prayer points
-                return db.ref(`${year}/${month}/students/PrayerPoints/${uniqueId}`).set({
-                    points: prayerPoints
-                });
+                if (prayerPoints.length > 0) {
+                    // Store prayer points if available
+                    return db.ref(`${year}/${month}/students/PrayerPoints/${uniqueId}`).set({
+                        points: prayerPoints
+                    });
+                }
             }).then(() => {
                 document.getElementById('loaderContainer').style.display = 'none';
                 document.getElementById('successMessage').style.display = 'block';
@@ -561,15 +572,19 @@
             db.ref(`${year}/${month}/graduates/details/${uniqueId}`).set({
                 name: name
             }).then(() => {
-                // Store praising points
-                return db.ref(`${year}/${month}/graduates/PraisingPoints/${uniqueId}`).set({
-                    points: praisingPoints
-                });
+                if (praisingPoints.length > 0) {
+                    // Store praising points if available
+                    return db.ref(`${year}/${month}/graduates/PraisingPoints/${uniqueId}`).set({
+                        points: praisingPoints
+                    });
+                }
             }).then(() => {
-                // Store prayer points
-                return db.ref(`${year}/${month}/graduates/PrayerPoints/${uniqueId}`).set({
-                    points: prayerPoints
-                });
+                if (prayerPoints.length > 0) {
+                    // Store prayer points if available
+                    return db.ref(`${year}/${month}/graduates/PrayerPoints/${uniqueId}`).set({
+                        points: prayerPoints
+                    });
+                }
             }).then(() => {
                 document.getElementById('loaderContainer').style.display = 'none';
                 document.getElementById('successMessage').style.display = 'block';
@@ -585,8 +600,7 @@
             document.getElementById('loaderContainer').style.display = 'none';
         }
     };
-}
-
+        }
 
 
 
