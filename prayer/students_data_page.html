@@ -84,7 +84,7 @@
 
 <body>
     <div class="container">
-        <h4>Students Prayer Requests</h4>
+        <h4>Students Prayer and Praising Points ● <strong><span id="mnth"></span>&ensp;<span id="yr"></span></strong></h4><br>
           <div id="error-message" class="error" style="display: none;"></div>
         <table class="table table-bordered">
             <thead>
@@ -140,6 +140,8 @@
 const queryParams = getQueryParams();
 const year = queryParams.year;
 const month = queryParams.month;
+document.getElementById('mnth').textContent = month;
+document.getElementById('yr').textContent = year;
          const category = 'student';
          
         let deleteStudentId = null;
