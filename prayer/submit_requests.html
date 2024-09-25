@@ -592,31 +592,29 @@
 
         // Speech recognition setup with dual language detection
         function startDictation(fieldId) {
-            if (window.SpeechRecognition || window.webkitSpeechRecognition) {
-                const recognition = window.SpeechRecognition ? new window.SpeechRecognition() : new window.webkitSpeechRecognition();
-                recognition.lang = 'en-US'; // Use English language for transcription
+    if (window.SpeechRecognition || window.webkitSpeechRecognition) {
+        const recognition = window.SpeechRecognition ? new window.SpeechRecognition() : new window.webkitSpeechRecognition();
+        recognition.lang = 'en-US'; // Use English language for transcription
 
-                recognition.onresult = function (event) {
-                    // Get the transcription result
-                    const text = event.results[0][0].transcript;
+        recognition.onresult = function (event) {
+            const text = event.results[0][0].transcript;
+            const capitalizedText = text.charAt(0).toUpperCase() + text.slice(1);
+            document.getElementById(fieldId).value = capitalizedText;
+        };
 
-                    // Capitalize the first letter and concatenate with the rest of the string
-                    const capitalizedText = text.charAt(0).toUpperCase() + text.slice(1);
+        recognition.onend = function () {
+            document.getElementById('micFeedback').style.display = 'none';
+        };
 
-                    // Set the capitalized transcription in the input field
-                    document.getElementById(fieldId).value = capitalizedText;
-                };
-
-                recognition.start();
-                document.getElementById('micFeedback').style.display = 'block';
-
-                recognition.onend = function () {
-                    document.getElementById('micFeedback').style.display = 'none';
-                };
-            } else {
-                alert('Speech Recognition not supported in this browser.');
-            }
-        }
+        // Slight delay before starting recognition
+        setTimeout(() => {
+            recognition.start();
+            document.getElementById('micFeedback').style.display = 'block';
+        }, 300);  // Delay by 300ms
+    } else {
+        alert('Speech Recognition not supported in this browser.');
+    }
+                }
 
 
         function removeField(button) {
