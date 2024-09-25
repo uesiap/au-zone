@@ -414,7 +414,7 @@
             const fieldHTML = `
                 <div class="input-group mb-3">
                     <span class="input-group-text dynamic-field-number">${fieldCount}</span>
-                    <input type="text" class="form-control" name="points[]" required>
+                    <input type="text" class="form-control" name="points[]">
                     <button type="button" class="btn btn-danger" onclick="removeField(this)">
                         <i class="fas fa-trash"></i>
                     </button>
@@ -431,7 +431,7 @@
                 fieldsHTML += `
             <div class="mb-3 input-group ${section}-field">
                 <span class="dynamic-field-number">${i}:</span>
-                <input type="text" class="form-control" id="${section}${i}" name="${section}${i}" required>
+                <input type="text" class="form-control" id="${section}${i}" name="${section}${i}">
                 <button type="button" class="btn mic-button" onclick="startDictation('${section}${i}')">
                     <i class="fas fa-microphone"></i>
                 </button>
