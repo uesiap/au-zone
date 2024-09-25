@@ -426,36 +426,36 @@
         // Generate dynamic fields for praising and prayer points
         // Generate dynamic fields for praising and prayer points
         function generateDynamicFields(section, count) {
-            let fieldsHTML = '';
-            for (let i = 1; i <= count; i++) {
-                fieldsHTML += `
+        let fieldsHTML = '';
+        for (let i = 1; i <= count; i++) {
+            fieldsHTML += `
             <div class="mb-3 input-group ${section}-field">
                 <span class="dynamic-field-number">${i}:</span>
-                <input type="text" class="form-control" id="${section}${i}" name="${section}${i}">
+                <input type="text" class="form-control" id="${section}${i}" name="${section}[]">
                 <button type="button" class="btn mic-button" onclick="startDictation('${section}${i}')">
                     <i class="fas fa-microphone"></i>
                 </button>
             </div>
         `;
-            }
-            return fieldsHTML;
+    }
+    return fieldsHTML;
         }
 
 
         // Function to dynamically add fields
         function addField(section, containerId) {
-            const container = document.getElementById(containerId);
-            const newFieldIndex = container.querySelectorAll('.input-group').length + 1;
-            const newFieldHTML = `
-            <div class="mb-3 input-group" id="${section}${newFieldIndex}Container">
-                <span class="dynamic-field-number" onmousedown="handleLongPress(event, '${section}${newFieldIndex}Container')" ontouchstart="handleLongPress(event, '${section}${newFieldIndex}Container')">${newFieldIndex}:</span>
-                <input type="text" class="form-control" id="${section}${newFieldIndex}" name="${section}${newFieldIndex}">
-                <button type="button" class="btn mic-button" onclick="startDictation('${section}${newFieldIndex}')">
-                    <i class="fas fa-microphone"></i>
-                </button>
-            </div>
-        `;
-            container.insertAdjacentHTML('beforeend', newFieldHTML);
+    const container = document.getElementById(containerId);
+    const newFieldIndex = container.querySelectorAll('.input-group').length + 1;
+    const newFieldHTML = `
+        <div class="mb-3 input-group" id="${section}${newFieldIndex}Container">
+            <span class="dynamic-field-number">${newFieldIndex}:</span>
+            <input type="text" class="form-control" id="${section}${newFieldIndex}" name="${section}[]">
+            <button type="button" class="btn mic-button" onclick="startDictation('${section}${newFieldIndex}')">
+                <i class="fas fa-microphone"></i>
+            </button>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', newFieldHTML);
         }
 
         // Function to handle long press for delete confirmation
@@ -500,20 +500,20 @@
         // Proceed with form submission
         const category = document.getElementById('category').value;
         const name = document.getElementById('name').value;
-        
+
         const gender = category === 'student' ? document.getElementById('gender').value : null;
 
         const today = new Date();
         const month = today.getMonth() + 1;
         const year = today.getFullYear();
 
-        // Collect all praising points inputs (including dynamically added ones)
-        const praisingPoints = Array.from(document.querySelectorAll('input[name^="praisingPoints"]'))
+        // Collect all praising points inputs (now using consistent naming)
+        const praisingPoints = Array.from(document.querySelectorAll('input[name="praisingPoints[]"]'))
                                     .map(input => input.value.trim())
                                     .filter(point => point.length > 0); // Filter out empty points
 
-        // Collect all prayer points inputs (including dynamically added ones)
-        const prayerPoints = Array.from(document.querySelectorAll('input[name^="prayerPoints"]'))
+        // Collect all prayer points inputs (now using consistent naming)
+        const prayerPoints = Array.from(document.querySelectorAll('input[name="prayerPoints[]"]'))
                                   .map(input => input.value.trim())
                                   .filter(point => point.length > 0); // Filter out empty points
 
@@ -599,8 +599,7 @@
             document.getElementById('loaderContainer').style.display = 'none';
         }
     };
-        }
-        
+                                          }
 
         // Speech recognition setup with dual language detection
         function startDictation(fieldId) {
