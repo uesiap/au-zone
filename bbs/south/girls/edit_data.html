@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:site_name" content="Melam Rahul">        
-    <meta property="og:title" content="North Bible Study Details - AU Zone">
+    <meta property="og:title" content="Edit - South Girls Bible Study Details">
     <meta property="og:url" content="https://Melam Rahul">
     <meta property="og:image:width" content="32">
     <meta property="og:image:height" content="32">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <title>South Girls Bible Study Details</title>
+    <title>Edit - South Girls Bible Study Details</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;700&family=Nunito:wght@400;700&display=swap">
     <style>
         /* General Styles */
@@ -356,7 +356,7 @@
                 var password = passwordInput.value.trim();
 
                 // Check password
-                if (password === 'southgrilsbbs') {
+                if (password === 'southgirlsbbs') {
                     // Proceed with edit
                     passwordDialog.style.display = 'none';
                     proceedWithEdit(row);
@@ -453,7 +453,7 @@
             row.querySelector('.save-button').style.display = 'none';
 
             // Update the data in Firebase
-            database.ref('AU-Zone/BibleStudy/South/Boys/' + id).update(updatedData).then(function () {
+            database.ref('AU-Zone/BibleStudy/South/Girls/' + id).update(updatedData).then(function () {
                 // Refresh the page after updating the data
                 location.reload();
             });
