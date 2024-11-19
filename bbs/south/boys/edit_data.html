@@ -357,7 +357,7 @@
                 var password = passwordInput.value.trim();
 
                 // Check password
-                if (password === 'rahulbible') {
+                if (password === 'southboysbbs') {
                     // Proceed with edit
                     passwordDialog.style.display = 'none';
                     proceedWithEdit(row);
@@ -454,7 +454,7 @@
             row.querySelector('.save-button').style.display = 'none';
 
             // Update the data in Firebase
-            database.ref('BibleStudyDetails/' + id).update(updatedData).then(function () {
+            database.ref('AU-Zone/BibleStudy/South/Boys/' + id).update(updatedData).then(function () {
                 // Refresh the page after updating the data
                 location.reload();
             });
