@@ -216,7 +216,7 @@
             </table>
         </div>
     </div>
--->
+--><!--
     <u>
         <h3 class="side-heading" style="color: black">Sathavahana Hostel</h3>
     </u>
@@ -237,7 +237,7 @@
                 <tbody></tbody>
             </table>
         </div>
-    </div>
+    </div>-->
     <u>
         <h3 class="side-heading" style="color: black">Sidharda Hostel</h3>
     </u>
@@ -306,11 +306,6 @@
                     <tr>
                         <td>2</td>
                         <td>-----</td>
-                        <td>Sathavahana Hostel</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>-----</td>
                         <td>Sidharda Hostel</td>
                     </tr>
                 </tbody>
@@ -347,7 +342,7 @@
     <h4 class="conclusion" style="margin-right: 40px; color: black; bottom: -5px;">Yesu Babu,</h4>
     <h4 class="conclusion" style="margin-right: 5px; color: black; bottom: -10px;">SOUTH BOYS BBS I/C.</h4>
     <footer style="font-size: 13px; bottom: 10px; width: 100%; text-align: center; margin-top: 200px;">
-        <p style="margin: 0;">Auto generated report, Designed by Rahul.</p>
+        <p style="margin: 0;">Auto generated report. Designed by Rahul.</p>
     </footer>
 
 
@@ -386,14 +381,14 @@
             var bbsTableBody = document.getElementById('bbsTable').getElementsByTagName('tbody')[0];
             var AshokaVardhanaTableBody = document.getElementById('AshokaVardhanaTable').getElementsByTagName('tbody')[0];
             // var orangeHostelTableBody = document.getElementById('orangeHostelTable').getElementsByTagName('tbody')[0];
-            var SathavahanaTableBody = document.getElementById('SathavahanaTable').getElementsByTagName('tbody')[0];
+            //var SathavahanaTableBody = document.getElementById('SathavahanaTable').getElementsByTagName('tbody')[0];
             var SidhardaTableBody = document.getElementById('SidhardaTable').getElementsByTagName('tbody')[0];
 
             // Clear existing table rows
             bbsTableBody.innerHTML = '';
             AshokaVardhanaTableBody.innerHTML = '';
             //orangeHostelTableBody.innerHTML = '';
-            SathavahanaTableBody.innerHTML = '';
+            //SathavahanaTableBody.innerHTML = '';
             SidhardaTableBody.innerHTML = '';
 
             snapshot.forEach(function (childSnapshot) {
@@ -413,10 +408,11 @@
                             row = orangeHostelTableBody.insertRow();
                          
                         } */
+                       /*
                         else if (data.hostel_name.includes("hana")) {
                             row = SathavahanaTableBody.insertRow();
-                        }
-                        else if (data.hostel_name === "ard" /*|| data.hostel_name === "Online (zoom)*/) {
+                        }*/
+                        else if (data.hostel_name.includes("ard") /*|| data.hostel_name === "Online (zoom)*/) {
                             row = SidhardaTableBody.insertRow();
                         }
 
