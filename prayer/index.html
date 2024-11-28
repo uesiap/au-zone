@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AU ZONE EU & EGF Prayer Requests Data</title>
+    <script>
+        window.onload = function() {
+            localStorage.clear();
+        };
+    </script>
+    <meta property="og:site_name" content="Melam Rahul">
+    <meta property="og:title" content="AU ZONE EU & EGF Prayer Requests Data">
+    <meta property="og:description" content="See the Prayer Requests Data of AU ZONE EU & EGF">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <!-- Font Awesome -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin-top: 5rem;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            margin-top: 15px;
+            background-color: #fff;
+            color: #000;
+            border-bottom: 0;
+            border-radius: 10px 10px 0 0;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: bold;       
+            }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .btn-custom {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+        }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+            color: #fff;
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                Select Year, Month, and Category to <br>Open Prayer Requests
+            </div>
+            <div class="card-body">
+                <form id="selectionForm">
+                    <div class="form-group">
+                        <label for="year" class="form-label">Year</label>
+                        <select id="year" class="form-select">
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="month" class="form-label">Month</label>
+                        <select id="month" class="form-select">
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="category" class="form-label">Category</label>
+                        <select id="category" class="form-select">
+                            <option value="students" selected>Students</option>
+                            <option value="graduates">Graduates</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-custom" onclick="submitForm()">Submit</button>
+                </form>
+                <div id="error-message" class="error" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Populate year and month dynamically
+    document.addEventListener("DOMContentLoaded", function () {
+        const yearSelect = document.getElementById('year');
+        const monthSelect = document.getElementById('month');
+
+        // Get current year and month
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth() + 1; // Months are 0-indexed in JavaScript
+
+        // Populate year options
+        const startYear = 2024; // Adjust this as needed
+        const endYear = 2030; // Adjust this as needed
+        for (let year = startYear; year <= endYear; year++) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            if (year === currentYear) {
+                option.selected = true; // Set the current year as default
+            }
+            yearSelect.appendChild(option);
+        }
+
+        // Populate month options
+        const monthNames = [
+            'January', 'February', 'March', 'April', 'May', 
+            'June', 'July', 'August', 'September', 'October', 
+            'November', 'December'
+        ];
+        for (let i = 1; i <= 12; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = monthNames[i - 1];
+            if (i === currentMonth) {
+                option.selected = true; // Set the current month as default
+            }
+            monthSelect.appendChild(option);
+        }
+    });
+
+    // Function to encode parameters using Base64
+    function encodeParameter(param) {
+        return btoa(param); // Base64 encoding
+    }
+
+    function submitForm() {
+        const year = document.getElementById('year').value;
+        const month = document.getElementById('month').value;
+        const category = document.getElementById('category').value;
+
+        const errorMessage = document.getElementById('error-message');
+
+        if (year && month && category) {
+            // Encode parameters
+            const encodedYear = encodeParameter(year);
+            const encodedMonth = encodeParameter(month);
+            const encodedCategory = encodeParameter(category);
+
+            // Redirect to the respective page with encoded query parameters
+            const targetPage = category === 'students' 
+                ? '/au-zone/prayer/students_data_page' 
+                : '/au-zone/prayer/graduates_data_page';
+
+            window.location.href = `${targetPage}?utm=${encodeURIComponent(encodedYear)}&auth=${encodeURIComponent(encodedMonth)}`;
+        } else {
+            // Display an error message if year, month, or category is not selected
+            errorMessage.textContent = 'Please select all fields.';
+            errorMessage.style.display = 'block';
+        }
+    }
+    </script>
+</body>
+
+
+</html>
