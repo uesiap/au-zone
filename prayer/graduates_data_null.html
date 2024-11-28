@@ -1,105 +1,281 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AU Zone EU Prayer Requests Data - Graduates</title>
     <script>
         window.onload = function() {
             localStorage.clear();
         };
     </script>
     <meta property="og:site_name" content="Melam Rahul">
-    <meta property="og:title" content="AU Zone EU Prayer Requests Data - Graduates">
-    <meta property="og:description" content="Sis.Beulah Deepthi, EGF Prayer Secretary">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta property="og:title" content="AU Zone EU & EGF Prayer Requests Submit Page.">
+    <meta property="og:description" content="Submit Your Prayer and Praising Points in this Form">
+    <meta property="og:url" content="https://Melam.Rahul">
+    <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/melam-rahul.appspot.com/o/AU%20Zone%20Treasurer%2FH8N0BqBc4inq.jpg?alt=media&token=963f79a2-0de4-4bbc-8c23-6fdec1d763b6">
+    <meta property="og:image:width" content="32">
+    <meta property="og:image:height" content="32">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>AU Zone EU & EGF Prayer Cell</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.0.10/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/6ff5af2422.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@490&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
     <style>
         body {
-            font-size: 0.8rem;
-            line-height: 1.2;
-            -webkit-tap-highlight-color: transparent; 
-            tap-highlight-color: transparent; 
-            -webkit-touch-callout: none; 
-            -webkit-user-select: none; 
-            -moz-user-select: none;
-            -ms-user-select: none;
-            
+            font-family: 'Google Sans', sans-serif;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 200px;
         }
 
         .container {
-            max-width: 100%;
-            margin-top: 1rem;
+            margin-top: 40px;
+            margin-left: 15px;
+            margin-right: 15px;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px #444;
         }
 
-        .student-container {
-            cursor: pointer;
+        .form-label {
+            color: #197afe;
         }
 
-        table {
+        .input-group {
+            display: flex;
+            align-items: center;
             width: 100%;
-            table-layout: fixed;
         }
 
-        th,
-        td {
-            padding: 0.5rem;
-            vertical-align: top;
-            text-align: left;
+        .input-group input {
+            flex-grow: 1;
+            width: calc(100% - 40px);
+            margin-right: 8px;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
         }
 
-        th {
-            background-color: #f8f9fa;
-            font-weight: bold;
+        .divider {
+            border-top: 2px solid #029012;
+            margin: 20px -20px;
         }
 
-        ul {
-            padding-left: 1rem;
-            margin: 0;
+        .dynamic-field-number {
+            margin-right: 10px;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            background: none;
         }
 
-        li {
-            margin-bottom: 0;
-        }
-
-        .checkbox-column,
-        .delete-button-column {
+        /* Mic listening feedback popup */
+        #micFeedback {
             display: none;
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #000;
+            color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            z-index: 1000;
+        }
+
+        #micFeedback i {
+            margin-right: 8px;
+        }
+
+        /* Loader Styles */
+        #loaderContainer {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+        }
+
+        #dynamicFields input {
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+
+        #loader {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+        }
+
+        #loader .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #fff;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        .form-control {
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+
+        .mic-button {
+            background-color: #029012;
+            /* Change this to your desired color */
+            border: none;
+            color: white;
+        }
+
+        .mic-button:hover {
+            background-color: #45a049;
+            /* Slightly darker shade on hover */
+        }
+        textarea {
+            resize: none; /* Disable manual resizing */
+            overflow-wrap: break-word; /* Wrap text within the lines */
+            width: calc(100% - 20px); /* Adjust width to reduce the right side space */
+            max-width: 100%; /* Ensure textarea does not exceed container width */
+            margin-right: 10px; /* Reduce the width from the right side */
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
 
-<body>
-    <div class="container">
-        <h4>Graduates Prayer Requests</h4>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th style="text-align: center;" class="checkbox-column">
-                        <div style="display: flex; flex-direction: row; gap: 4px;">
-                        <button class="btn btn-danger btn-sm" id="bulkDelete" style="display: none; margin-bottom: 5px; height: 40px; width: 40px;"><i class="fa-solid fa-trash"></i></button> 
-<button class="btn btn-secondary btn-sm" id="cancelSelection" onclick="closefun()" style="display: none; margin-bottom: 5px;height: 40px; width: 40px; font-size: 20px">
-   <i class="fa-solid fa-xmark"></i></button>
-   </div>
-<br> 
-                        <div style="display: flex; flex-direction: row; gap: 4px;">
-                           
-                        <label style="font-size: 13px; font-weight: 400">Select All</label>                        <input type="checkbox" id="selectAll">
-                        </div>
-                    </th>
-                    <th style="text-align: center;">Student Name</th>
-                    <th style="text-align: center;">Praising Points</th>
-                    <th style="text-align: center;">Prayer Points</th>
-                </tr>
-            </thead>
-            <tbody id="dataContainer"></tbody>
-        </table>
+<body class="bg-gray-100" style="margin-left: 15px; margin-right: 15px; margin-top: -15px;">
+  <div style="margin-top: 0px; background-color: white; padding: 5px;
+    box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.2); position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <img src="https://i.ibb.co/vJVV3Xz/au-logo-Photoroom.png" width="70" height="70"
+            class="d-inline-block align-center" style="margin-left: 10px; padding: 5px" alt="AU ZONE">&emsp;
+        <h2 style="margin-top: 20px; margin-left: -3px; font-family: 'Google Sans', sans-serif; font-size: 25px; color: black">
+            AU ZONE Prayer Requests
+        </h2>
+    </div>
+</div><p style="margin-bottom: 100px"></p>
+        <div class="divider"></div>
+        <form id="prayerRequestForm" style="display: block;">
+            <div class="mb-3">
+                <label for="currentMonth" class="form-label">Month:</label>
+                <p class="form-label" style="color: black; font-size: 12px">Month Updates Automatically.</p>
+                <input type="text" class="form-control" id="currentMonth" name="currentMonth" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="category" class="form-label">Select Category:</label>
+                <p class="form-label" style="color: black; font-size: 12px">Select Student or Graduate.</p>
+                <select class="form-control" id="category" name="category" required>
+                    <option value="" disabled selected>Select here</option>
+                    <option value="student">👨‍🎓|👩🏻‍🎓 Student</option>
+                    <option value="graduate">👨🏻‍🍼|👩🏻‍🍼 Graduate</option>
+                </select>
+            </div>
+
+            <div id="dynamicFields"></div>
+            <div class="divider"></div>
+            <input type="submit" value="Submit " class="btn btn-primary" style="display: block; margin: 0 auto;">
+
+        </form>
+
+        <div id="successMessage" style="display: none; margin-top: 20px;">
+            <div class="alert alert-success" role="alert">
+                🎉Your Prayer and Praising Points are Submitted Successfully! 😊
+            </div>
+        </div>
+        <!-- Confirmation Dialog -->
+        <div class="modal fade" id="confirmationDialog" tabindex="-1" aria-labelledby="confirmationDialogLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmationDialogLabel">
+                            <i class="fas fa-exclamation-triangle text-warning"></i> Confirm Submission
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ✌🏻 Are you sure you want to submit the form? <br>This action cannot be undone.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="confirmSubmit">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <footer
+        style="margin-bottom: 30px; width: 100%; background-color: #fff; color: #333; text-align: center; padding: 10px 0; margin-top: 30px">
+        <p style="margin: 0; font-family: 'Google Sans', sans-serif; font-size: 16px;">© Designed with ❤️ by <strong><a
+                    href="https://rahul.serv00.net/profile">Rahul</a></strong>&ensp;</p>
+    </footer>
+
+    <!-- Mic Feedback Popup -->
+    <div id="micFeedback">
+        <i class="fas fa-microphone"></i> Listening...
+    </div>
+
+    <!-- Delete Confirmation Dialog -->
+    <div class="modal fade" id="deleteConfirmationDialog" tabindex="-1" aria-labelledby="deleteConfirmationDialogLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteConfirmationDialogLabel">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this field?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loaderContainer">
+        <div id="loader">
+            <div class="spinner" style="margin-left: 10px;"></div><br>
+            <p style="margin-left: -10px;">Submitting..</p>
+        </div>
     </div>
 
     <script>
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAaQdWKBdtqqe3pu9XDdPoFuvcEm2YG_wA",
             authDomain: "melam-rahul.firebaseapp.com",
@@ -110,163 +286,361 @@
             measurementId: "G-SCNKZYJ3TT"
         };
 
+        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
         const currentDate = new Date();
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth() + 1;
-        const category = 'graduate';
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const currentMonth = monthNames[currentDate.getMonth()] + " " + currentDate.getFullYear();
+        document.getElementById("currentMonth").value = currentMonth;
 
-        function handleLongPress(event, studentId) {
+        document.getElementById('prayerRequestForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            submitForm();
+        });
+
+        // Handle category change and dynamic field generation
+        document.getElementById('category').addEventListener('change', function () {
+            const category = this.value;
+            const dynamicFields = document.getElementById('dynamicFields');
+            dynamicFields.innerHTML = '';
+
+            if (category === 'student') {
+                dynamicFields.innerHTML = `
+                <div class="mb-3">
+                <label for="name" class="form-label">Name:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="name" name="name" required>
+                    
+                </div>
+                </div>
+                    <div class="divider"></div>
+                    
+                    
+                    
+                    <h4 class="form-label">Course & Personal Details</h4>
+<div class="mb-3">
+    <label for="courseBranch" class="form-label">Course & Branch:</label>
+    <div class="input-group">
+        <input type="text" class="form-control" id="courseBranch" name="courseBranch" required>
+       
+    </div>
+</div>
+<div class="mb-3">
+    <label for="phoneNumber" class="form-label">Phone Number:</label>
+    <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" required>
+</div>
+<div class="mb-3">
+    <label for="gender" class="form-label">🧑|👧 Gender:</label>
+    <select class="form-control" id="gender" name="gender" required>
+        <option value="" disabled selected>Select Gender</option>
+        <option value="male">🧑 Male</option>
+        <option value="female">👧 Female</option>
+    </select>
+</div>
+                    
+                    
+                    
+                    <div class="divider"></div>
+                    <h4 class="form-label">🙌🏻 Praising Points</h4>
+                    <p class="form-label" style="color: black; font-size: 12px">To delete extra field if you added. Long press on its Number.</p>
+                    <div id="praisingPointsContainer">
+                        ${generateDynamicFields('praisingPoints', 2)}
+                    </div>
+                    <button type="button" class="btn btn-outline-primary mb-3" onclick="addField('praisingPoints', 'praisingPointsContainer')">Add More Praising Points</button>
+                    <div class="divider"></div>
+                    <h4 class="form-label">🙏🏻 Prayer Points</h4>
+                    <p class="form-label" style="color: black; font-size: 12px">To delete extra field if you added. Long press on its Number.</p>
+                    <div id="prayerPointsContainer">
+                        ${generateDynamicFields('prayerPoints', 3)}
+                    </div>
+                    <button type="button" class="btn btn-outline-primary mb-3" onclick="addField('prayerPoints', 'prayerPointsContainer')">Add More Prayer Points</button>
+                `;
+            } else if (category === 'graduate') {
+                dynamicFields.innerHTML = `
+                    <div class="mb-3">
+                <label for="name" class="form-label">Name:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="name" name="name" required>
+                    
+                </div>
+            </div>
+            <!--
+                    <div class="divider"></div>
+                    <h4 class="form-label">Family Members</h4>
+                    <p class="form-label" style="color: black; font-size: 12px">Father, Mother, Wife/Husband,  Sons/Daughters Names.</p>
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <textarea class="form-control" id="father" name="father" rows="1" maxlength="60" oninput="enforceMaxLength(this); autoExpand(this)"></textarea>
+                            <button type="button" class="btn mic-button" onclick="startDictation('father')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                        </div>
+                    </div>
+                    -->
+                    <div class="divider"></div>
+                    <h4 class="form-label">🙌🏻 Praising Points</h4>
+                    <p class="form-label" style="color: black; font-size: 12px">To delete extra field if you added. Long press on its Number.</p>
+                    <div id="praisingPointsContainer">
+                        ${generateDynamicFields('praisingPoints', 2)}
+                    </div>
+                    <button type="button" class="btn btn-outline-primary mb-3" onclick="addField('praisingPoints', 'praisingPointsContainer')">Add More Praising Points</button>
+                    <div class="divider"></div>
+                    <h4 class="form-label">🙏🏻 Prayer Points</h4>
+                    <p class="form-label" style="color: black; font-size: 12px">To delete extra field if you added. Long press on its Number.</p>
+                    <div id="prayerPointsContainer">
+                        ${generateDynamicFields('prayerPoints', 3)}
+                    </div>
+                    <button type="button" class="btn btn-outline-primary mb-3" onclick="addField('prayerPoints', 'prayerPointsContainer')">Add More Prayer Points</button>
+                    <!--
+                    <div class="divider"></div>
+                    <h4 class="form-label">🏠 House Area</h4>
+                    <p class="form-label" style="color: black; font-size: 12px">Mention Area only.</p>
+                    <div class="mb-3">
+                        <!--<label for="apartment" class="form-label">Enter Apartment Name & Area Name:</label> 
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="apartment" name="apartment" required>
+                            <button type="button" class="btn mic-button" onclick="startDictation('apartment')">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                        </div>
+                    </div> -->
+                `;
+            }
+        });
+
+        function addDynamicField() {
+            const dynamicFieldsDiv = document.getElementById('dynamicFields');
+            const fieldCount = dynamicFieldsDiv.querySelectorAll('.input-group').length + 1;
+
+            const fieldHTML = `
+                <div class="input-group mb-3">
+                    <span class="input-group-text dynamic-field-number">${fieldCount}</span>
+                    <input type="text" class="form-control" name="points[]">
+                    <button type="button" class="btn btn-danger" onclick="removeField(this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            dynamicFieldsDiv.insertAdjacentHTML('beforeend', fieldHTML);
+        }
+
+        // Generate dynamic fields for praising and prayer points
+        // Generate dynamic fields for praising and prayer points
+        function generateDynamicFields(section, count) {
+        let fieldsHTML = '';
+        for (let i = 1; i <= count; i++) {
+            fieldsHTML += `
+            <div class="mb-3 input-group ${section}-field">
+                <span class="dynamic-field-number">${i}:</span>
+                <input type="text" class="form-control" id="${section}${i}" name="${section}[]">
+                <button type="button" class="btn mic-button" onclick="startDictation('${section}${i}')">
+                    <i class="fas fa-microphone"></i>
+                </button>
+            </div>
+        `;
+    }
+    return fieldsHTML;
+        }
+
+
+        // Function to dynamically add fields
+        function addField(section, containerId) {
+    const container = document.getElementById(containerId);
+    const newFieldIndex = container.querySelectorAll('.input-group').length + 1;
+    const newFieldHTML = `
+        <div class="mb-3 input-group" id="${section}${newFieldIndex}Container">
+            <span class="dynamic-field-number">${newFieldIndex}:</span>
+            <input type="text" class="form-control" id="${section}${newFieldIndex}" name="${section}[]">
+            <button type="button" class="btn mic-button" onclick="startDictation('${section}${newFieldIndex}')">
+                <i class="fas fa-microphone"></i>
+            </button>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', newFieldHTML);
+        }
+
+        // Function to handle long press for delete confirmation
+        function handleLongPress(event, containerId) {
             let timer;
             const target = event.target;
 
-            const startTimer = () => {
+            // Start timer on mousedown or touchstart
+            target.onmousedown = target.ontouchstart = function () {
                 timer = setTimeout(() => {
-                    // Show checkboxes and the delete button in the header
-                    document.querySelectorAll('.checkbox-column').forEach(el => el.style.display = 'table-cell');
-                    document.getElementById('bulkDelete').style.display = 'inline-block';
-                    document.getElementById('cancelSelection').style.display = 'inline-block';
-
-                    const deleteCheckbox = document.querySelector(`input[type='checkbox'][data-student-id='${studentId}']`);
-                    if (deleteCheckbox) deleteCheckbox.checked = true;
-                }, 450); // Duration of long press
+                    const deleteDialog = new bootstrap.Modal(document.getElementById('deleteConfirmationDialog'));
+                    deleteDialog.show();
+                    document.getElementById('confirmDelete').onclick = function () {
+                        document.getElementById(containerId).remove();
+                        deleteDialog.hide();
+                    };
+                }, 500); // 1-second delay for long press
             };
 
-            const clearTimer = () => clearTimeout(timer);
-
-            target.addEventListener('mousedown', startTimer);
-            target.addEventListener('mouseup', clearTimer);
-            target.addEventListener('touchstart', startTimer);
-            target.addEventListener('touchend', clearTimer);
+            // Clear timer on mouseup or touchend
+            target.onmouseup = target.ontouchend = function () {
+                clearTimeout(timer);
+            };
         }
 
-        function handleBulkDelete() {
-            const selectedCheckboxes = document.querySelectorAll('input[type="checkbox"].student-checkbox:checked');
-            const deletePromises = [];
 
-            selectedCheckboxes.forEach(checkbox => {
-                const studentId = checkbox.getAttribute('data-student-id');
-                const path = 'graduates';
 
-                deletePromises.push(
-                    db.ref(`${year}/${month}/${path}/details/${studentId}`).remove()
-                        .then(() => db.ref(`${year}/${month}/${path}/PraisingPoints/${studentId}`).remove())
-                        .then(() => db.ref(`${year}/${month}/${path}/PrayerPoints/${studentId}`).remove())
-                );
-            });
 
-            Promise.all(deletePromises)
-                .then(() => {
-                    window.location.reload(); // Refresh the page after bulk deletion
-                })
-                .catch(error => console.error("Error deleting selected graduates:", error));
-        }
+        // Handle form submission with Firebase and loader
+        function submitForm() {
+    // Show the confirmation dialog
+    const confirmationDialog = new bootstrap.Modal(document.getElementById('confirmationDialog'));
+    confirmationDialog.show();
 
-        async function retrieveData() {
-            const path = 'graduates';
-            const dataContainer = document.getElementById('dataContainer');
-            dataContainer.innerHTML = '';
+    // Handle the confirmation
+    document.getElementById('confirmSubmit').onclick = function () {
+        confirmationDialog.hide();
 
-            try {
-                const snapshot = await db.ref(`${year}/${month}/${path}/details`).once('value');
-                const details = snapshot.val();
+        // Show loading screen
+        document.getElementById('loaderContainer').style.display = 'block';
 
-                if (details) {
-                    const sortedDetails = Object.keys(details)
-                        .map(key => ({
-                            id: key,
-                            data: details[key]
-                        }))
-                        .map(student => student.id);
+        // Proceed with form submission
+        const category = document.getElementById('category').value;
+        const name = document.getElementById('name').value;
 
-                    const detailsHtml = await Promise.all(sortedDetails.map(async (studentId, index) => {
-                        const studentData = details[studentId];
+        const gender = category === 'student' ? document.getElementById('gender').value : null;
 
-                        try {
-                            const praisingSnapshot = await db.ref(`${year}/${month}/${path}/PraisingPoints/${studentId}/points`).once('value');
-                            const praisingPoints = praisingSnapshot.val() || {};
-                            const praisingPointsHtml = Object.keys(praisingPoints).map(ppKey => `
-                                <li>${praisingPoints[ppKey]}</li>
-                            `).join('');
+        const today = new Date();
+        const month = today.getMonth() + 1;
+        const year = today.getFullYear();
 
-                            const prayerSnapshot = await db.ref(`${year}/${month}/${path}/PrayerPoints/${studentId}/points`).once('value');
-                            const prayerPoints = prayerSnapshot.val() || {};
-                            const prayerPointsHtml = Object.keys(prayerPoints).map(prayerKey => `
-                                <li>${prayerPoints[prayerKey]}</li>
-                            `).join('');
+        // Collect all praising points inputs (now using consistent naming)
+        const praisingPoints = Array.from(document.querySelectorAll('input[name="praisingPoints[]"]'))
+                                    .map(input => input.value.trim())
+                                    .filter(point => point.length > 0); // Filter out empty points
 
-                            return `
-                                <tr class="student-container" data-student-id="${studentId}" 
-                                    ontouchstart="handleLongPress(event, '${studentId}')" 
-                                    onmousedown="handleLongPress(event, '${studentId}')">
-                                    <td style="text-align: center;" class="checkbox-column">
-    <input type="checkbox" class="student-checkbox" data-student-id="${studentId}">
-</td>
+        // Collect all prayer points inputs (now using consistent naming)
+        const prayerPoints = Array.from(document.querySelectorAll('input[name="prayerPoints[]"]'))
+                                  .map(input => input.value.trim())
+                                  .filter(point => point.length > 0); // Filter out empty points
 
-                                    <td style="text-align: center;">
-                                        <strong>${index + 1}. ${studentData.name}</strong><br>
-                                    </td>
-                                    <td>
-                                        <ul>${praisingPointsHtml}</ul>
-                                    </td>
-                                    <td>
-                                        <ul>${prayerPointsHtml}</ul>
-                                    </td>
-                                </tr>
-                            `;
-                        } catch (error) {
-                            return `<tr><td colspan="4">Error retrieving data for ${studentId}</td></tr>`;
-                        }
-                    }));
+        // Function to generate a unique ID based on text
+        const generateId = (text, category) => {
+            const prefix = category === 'student' ? 'stu_' : 'grad_'; // Prefix based on category
+            return prefix + text
+                .trim()
+                .replace(/[^\w\s]/g, '') // Remove non-alphanumeric characters except spaces
+                .replace(/\s+/g, '_')    // Replace spaces with underscores
+                .toLowerCase();         // Convert to lowercase
+        };
 
-                    dataContainer.innerHTML = detailsHtml.join('');
-                } else {
-                    dataContainer.innerHTML += `<p>No graduate details found for ${month} ${year}.</p>`;
+        const uniqueId = generateId(name, category); // Pass category to generateId
+
+        if (category === 'student') {
+            const branch = document.getElementById('courseBranch').value;
+            const combinedClassBranch = `${branch}`;
+            const phoneNumberElement = document.getElementById('phoneNumber');
+            const phoneNumber = phoneNumberElement.value;
+
+            // Store student details
+            db.ref(`${year}/${month}/students/details/${uniqueId}`).set({
+                name: name,
+                gender: gender,
+                classAndBranch: combinedClassBranch,
+                phoneNumber: phoneNumber
+            }).then(() => {
+                if (praisingPoints.length > 0) {
+                    // Store praising points if available
+                    return db.ref(`${year}/${month}/students/PraisingPoints/${uniqueId}`).set({
+                        points: praisingPoints
+                    });
                 }
-            } catch (error) {
-                dataContainer.innerHTML += `<p>Error retrieving data for ${month} ${year}.</p>`;
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            retrieveData();
-            document.getElementById('selectAll').addEventListener('change', (event) => {
-                const isChecked = event.target.checked;
-                document.querySelectorAll('input[type="checkbox"].student-checkbox').forEach(checkbox => {
-                    checkbox.checked = isChecked;
-                });
-            });
-            document.getElementById('bulkDelete').addEventListener('click', handleBulkDelete);
-            localStorage.clear();
-            Object.defineProperty(window, 'localStorage', {
-                value: {
-                    getItem: () => null,
-                    setItem: () => { },
-                    removeItem: () => { },
-                    clear: () => { }
+            }).then(() => {
+                if (prayerPoints.length > 0) {
+                    // Store prayer points if available
+                    return db.ref(`${year}/${month}/students/PrayerPoints/${uniqueId}`).set({
+                        points: prayerPoints
+                    });
                 }
+            }).then(() => {
+                document.getElementById('loaderContainer').style.display = 'none';
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('prayerRequestForm').reset();
+                document.getElementById('dynamicFields').innerHTML = '';
+                document.getElementById('prayerRequestForm').style.display = 'none';
+            }).catch(error => {
+                console.error("Error writing student data to Firebase Database", error);
+                document.getElementById('loaderContainer').style.display = 'none';
             });
-        });
-        function closefun() {
-    // Hide the checkbox column
-    document.querySelectorAll('.checkbox-column').forEach(el => el.style.display = 'none');
 
-    // Hide the delete and cancel buttons
-    document.getElementById('bulkDelete').style.display = 'none';
-    document.getElementById('cancelSelection').style.display = 'none';
+        } else if (category === 'graduate') {
+            // Store graduate details (no phoneNumber for graduates)
+            db.ref(`${year}/${month}/graduates/details/${uniqueId}`).set({
+                name: name
+            }).then(() => {
+                if (praisingPoints.length > 0) {
+                    // Store praising points if available
+                    return db.ref(`${year}/${month}/graduates/PraisingPoints/${uniqueId}`).set({
+                        points: praisingPoints
+                    });
+                }
+            }).then(() => {
+                if (prayerPoints.length > 0) {
+                    // Store prayer points if available
+                    return db.ref(`${year}/${month}/graduates/PrayerPoints/${uniqueId}`).set({
+                        points: prayerPoints
+                    });
+                }
+            }).then(() => {
+                document.getElementById('loaderContainer').style.display = 'none';
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('prayerRequestForm').reset();
+                document.getElementById('dynamicFields').innerHTML = '';
+                document.getElementById('prayerRequestForm').style.display = 'none';
+            }).catch(error => {
+                console.error("Error writing graduate data to Firebase Database", error);
+                document.getElementById('loaderContainer').style.display = 'none';
+            });
+        } else {
+            console.error("Invalid category value:", category);
+            document.getElementById('loaderContainer').style.display = 'none';
+        }
+    };
+                                          }
 
-    // Uncheck all checkboxes
-    document.querySelectorAll('input[type="checkbox"].student-checkbox').forEach(checkbox => {
-        checkbox.checked = false;
-    });
+        // Speech recognition setup with dual language detection
+        function startDictation(fieldId) {
+    if (window.SpeechRecognition || window.webkitSpeechRecognition) {
+        const recognition = window.SpeechRecognition ? new window.SpeechRecognition() : new window.webkitSpeechRecognition();
+        recognition.lang = 'en-US'; // Use English language for transcription
 
-    // Uncheck the "Select All" checkbox
-    document.getElementById('selectAll').checked = false;
-}
+        recognition.onresult = function (event) {
+            const text = event.results[0][0].transcript;
+            const capitalizedText = text.charAt(0).toUpperCase() + text.slice(1);
+            document.getElementById(fieldId).value = capitalizedText;
+        };
 
+        recognition.onend = function () {
+            document.getElementById('micFeedback').style.display = 'none';
+        };
+
+        // Slight delay before starting recognition
+        setTimeout(() => {
+            recognition.start();
+            document.getElementById('micFeedback').style.display = 'block';
+        }, 300);  // Delay by 300ms
+    } else {
+        alert('Speech Recognition not supported in this browser.');
+    }
+                }
+
+
+        function removeField(button) {
+            button.closest('.input-group').remove();
+            document.querySelectorAll('#dynamicFields .dynamic-field-number').forEach((element, index) => {
+                element.textContent = index + 1;
+            });
+        }
+        localStorage.clear();
     </script>
+
+    <!-- Include Bootstrap JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script defer>
             localStorage.clear();
