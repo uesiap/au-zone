@@ -4,15 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AU ZONE EU & EGF Prayer Requests Data</title>
+    <title>AU Zone EU Prayer Requests Data - Students</title>
     <script>
         window.onload = function() {
             localStorage.clear();
         };
     </script>
     <meta property="og:site_name" content="Melam Rahul">
-    <meta property="og:title" content="AU ZONE EU & EGF Prayer Requests Data">
-    <meta property="og:description" content="See the Prayer Requests Data of AU ZONE EU & EGF">
+    <meta property="og:title" content="AU Zone EU Prayer Requests Data - Students">
+    <meta property="og:description" content="Sis.Joycy, Prayer Secretary">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <!-- Font Awesome -->
     <style>
@@ -106,8 +106,10 @@
                             <option value="students" selected>Students</option>
                             <option value="graduates">Graduates</option>
                         </select>
+                    </div><br>
+                    <div style="display: flex; justify-content: center">
+                    <button type="button" class="btn btn-outline-primary" onclick="submitForm()">Submit</button>
                     </div>
-                    <button type="button" class="btn btn-custom" onclick="submitForm()">Submit</button>
                 </form>
                 <div id="error-message" class="error" style="display: none;"></div>
             </div>
