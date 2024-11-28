@@ -84,39 +84,27 @@
     <div class="container">
         <div class="card">
             <div class="card-header">
-                Select Year and Month to <br>Open Prayer Requests
+                Select Year, Month, and Category to <br>Open Prayer Requests
             </div>
             <div class="card-body">
                 <form id="selectionForm">
                     <div class="form-group">
                         <label for="year" class="form-label">Year</label>
                         <select id="year" class="form-select">
-                            <!-- Populate options with years from 2024 to 2028 -->
-                            <option value="" disabled>Select Year</option>
-                            <option value="2024" selected>2024</option>
-                            <option value="2025">2025</option>
-                            <option value="2026">2026</option>
-                            <option value="2027">2027</option>
-                            <option value="2028">2028</option>
+                            <!-- Options will be populated dynamically -->
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="month" class="form-label">Month</label>
                         <select id="month" class="form-select">
-                            <!-- Populate options with months as numbers -->
-                            <option value="" selected disabled>Select Month</option>
-                            <option value="1">January</option>
-                            <option value="2">February</option>
-                            <option value="3">March</option>
-                            <option value="4">April</option>
-                            <option value="5">May</option>
-                            <option value="6">June</option>
-                            <option value="7">July</option>
-                            <option value="8">August</option>
-                            <option value="9">September</option>
-                            <option value="10">October</option>
-                            <option value="11">November</option>
-                            <option value="12">December</option>
+                            <!-- Options will be populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="category" class="form-label">Category</label>
+                        <select id="category" class="form-select">
+                            <option value="students" selected>Students</option>
+                            <option value="graduates">Graduates</option>
                         </select>
                     </div>
                     <button type="button" class="btn btn-custom" onclick="submitForm()">Submit</button>
@@ -127,6 +115,46 @@
     </div>
 
     <script>
+    // Populate year and month dynamically
+    document.addEventListener("DOMContentLoaded", function () {
+        const yearSelect = document.getElementById('year');
+        const monthSelect = document.getElementById('month');
+
+        // Get current year and month
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth() + 1; // Months are 0-indexed in JavaScript
+
+        // Populate year options
+        const startYear = 2024; // Adjust this as needed
+        const endYear = 2030; // Adjust this as needed
+        for (let year = startYear; year <= endYear; year++) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            if (year === currentYear) {
+                option.selected = true; // Set the current year as default
+            }
+            yearSelect.appendChild(option);
+        }
+
+        // Populate month options
+        const monthNames = [
+            'January', 'February', 'March', 'April', 'May', 
+            'June', 'July', 'August', 'September', 'October', 
+            'November', 'December'
+        ];
+        for (let i = 1; i <= 12; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = monthNames[i - 1];
+            if (i === currentMonth) {
+                option.selected = true; // Set the current month as default
+            }
+            monthSelect.appendChild(option);
+        }
+    });
+
     // Function to encode parameters using Base64
     function encodeParameter(param) {
         return btoa(param); // Base64 encoding
@@ -135,23 +163,30 @@
     function submitForm() {
         const year = document.getElementById('year').value;
         const month = document.getElementById('month').value;
-        
+        const category = document.getElementById('category').value;
+
         const errorMessage = document.getElementById('error-message');
 
-        if (year && month) {
+        if (year && month && category) {
             // Encode parameters
             const encodedYear = encodeParameter(year);
             const encodedMonth = encodeParameter(month);
+            const encodedCategory = encodeParameter(category);
 
-            // Redirect to the receiver page with encoded query parameters
-            window.location.href = `/au-zone/prayer/students_data_page?utm=${encodeURIComponent(encodedYear)}&auth=${encodeURIComponent(encodedMonth)}`;
+            // Redirect to the respective page with encoded query parameters
+            const targetPage = category === 'students' 
+                ? '/au-zone/prayer/students_data_page' 
+                : '/au-zone/prayer/graduates_data_page';
+
+            window.location.href = `${targetPage}?utm=${encodeURIComponent(encodedYear)}&auth=${encodeURIComponent(encodedMonth)}`;
         } else {
-            // Display an error message if year or month is not selected
+            // Display an error message if year, month, or category is not selected
             errorMessage.textContent = 'Please select all fields.';
             errorMessage.style.display = 'block';
         }
     }
     </script>
 </body>
+
 
 </html>
