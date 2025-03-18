@@ -236,21 +236,9 @@
             <h4 class="section-heading">Academic Information</h4>
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label for="course" class="form-label">Course Completed:</label>
+                    <label for="course" class="form-label">Course Completed & College:</label>
                     <input type="text" class="form-control" id="course" name="course"
-                        placeholder="Enter your course/degree" required>
-                </div>&emsp;
-                <div class="col-md-6">
-                    <label for="college" class="form-label">College:</label>
-                    <select class="form-select" id="college" name="college" required>
-                        <option value="" disabled selected>Select your college</option>
-                        <option value="AU College of Arts">AU College of Arts</option>
-                        <option value="AU College of Engineering">AU College of Engineering</option>
-                        <option value="AU College of Law">AU College of Law</option>
-                        <option value="AU College of Pharmacy">AU College of Pharmacy</option>
-                        <option value="AU College of Science">AU College of Science</option>
-                        <option value="AU College of Education">AU College of Education</option>
-                    </select>
+                        placeholder="Enter your course/degree & college" required>
                 </div>
             </div>
 
@@ -352,7 +340,6 @@
             const dob = formData.get('dob');
             const bornAgainDate = formData.get('bornAgainDate');
             const course = formData.get('course');
-            const college = formData.get('college');
             const batchStartYear = formData.get('batchStartYear');
             const batchEndYear = formData.get('batchEndYear');
             const batch = `${batchStartYear}-${batchEndYear}`;
@@ -379,7 +366,6 @@
                     dob,
                     bornAgainDate,
                     course,
-                    college,
                     batchStartYear,
                     batchEndYear,
                     batch,
