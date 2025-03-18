@@ -236,9 +236,14 @@
             <h4 class="section-heading">Academic Information</h4>
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label for="course" class="form-label">Course Completed & College:</label>
+                    <label for="course" class="form-label">Course Completed:</label>
                     <input type="text" class="form-control" id="course" name="course"
-                        placeholder="Enter your course/degree & college" required>
+                        placeholder="Enter your course/degree" required>
+                </div>&emsp;
+                <div class="col-md-6">
+                    <label for="college" class="form-label">College:</label>
+                    <input type="text" class="form-control" id="college" name="college"
+                        placeholder="Enter your college name" required>
                 </div>
             </div>
 
@@ -295,9 +300,9 @@
     </div>
 
     <footer>
-        <p style="margin: 0; font-family: 'Google Sans', sans-serif; font-size: 18px;">© Designed with <i
-                class="fas fa-heart" style="color: #e74c3c;"></i> by <strong>Rahul</strong>&ensp;<a
-                href="https://rahul.serv00.net/profile">Visit Profile</a></p>
+        <p style="margin: 0; font-family: 'Google Sans', sans-serif; font-size: 15px;">© Designed with <i
+                class="fas fa-heart" style="color: #e74c3c;"></i> by <strong><a
+                    href="https://rahul.serv00.net/profile">Rahul</a></strong>&ensp;</p>
     </footer>
 
     <div id="loaderContainer">
@@ -340,6 +345,7 @@
             const dob = formData.get('dob');
             const bornAgainDate = formData.get('bornAgainDate');
             const course = formData.get('course');
+            const college = formData.get('college');
             const batchStartYear = formData.get('batchStartYear');
             const batchEndYear = formData.get('batchEndYear');
             const batch = `${batchStartYear}-${batchEndYear}`;
@@ -366,6 +372,7 @@
                     dob,
                     bornAgainDate,
                     course,
+                    college,
                     batchStartYear,
                     batchEndYear,
                     batch,
