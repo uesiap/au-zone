@@ -148,47 +148,51 @@
 
         // Retrieve and display student data
         db.ref('iceustudents').once('value')
-            .then(snapshot => {
-                const students = snapshot.val();
-                const studentTableBody = document.getElementById('studentTableBody');
+    .then(snapshot => {
+        const students = snapshot.val();
+        const studentTableBody = document.getElementById('studentTableBody');
 
-                // Convert the students object to an array and sort by name
-                const sortedStudents = Object.values(students).sort((a, b) => {
-                    return a.stdName.localeCompare(b.stdName);
-                });
+        // Convert the students object to an array and sort by gender (males first) and then by name
+        const sortedStudents = Object.values(students).sort((a, b) => {
+            if (a.gender === b.gender) {
+                return a.stdName.localeCompare(b.stdName); // Sort by name if gender is the same
+            } else {
+                return a.gender === 'Male' ? -1 : 1; // Males come before females
+            }
+        });
 
-                sortedStudents.forEach(student => {
-                    const row = document.createElement('tr');
+        sortedStudents.forEach(student => {
+            const row = document.createElement('tr');
 
-                    // Format dates for better display
-                    const dobDate = new Date(student.dob);
-                    const formattedDOB = dobDate.toLocaleDateString('en-GB');
+            // Format dates for better display
+            const dobDate = new Date(student.dob);
+            const formattedDOB = dobDate.toLocaleDateString('en-GB');
 
-                    const bornAgainDate = new Date(student.bornAgainDate);
-                    const formattedBornAgainDate = bornAgainDate.toLocaleDateString('en-GB');
+            const bornAgainDate = new Date(student.bornAgainDate);
+            const formattedBornAgainDate = bornAgainDate.toLocaleDateString('en-GB');
 
-                    // Create the batch display with start and end year
-                    const batchDisplay = `${student.batchStartYear}-${student.batchEndYear}`;
+            // Create the batch display with start and end year
+            const batchDisplay = `${student.batchStartYear}-${student.batchEndYear}`;
 
-                    row.innerHTML = `
-                        <td class="name-col">${student.stdName}</td>
-                        <td class="phone-col">${student.phoneNo}</td>
-                        <td class="gender-col">${student.gender}</td>
-                        <td class="native-place-col">${student.nativePlace}</td>
-                        <td class="date-col">${formattedDOB}</td>
-                        <td class="date-col">${formattedBornAgainDate}</td>
-                        <td class="course-college-col">${student.course}<br>${student.college}</td>
-                        <td class="batch-col">${batchDisplay}</td>
-                        <td class="email-col">${student.emailId}</td>
-                        <td class="image-col"><img src="${student.photoURL}" alt="Student Photo"></td>
-                    `;
+            row.innerHTML = `
+                <td class="name-col">${student.stdName}</td>
+                <td class="phone-col">${student.phoneNo}</td>
+                <td class="gender-col">${student.gender}</td>
+                <td class="native-place-col">${student.nativePlace}</td>
+                <td class="date-col">${formattedDOB}</td>
+                <td class="date-col">${formattedBornAgainDate}</td>
+                <td class="course-college-col">${student.course}<br>${student.college}</td>
+                <td class="batch-col">${batchDisplay}</td>
+                <td class="email-col">${student.emailId}</td>
+                <td class="image-col"><img src="${student.photoURL}" alt="Student Photo"></td>
+            `;
 
-                    studentTableBody.appendChild(row);
-                });
-            })
-            .catch(error => {
-                console.error("Error fetching student data:", error);
-            });
+            studentTableBody.appendChild(row);
+        });
+    })
+    .catch(error => {
+        console.error("Error fetching student data:", error);
+    });
     </script>
 </body>
 
