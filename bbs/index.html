@@ -797,14 +797,24 @@
         const waNameBtn = document.getElementById('wa');
 
         function Redirect(element, url = null) {
-            // Get bbsRole from localStorage
-            const bbsRole = localStorage.getItem('bbsRole');
+            // Get bbsRole and bbsName from localStorage
+            const bbsRole = localStorage.getItem('bbsRole') || 'unknown';
+            const bbsName = localStorage.getItem('bbsName') || 'unknown';
 
-            // Redirect to the specified URL with utm_source parameter
-            if (url) {
-                const finalUrl = `${url}?utm_source=${encodeURIComponent(bbsRole || 'unknown')}`;
-                window.location.href = finalUrl;
+            let finalUrl = url;
+
+            // If the URL is for generating a report, add name and role parameters
+            if (url === '/au-zone/bbs/gen-report') {
+                finalUrl = `${url}?name=${encodeURIComponent(bbsName)}&role=${encodeURIComponent(bbsRole)}`;
+            } else {
+                // Default behavior: Only pass utm_source
+                finalUrl = `${url}?utm_source=${encodeURIComponent(bbsRole)}`;
             }
+
+            // Redirect to the final URL
+            window.location.href = finalUrl;
+
+            // Close the navigation drawer (assuming it's a sidebar menu)
             toggleDrawer();
         }
         function openMail() {
