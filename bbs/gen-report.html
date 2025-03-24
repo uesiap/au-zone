@@ -249,57 +249,102 @@
                 Bible Study I/C
             </div>
             <hr>
-            <div class="card-body">
-                <form id="selectionForm">
-                    <div class="form-group" style="margin-top: -20px;">
-                        <label for="year" class="form-label">Portfolio</label>
-                        <input type="text" disabled class="form-control" id="portfolio" placeholder="No Portfolio Found"
-                            required>
+            <form id="selectionForm">
+                <div class="form-group" style="margin-top: -20px;">
+                    <label for="portfolio" class="form-label">Portfolio *</label>
+                    <input type="text" disabled class="form-control" id="portfolio" placeholder="Select Your Portfolio in Home page" required>
+                </div>
+                <div class="form-group">
+                    <label for="name" class="form-label">BBS I/C Name *</label>
+                    <input type="text" disabled class="form-control" id="name" placeholder="Enter Your Name in Home page" required>
+                </div>
+
+                <!-- Academic Year Selection -->
+                <div class="form-group">
+                    <label class="form-label">Academic Year *</label>
+                    <div style="display: flex; gap: 10px;">
+                        <select id="startYear" class="form-control" required onchange="updateEndYear()">
+                            <option value="" selected disabled>Starting Year</option>
+                        </select>
+                        <select id="endYear" class="form-control" required disabled>
+                            <option value="" selected disabled>End Year</option>
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <label for="year" class="form-label">BBS I/C Name</label>
-                        <input type="text" disabled class="form-control" id="name" placeholder="No Name Found" required>
+                </div>
+
+                <!-- Number Selection Field -->
+                <div class="form-group">
+                    <label for="numberSelect" class="form-label">Select Commitee Meeting Number *</label>
+                    <select id="numberSelect" class="form-control" required>
+                        <option value="">Select a Number</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+
+                <hr>
+                <p>Select time frame to generate report in-between those dates</p>
+                <div class="form-group">
+                    <label for="fromDate" class="form-label">From Date *</label>
+                    <input type="date" class="form-control" id="fromDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="toDate" class="form-label">To Date *</label>
+                    <input type="date" class="form-control" id="toDate" required>
+                </div>
+                <hr>
+
+                <!-- Optional Fields -->
+                <div class="form-group">
+                    <label for="praise" class="form-label">Praising Points</label>
+                    <input type="text" class="form-control" id="praise" placeholder="Enter praising points (optional)">
+                </div>
+                <div class="add" onclick="addPraisingInputs()">
+                    Add more
+                </div><br>
+
+                <div class="form-group">
+                    <label for="prayer" class="form-label">Prayer Points</label>
+                    <input type="text" class="form-control" id="prayer" placeholder="Enter prayer points (optional)">
+                </div>
+                <div class="add" onclick="addPrayerInputs()">
+                    Add more
+                </div><br>
+
+                <div class="form-group">
+                    <label for="bbsHostel" class="form-label">BBS Hostels</label>
+                    <input type="text" class="form-control" id="bbsHostel" placeholder="Enter BBS Hostel (optional)">
+                </div>
+                <div class="add" onclick="addBBSHostelInputs()">
+                    Add more
+                </div><br>
+
+                <div class="form-group">
+                    <label for="ebsHostel" class="form-label">EBS Hostels</label>
+                    <input type="text" class="form-control" id="ebsHostel" placeholder="Enter EBS Hostel (optional)">
+                </div>
+                <div class="add" onclick="addEBSHostelInputs()">
+                    Add more
+                </div><br>
+
+                <hr><br>
+                <div class="button-container">
+                    <div class="button" onclick="submitForm()">
+                        <h4 class="answer-choice">Submit</h4>
                     </div>
-                    <hr>
-                    <p>Select time frame to generate report in-between those dates</p>
-                    <div class="form-group">
-                        <label for="year" class="form-label">From Date</label>
-                        <input type="date" class="form-control" id="fromDate" placeholder="From Date" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="year" class="form-label">To Date</label>
-                        <input type="date" class="form-control" id="toDate" placeholder="To Date" required>
-                    </div>
-                    <hr style="color: green;">
-                    <div class="form-group" style="margin-top: 10px;">
-                        <label for="year" class="form-label">Praising Points</label>
-                        <input type="text" class="form-control" id="praise" placeholder="Enter praising points"
-                            required>
-                    </div>
-                    <div class="add"
-                        style="border: 1.5px solid #6750A4; text-align: left; width: fit-content; height: fit-content; padding: 5px; border-radius: 10px;"
-                        onclick="addPraisingInputs()">
-                        Add more
-                    </div><br>
-                    <div class="form-group">
-                        <label for="year" class="form-label">Prayer Points</label>
-                        <input type="text" class="form-control" id="prayer" placeholder="Enter prayer points" required>
-                    </div>
-                    <div class="add"
-                        style="border: 1.5px solid #6750A4; text-align: left; width: fit-content; height: fit-content; padding: 5px; border-radius: 10px;"
-                        onclick="addPrayerInputs()">
-                        <span>Add more</span>
-                    </div><br>
-                    <hr><br>
-                    <div class="button-container">
-                        <div class="button" onclick="submitForm()">
-                            <h4 class="answer-choice">Submit</h4>
-                        </div>
-                    </div><br>
-                </form>
-            </div>
+                </div><br>
+            </form>
         </div>
     </div>
+
     <div class="confirmation-dialog" id="confirmationDialog">
         <div class="confirmation-icon">
             <i class="fas fa-exclamation-circle" style="color: #D32F2F;"></i>
@@ -310,8 +355,8 @@
         <button id="okButton">OK</button>
     </div>
 
-
     <script>
+      
         // Retrieve URL Parameters
         function getUrlParameter(name) {
             const urlParams = new URLSearchParams(window.location.search);
@@ -319,26 +364,56 @@
         }
 
         // Set name and role from URL parameters
-        document.getElementById('name').value = getUrlParameter('name') || 'No Name Found';
-        document.getElementById('portfolio').value = getUrlParameter('role') || 'No Portfolio Found';
+        document.getElementById('name').value = getUrlParameter('name') || 'Enter your name in Home page';
+        document.getElementById('portfolio').value = getUrlParameter('role') || 'Select your portfolio in Home page';
 
         let praiseCount = 1;
         let prayerCount = 1;
+        let bbsHostelCount = 1;
+        let ebsHostelCount = 1;
 
-        // Function to dynamically add praising points
+        // Populate Academic Year Dropdown
+        const currentYear = new Date().getFullYear();
+        const startYearSelect = document.getElementById("startYear");
+        [currentYear - 1, currentYear].forEach(year => {
+            const option = document.createElement("option");
+            option.value = year;
+            option.textContent = year;
+            startYearSelect.appendChild(option);
+        });
+
+        // Update end year based on start year selection
+        function updateEndYear() {
+            const startYearSelect = document.getElementById('startYear');
+            const endYearSelect = document.getElementById('endYear');
+
+            if (startYearSelect.value) {
+                endYearSelect.innerHTML = '<option value="">End Year</option>';
+                const endYears = [parseInt(startYearSelect.value) + 1];
+                endYears.forEach(year => {
+                    const option = document.createElement("option");
+                    option.value = year;
+                    option.textContent = year;
+                    endYearSelect.appendChild(option);
+                });
+                endYearSelect.disabled = false;
+            } else {
+                endYearSelect.innerHTML = '<option value="">End Year</option>';
+                endYearSelect.disabled = true;
+            }
+        }
+
+        // Dynamic input addition functions
         function addPraisingInputs() {
             const praiseContainer = document.createElement('div');
             praiseContainer.classList.add('form-group');
-
-            const label = document.createElement('label');
-            label.htmlFor = `praise-${praiseCount}`;
 
             const input = document.createElement('input');
             input.type = 'text';
             input.classList.add('form-control', 'praise-input');
             input.id = `praise-${praiseCount}`;
+            input.placeholder = 'Enter additional praising points';
 
-            praiseContainer.appendChild(label);
             praiseContainer.appendChild(input);
 
             const addMoreButton = document.querySelector('.add[onclick="addPraisingInputs()"]');
@@ -347,20 +422,16 @@
             praiseCount++;
         }
 
-        // Function to dynamically add prayer points
         function addPrayerInputs() {
             const prayerContainer = document.createElement('div');
             prayerContainer.classList.add('form-group');
-
-            const label = document.createElement('label');
-            label.htmlFor = `prayer-${prayerCount}`;
 
             const input = document.createElement('input');
             input.type = 'text';
             input.classList.add('form-control', 'prayer-input');
             input.id = `prayer-${prayerCount}`;
+            input.placeholder = 'Enter additional prayer points';
 
-            prayerContainer.appendChild(label);
             prayerContainer.appendChild(input);
 
             const addMoreButton = document.querySelector('.add[onclick="addPrayerInputs()"]');
@@ -369,6 +440,41 @@
             prayerCount++;
         }
 
+        function addBBSHostelInputs() {
+            const bbsHostelContainer = document.createElement('div');
+            bbsHostelContainer.classList.add('form-group');
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.classList.add('form-control', 'bbs-hostel-input');
+            input.id = `bbsHostel-${bbsHostelCount}`;
+            input.placeholder = 'Enter additional BBS Hostels';
+
+            bbsHostelContainer.appendChild(input);
+
+            const addMoreButton = document.querySelector('.add[onclick="addBBSHostelInputs()"]');
+            addMoreButton.parentNode.insertBefore(bbsHostelContainer, addMoreButton);
+
+            bbsHostelCount++;
+        }
+
+        function addEBSHostelInputs() {
+            const ebsHostelContainer = document.createElement('div');
+            ebsHostelContainer.classList.add('form-group');
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.classList.add('form-control', 'ebs-hostel-input');
+            input.id = `ebsHostel-${ebsHostelCount}`;
+            input.placeholder = 'Enter additional EBS Hostels';
+
+            ebsHostelContainer.appendChild(input);
+
+            const addMoreButton = document.querySelector('.add[onclick="addEBSHostelInputs()"]');
+            addMoreButton.parentNode.insertBefore(ebsHostelContainer, addMoreButton);
+
+            ebsHostelCount++;
+        }
 
         // Function to show error messages in the dialog
         function showErrorDialog(message) {
@@ -386,93 +492,94 @@
 
         // Form submission with validation
         function submitForm() {
-            const role = document.getElementById('portfolio').value;
-            const name = document.getElementById('name').value;
+            // Required field validations
+            const portfolio = document.getElementById('portfolio').value.trim();
+            const name = document.getElementById('name').value.trim();
+            const startYear = document.getElementById('startYear').value;
+            const endYear = document.getElementById('endYear').value;
+            const selectedNumber = document.getElementById('numberSelect').value;
             const fromDate = document.getElementById('fromDate').value;
             const toDate = document.getElementById('toDate').value;
 
             // Validate Portfolio
-            if (!role || role === 'No Portfolio Found') {
-                showErrorDialog("Portfolio should not be empty");
+            if (!portfolio) {
+                showErrorDialog("Portfolio is required");
                 return;
             }
 
             // Validate Name
-            if (!name || name === 'No Name Found') {
-                showErrorDialog("Name should not be empty");
+            if (!name) {
+                showErrorDialog("Name is required");
+                return;
+            }
+
+            // Validate Academic Year
+            if (!startYear || !endYear) {
+                showErrorDialog("Please select an academic year");
+                return;
+            }
+
+            // Validate Number Selection
+            if (!selectedNumber) {
+                showErrorDialog("Please select a committee meeting number");
                 return;
             }
 
             // Validate From Date
             if (!fromDate) {
-                showErrorDialog("From Date should not be empty");
+                showErrorDialog("From Date is required");
                 return;
             }
 
             // Validate To Date
             if (!toDate) {
-                showErrorDialog("To Date should not be empty");
+                showErrorDialog("To Date is required");
                 return;
             }
 
-            // Collect all praising points
+            // Collect optional fields
             let praisePoints = [];
-
-            // Get the initial praise point
             const initialPraise = document.getElementById('praise').value.trim();
-            if (initialPraise) {
-                praisePoints.push(initialPraise);
-            }
-
-            // Get additional praise points
-            const praiseInputs = document.querySelectorAll('.praise-input');
-            praiseInputs.forEach(input => {
-                if (input.value.trim()) {
-                    praisePoints.push(input.value.trim());
-                }
+            if (initialPraise) praisePoints.push(initialPraise);
+            document.querySelectorAll('.praise-input').forEach(input => {
+                if (input.value.trim()) praisePoints.push(input.value.trim());
             });
 
-            if (praisePoints.length === 0) {
-                showErrorDialog("Please enter at least one praising point");
-                return;
-            }
-
-            // Collect all prayer points
             let prayerPoints = [];
-
-            // Get the initial prayer point
             const initialPrayer = document.getElementById('prayer').value.trim();
-            if (initialPrayer) {
-                prayerPoints.push(initialPrayer);
-            }
-
-            // Get additional prayer points
-            const prayerInputs = document.querySelectorAll('.prayer-input');
-            prayerInputs.forEach(input => {
-                if (input.value.trim()) {
-                    prayerPoints.push(input.value.trim());
-                }
+            if (initialPrayer) prayerPoints.push(initialPrayer);
+            document.querySelectorAll('.prayer-input').forEach(input => {
+                if (input.value.trim()) prayerPoints.push(input.value.trim());
             });
 
-            if (prayerPoints.length === 0) {
-                showErrorDialog("Please enter at least one prayer point");
-                return;
-            }
+            let bbsHostels = [];
+            const initialBBSHostel = document.getElementById('bbsHostel').value.trim();
+            if (initialBBSHostel) bbsHostels.push(initialBBSHostel);
+            document.querySelectorAll('.bbs-hostel-input').forEach(input => {
+                if (input.value.trim()) bbsHostels.push(input.value.trim());
+            });
 
-            // Convert points to comma-separated strings
+            let ebsHostels = [];
+            const initialEBSHostel = document.getElementById('ebsHostel').value.trim();
+            if (initialEBSHostel) ebsHostels.push(initialEBSHostel);
+            document.querySelectorAll('.ebs-hostel-input').forEach(input => {
+                if (input.value.trim()) ebsHostels.push(input.value.trim());
+            });
+
+            // Convert optional points to comma-separated strings
             const praisePointsStr = praisePoints.join(',');
             const prayerPointsStr = prayerPoints.join(',');
+            const bbsHostelsStr = bbsHostels.join(',');
+            const ebsHostelsStr = ebsHostels.join(',');
 
             // Build URL with parameters
-            const finalUrl = `/au-zone/bbs/final-report?name=${encodeURIComponent(name)}&role=${encodeURIComponent(role)}&startDate=${encodeURIComponent(fromDate)}&endDate=${encodeURIComponent(toDate)}&praise-points=${encodeURIComponent(praisePointsStr)}&prayer-points=${encodeURIComponent(prayerPointsStr)}`;
+            const finalUrl = `/au-zone/bbs/final-report?name=${encodeURIComponent(name)}&role=${encodeURIComponent(portfolio)}&y1=${encodeURIComponent(startYear)}&y2=${encodeURIComponent(endYear)}&selectedNumber=${encodeURIComponent(selectedNumber)}&startDate=${encodeURIComponent(fromDate)}&endDate=${encodeURIComponent(toDate)}&praise-points=${encodeURIComponent(praisePointsStr)}&prayer-points=${encodeURIComponent(prayerPointsStr)}&bbs-hostels=${encodeURIComponent(bbsHostelsStr)}&ebs-hostels=${encodeURIComponent(ebsHostelsStr)}`;
 
             // Redirect to the final URL
             window.location.href = finalUrl;
         }
-
     </script>
-
 </body>
-
+</html>
 
 </html>
