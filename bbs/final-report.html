@@ -96,6 +96,12 @@
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        header, footer {
+            display: none;
         }
 
         .container {
@@ -361,7 +367,7 @@
                         document.getElementById('campus').textContent = 'NORTH Girls';
                         document.getElementById('page-title').textContent = 'NORTH Girls - Bible Study Report';
                         break;
-                    case "North Women BBS I/C":
+                    case "North Womens BBS I/C":
                         bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/North/Womens/');
                         document.getElementById('campus').textContent = 'NORTH Womens';
                         document.getElementById('page-title').textContent = 'NORTH Womens - Bible Study Report';
