@@ -100,7 +100,8 @@
             print-color-adjust: exact;
         }
 
-        header, footer {
+        header,
+        footer {
             display: none;
         }
 
@@ -634,11 +635,22 @@
             }, 5000);
         });
         function hidePrint(button) {
+            // Store the current URL
+            const originalUrl = window.location.href;
+            const cleanUrl = window.location.origin + window.location.pathname;
+
+            // Remove URL parameters
+            window.history.pushState({}, document.title, cleanUrl);
+
+            // Hide the button
             button.style.display = 'none';
+
+            // Print the page
             window.print();
 
-            // Show it again after 2 seconds (2000 ms)
+            // Restore the original URL and show the button after 2 seconds
             setTimeout(() => {
+                window.history.pushState({}, document.title, originalUrl);
                 button.style.display = 'block';
             }, 2000);
         }
