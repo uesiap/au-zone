@@ -820,7 +820,7 @@
         <div class="confirmation-message" id="confirmationMessage">
             Data Uploaded Successfully!
         </div>
-        <button id="okkButton">OK</button>
+        <button onclick="window.location.reload()">OK</button>
     </div>
 
     <script>
@@ -1040,7 +1040,7 @@
             case "North Girls BBS I/C":
                 bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/North/Girls/');
                 break;
-            case "North Women BBS I/C":
+            case "North Womens BBS I/C":
                 bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/North/Womens/');
                 break;
             case "South Boys BBS I/C":
