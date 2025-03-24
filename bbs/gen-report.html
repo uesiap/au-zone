@@ -2,6 +2,78 @@
 <html lang="en">
 
 <head>
+    <script>
+        (function () {
+            // Keys to retain in localStorage
+            const keysToRetain = ["bbsRole", "bbsName"];
+
+            // Retrieve the values of the keys to retain
+            const valuesToRetain = {};
+            keysToRetain.forEach((key) => {
+                const value = localStorage.getItem(key);
+                if (value !== null) {
+                    valuesToRetain[key] = value;
+                }
+            });
+
+            // Clear all keys in localStorage except the specified keys
+            Object.keys(localStorage).forEach((key) => {
+                if (!keysToRetain.includes(key)) {
+                    localStorage.removeItem(key);
+                }
+            });
+
+            // Restore the retained key-value pairs
+            Object.keys(valuesToRetain).forEach((key) => {
+                localStorage.setItem(key, valuesToRetain[key]);
+            });
+
+            console.log("LocalStorage cleared except for:", keysToRetain);
+
+            // Clear sessionStorage
+            sessionStorage.clear();
+            console.log("SessionStorage cleared.");
+
+            // Clear IndexedDB data
+            const clearIndexedDB = () => {
+                if (!window.indexedDB) {
+                    console.warn("IndexedDB is not supported by this browser.");
+                    return;
+                }
+                indexedDB.databases().then((databases) => {
+                    databases.forEach((db) => {
+                        indexedDB.deleteDatabase(db.name);
+                        console.log(`Deleted IndexedDB: ${db.name}`);
+                    });
+                }).catch((error) => {
+                    console.error("Error clearing IndexedDB:", error);
+                });
+            };
+
+            // Clear browser cache
+            const clearCache = () => {
+                if ("caches" in window) {
+                    caches.keys().then((cacheNames) => {
+                        cacheNames.forEach((cacheName) => {
+                            caches.delete(cacheName);
+                            console.log(`Deleted Cache: ${cacheName}`);
+                        });
+                    }).catch((error) => {
+                        console.error("Error clearing cache:", error);
+                    });
+                } else {
+                    console.warn("Cache API is not supported by this browser.");
+                }
+            };
+
+            // Execute cleanup functions
+            clearIndexedDB();
+            clearCache();
+
+            console.log(`All data cleared except for ${keysToRetain.join(", ")} in localStorage.`);
+        })();
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generate Report for BBS</title>
@@ -252,11 +324,13 @@
             <form id="selectionForm">
                 <div class="form-group" style="margin-top: -20px;">
                     <label for="portfolio" class="form-label">Portfolio *</label>
-                    <input type="text" disabled class="form-control" id="portfolio" placeholder="Select Your Portfolio in Home page" required>
+                    <input type="text" disabled class="form-control" id="portfolio"
+                        placeholder="Select Your Portfolio in Home page" required>
                 </div>
                 <div class="form-group">
                     <label for="name" class="form-label">BBS I/C Name *</label>
-                    <input type="text" disabled class="form-control" id="name" placeholder="Enter Your Name in Home page" required>
+                    <input type="text" disabled class="form-control" id="name"
+                        placeholder="Enter Your Name in Home page" required>
                 </div>
 
                 <!-- Academic Year Selection -->
@@ -356,7 +430,7 @@
     </div>
 
     <script>
-      
+
         // Retrieve URL Parameters
         function getUrlParameter(name) {
             const urlParams = new URLSearchParams(window.location.search);
@@ -580,6 +654,7 @@
         }
     </script>
 </body>
+
 </html>
 
 </html>
