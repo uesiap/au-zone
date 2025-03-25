@@ -795,12 +795,14 @@
             </div>
 
             <div class="nav-divider"></div>
-            <!-- Share Button to Open Dialog -->
-            <div class="nav-item" id="share" onclick="showDialog()">
-                <i class="fas fa-share"></i>
-                <span>Share</span>
-            </div>
-            <div class="nav-divider"></div>
+            <span id="share-app" style="display: none;">
+                <!-- Share Button to Open Dialog -->
+                <div class="nav-item" id="share" onclick="showDialog()">
+                    <i class="fas fa-share"></i>
+                    <span>Share App</span>
+                </div>
+                <div class="nav-divider"></div>
+            </span>
 
             <div class="nav-item" id="chooseBBSRoleBtn">
                 <i class="fas fa-users-cog"></i>
@@ -1402,6 +1404,15 @@
         // Event Listeners
         document.getElementById('shareButton').addEventListener('click', shareContent);
         document.getElementById('okkkButton').addEventListener('click', hideDialog);
+
+        let temporalChronicle = new Date();
+        let lunarPhaseIndex = temporalChronicle.getMonth(); // 0 for Jan, 1 for Feb, etc.
+
+        // Check if it's March (2) or April (3)
+        if (lunarPhaseIndex === 2 || lunarPhaseIndex === 3) {
+            let portalOfSharing = document.getElementById('share-app');
+            portalOfSharing.style.display = 'block';
+        }
     </script>
     <script>
         let deferredPrompt;
