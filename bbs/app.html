@@ -160,19 +160,14 @@
             background-color: #0056b3;
         }
 
-        .install-btnn {
-            background-color: green;
+        .installed-btn {
+            background-color: #6c757d;
             color: #fff;
             border: none;
             padding: 12px 20px;
             border-radius: 8px;
-            cursor: pointer;
+            cursor: default;
             font-size: 0.95rem;
-            transition: background-color 0.3s;
-        }
-
-        .install-btnn:hover {
-            background-color: #0056b3;
         }
     </style>
 
@@ -192,29 +187,52 @@
         <img src="https://uesiap.github.io/au-zone/bbs/icons/icon-192.png" alt="App Icon" class="app-icon" />
         <div class="app-info">
             <div class="app-title">BS I/C</div>
+            <div class="app-description">Open the installed app</div>
         </div>&ensp;
-        <button class="install-btn" onclick="window.open('https://uesiap.github.io/au-zone/bbs/', '_blank')">Open
-            App</button>
+        <button class="install-btn" onclick="window.open('https://uesiap.github.io/au-zone/bbs/', '_blank')">Open App</button>
+    </div>
+    <div class="app-banner" id="app-banner-installed" style="display: none">
+        <img src="https://uesiap.github.io/au-zone/bbs/icons/icon-192.png" alt="App Icon" class="app-icon" />
+        <div class="app-info">
+            <div class="app-title">BS I/C</div>
+            <div class="app-description">App is already installed</div>
+        </div>&ensp;
+        <button class="installed-btn">Installed</button>
     </div>
     <script>
         let deferredPrompt;
 
-        // Function to hide both banners
+        // Function to hide all banners
         function hideBanners() {
             const appBanner = document.getElementById('app-banner');
             const appBannerOpen = document.getElementById('app-banner-open');
+            const appBannerInstalled = document.getElementById('app-banner-installed');
 
             if (appBanner) appBanner.style.display = 'none';
             if (appBannerOpen) appBannerOpen.style.display = 'none';
+            if (appBannerInstalled) appBannerInstalled.style.display = 'none';
         }
 
         // Function to show the open app banner
         function showOpenAppBanner() {
             const appBanner = document.getElementById('app-banner');
             const appBannerOpen = document.getElementById('app-banner-open');
+            const appBannerInstalled = document.getElementById('app-banner-installed');
 
             if (appBanner) appBanner.style.display = 'none';
             if (appBannerOpen) appBannerOpen.style.display = 'flex';
+            if (appBannerInstalled) appBannerInstalled.style.display = 'none';
+        }
+
+        // Function to show the installed banner
+        function showInstalledBanner() {
+            const appBanner = document.getElementById('app-banner');
+            const appBannerOpen = document.getElementById('app-banner-open');
+            const appBannerInstalled = document.getElementById('app-banner-installed');
+
+            if (appBanner) appBanner.style.display = 'none';
+            if (appBannerOpen) appBannerOpen.style.display = 'none';
+            if (appBannerInstalled) appBannerInstalled.style.display = 'flex';
         }
 
         // Capture the beforeinstallprompt event
@@ -226,11 +244,13 @@
 
             const appBanner = document.getElementById('app-banner');
             const appBannerOpen = document.getElementById('app-banner-open');
+            const appBannerInstalled = document.getElementById('app-banner-installed');
 
             // Show install banner if not in standalone mode
             if (!isRunningAsPWA()) {
                 if (appBanner) appBanner.style.display = 'flex';
                 if (appBannerOpen) appBannerOpen.style.display = 'none';
+                if (appBannerInstalled) appBannerInstalled.style.display = 'none';
             }
         });
 
@@ -254,26 +274,31 @@
                             deferredPrompt.userChoice.then((choiceResult) => {
                                 if (choiceResult.outcome === 'accepted') {
                                     console.log('User accepted the install prompt');
+                                    // Show installed banner after installation
+                                    showInstalledBanner();
                                 } else {
                                     console.log('User dismissed the install prompt');
                                 }
                                 deferredPrompt = null;
-
-                                // Hide install banner
-                                const appBanner = document.getElementById('app-banner');
-                                if (appBanner) appBanner.style.display = 'none';
                             });
                         }
-                    } else if (button.textContent.toLowerCase() === 'open') {
+                    } else if (button.textContent.toLowerCase() === 'open app') {
                         // Open app in new tab
                         window.open('https://uesiap.github.io/au-zone/bbs/', '_blank');
                     }
                 });
             });
 
-            // Show open app banner only when not in PWA mode
-            if (!isRunningAsPWA()) {
-                showOpenAppBanner();
+            // Check if app is already installed
+            if (isRunningAsPWA()) {
+                showInstalledBanner();
+            } else {
+                // Check if the app is installed but not running as PWA
+                if (isAppInstalled()) {
+                    showInstalledBanner();
+                } else {
+                    showOpenAppBanner();
+                }
             }
         });
 
@@ -284,9 +309,30 @@
                 window.navigator.standalone === true;
         }
 
-        // Always hide banners if running as PWA
-        if (isRunningAsPWA()) {
-            hideBanners();
+        // Detect if app is installed (but might not be running as PWA)
+        function isAppInstalled() {
+            // Check if the app is in the list of installed apps
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                return true;
+            }
+            
+            // For iOS
+            if (navigator.standalone) {
+                return true;
+            }
+            
+            // For Android
+            if (window.navigator.standalone === true) {
+                return true;
+            }
+            
+            // Check if the beforeinstallprompt event was never fired (suggests already installed)
+            if ('beforeinstallprompt' in window && !deferredPrompt) {
+                return true;
+            }
+            
+            return false;
         }
     </script>
 </body>
+</html>
