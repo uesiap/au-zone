@@ -191,17 +191,60 @@
     const installDialog = document.getElementById('install-dialog');
     const closeButton = document.getElementById('close-install-dialog');
     const nativeInstallButton = document.getElementById('native-install-button');
+    const scrollContainer = document.querySelector('.scroll-container');
+    const screenshotUrls = [
+      "https://uesiap.github.io/au-zone/bbs/screens/short1.jpg",
+      "https://uesiap.github.io/au-zone/bbs/screens/short2.jpg",
+      "https://uesiap.github.io/au-zone/bbs/screens/short3.jpg",
+      "https://uesiap.github.io/au-zone/bbs/screens/short4.jpg"
+    ];
+
+    // Create placeholder elements
+    function createPlaceholders() {
+      screenshotUrls.forEach((url, index) => {
+        const placeholder = document.createElement('div');
+        placeholder.className = 'screenshot-placeholder';
+        placeholder.innerHTML = `Screenshot ${index + 1}`;
+        placeholder.dataset.src = url;
+        scrollContainer.appendChild(placeholder);
+      });
+    }
+
+    // Load actual images when dialog opens
+    function loadScreenshots() {
+      const placeholders = document.querySelectorAll('.screenshot-placeholder');
+      placeholders.forEach(placeholder => {
+        const img = new Image();
+        img.src = placeholder.dataset.src;
+        img.alt = `App Screenshot`;
+        img.style.height = '250px';
+        img.style.borderRadius = '5px';
+        img.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+        img.style.border = '1px solid #ddd';
+        
+        img.onload = () => {
+          placeholder.replaceWith(img);
+        };
+        
+        img.onerror = () => {
+          placeholder.innerHTML = 'Failed to load';
+          placeholder.style.backgroundColor = '#ffebee';
+        };
+      });
+    }
 
     // Only show install button if PWA can be installed
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
       installButton.style.display = 'flex';
+      createPlaceholders(); // Prepare placeholders when app is installable
     });
 
     // Install button click handler
     installButton.addEventListener('click', () => {
       if (deferredPrompt) {
+        loadScreenshots(); // Load actual images only when dialog opens
         installDialog.showModal();
       } else {
         alert("To install this app, look for 'Add to Home Screen' in your browser's menu.");
@@ -231,7 +274,19 @@
     window.addEventListener('appinstalled', () => {
       console.log('App was installed');
       installButton.style.display = 'none';
+      
+      // Check if we need to clean up any resources
+      if (window.matchMedia('(display-mode: standalone)').matches) {
+        // App is running in standalone mode, no need to keep screenshots
+        const images = scrollContainer.querySelectorAll('img');
+        images.forEach(img => img.remove());
+      }
     });
+
+    // Check if already installed
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      installButton.style.display = 'none';
+    }
   </script>
 </body>
 </html>
