@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AU - ZONE Bibel Study I/C</title>
+  <meta name="theme-color" content="#1a5276">
+  <meta name="description" content="Submit Bible Study data, Edit/Review, Generate Report, etc">
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/au-zone/bbs/manifest.json">
+  
+  <!-- Icons -->
+  <link rel="icon" href="/au-zone/bbs/icons/icon-32.png" type="image/png">
+  <link rel="apple-touch-icon" href="/au-zone/bbs/icons/icon-192.png">
+  
+  <!-- Styles -->
+  <style>
+    /* Main app styles */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    
+    /* Install button styles */
+    #install-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #1a5276;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      z-index: 1000;
+    }
+    
+    /* Installation dialog styles */
+    #install-dialog {
+      width: 90%;
+      max-width: 500px;
+      border-radius: 10px;
+      border: none;
+      padding: 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    
+    #install-dialog::backdrop {
+      background-color: rgba(0,0,0,0.5);
+    }
+    
+    #install-dialog header {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      gap: 12px;
+      background: #1a5276;
+      color: white;
+      border-radius: 10px 10px 0 0;
+    }
+    
+    #install-dialog header img {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+    }
+    
+    #install-dialog .heading {
+      flex: 1;
+    }
+    
+    #install-dialog .heading span:first-child {
+      font-weight: bold;
+      display: block;
+      font-size: 1.2em;
+    }
+    
+    #install-dialog .heading span:last-child {
+      font-size: 0.9em;
+      opacity: 0.9;
+    }
+    
+    #install-dialog .screenshots {
+      padding: 15px;
+      background: white;
+    }
+    
+    #install-dialog .scroll-container {
+      display: flex;
+      gap: 15px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+    
+    #install-dialog .scroll-container img {
+      height: 250px;
+      border-radius: 5px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border: 1px solid #ddd;
+    }
+    
+    #install-dialog footer {
+      padding: 15px;
+      text-align: right;
+      background: #f5f5f5;
+      border-radius: 0 0 10px 10px;
+      border-top: 1px solid #ddd;
+    }
+    
+    #native-install-button {
+      background: #1a5276;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    
+    #close-install-dialog {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 1.5em;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- Your Bible Study App Content -->
+  <h1>Bible Study Manager</h1>
+  
+  <!-- Install Button -->
+  <button id="install-button">
+    <span>Install App</span>
+  </button>
+
+  <!-- Installation Popup Dialog -->
+  <dialog id="install-dialog">
+    <section>
+      <header>
+        <img src="/au-zone/bbs/icons/icon-192.png" alt="Bible Study App Icon">
+        <div class="heading">
+          <span>Bible Study Manager</span>
+          <span>Organize your biblical studies</span>
+        </div>
+        <button id="close-install-dialog">✕</button>
+      </header>
+
+      <div class="screenshots">
+        <div class="scroll-container">
+          <img src="/au-zone/bbs/screens/short1.jpg" alt="App Screenshot 1">
+          <img src="/au-zone/bbs/screens/short2.jpg" alt="App Screenshot 2">
+          <img src="/au-zone/bbs/screens/short3.jpg" alt="App Screenshot 3">
+          <img src="/au-zone/bbs/screens/short4.jpg" alt="App Screenshot 4">
+        </div>
+      </div>
+
+      <footer>
+        <button id="native-install-button">Install App</button>
+      </footer>
+    </section>
+  </dialog>
+
+  <script>
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/au-zone/bbs/service-worker.js')
+          .then(registration => {
+            console.log('Service Worker registered');
+          })
+          .catch(err => {
+            console.log('Service Worker registration failed: ', err);
+          });
+      });
+    }
+
+    // PWA Installation Logic
+    let deferredPrompt;
+    const installButton = document.getElementById('install-button');
+    const installDialog = document.getElementById('install-dialog');
+    const closeButton = document.getElementById('close-install-dialog');
+    const nativeInstallButton = document.getElementById('native-install-button');
+
+    // Only show install button if PWA can be installed
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installButton.style.display = 'flex';
+    });
+
+    // Install button click handler
+    installButton.addEventListener('click', () => {
+      if (deferredPrompt) {
+        installDialog.showModal();
+      } else {
+        alert("To install this app, look for 'Add to Home Screen' in your browser's menu.");
+      }
+    });
+
+    // Close dialog
+    closeButton.addEventListener('click', () => {
+      installDialog.close();
+    });
+
+    // Native install button in dialog
+    nativeInstallButton.addEventListener('click', () => {
+      installDialog.close();
+      deferredPrompt.prompt();
+      
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User installed the app');
+          installButton.style.display = 'none';
+        }
+        deferredPrompt = null;
+      });
+    });
+
+    // Hide install button after installation
+    window.addEventListener('appinstalled', () => {
+      console.log('App was installed');
+      installButton.style.display = 'none';
+    });
+  </script>
+</body>
+</html>
