@@ -1307,9 +1307,11 @@
             const appBanner = document.getElementById('app-banner');
             const appBannerOpen = document.getElementById('app-banner-open');
 
-            // Show install banner
-            if (appBanner) appBanner.style.display = 'flex';
-            if (appBannerOpen) appBannerOpen.style.display = 'none';
+            // Show install banner if not in standalone mode
+            if (!isRunningAsPWA()) {
+                if (appBanner) appBanner.style.display = 'flex';
+                if (appBannerOpen) appBannerOpen.style.display = 'none';
+            }
         });
 
         // Register service worker
@@ -1349,16 +1351,20 @@
                 });
             });
 
-            // Always show open app banner when page loads in browser
-            showOpenAppBanner();
+            // Show open app banner only when not in PWA mode
+            if (!isRunningAsPWA()) {
+                showOpenAppBanner();
+            }
         });
 
         // Detect if app is already running as PWA
         function isRunningAsPWA() {
-            return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+            return window.matchMedia('(display-mode: standalone)').matches ||
+                navigator.standalone ||
+                window.navigator.standalone === true;
         }
 
-        // Hide banners if running as PWA
+        // Always hide banners if running as PWA
         if (isRunningAsPWA()) {
             hideBanners();
         }
