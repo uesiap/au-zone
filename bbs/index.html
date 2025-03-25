@@ -1277,64 +1277,91 @@
         }
     </script>
     <script>
+        let deferredPrompt;
+
+        // Capture the beforeinstallprompt event
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing
+            e.preventDefault();
+            // Stash the event so it can be triggered later
+            deferredPrompt = e;
+
+            // Check if the app is already installed
+            if ('getInstalledRelatedApps' in navigator) {
+                navigator.getInstalledRelatedApps().then(apps => {
+                    const appBanner = document.getElementById('app-banner');
+                    const appBannerOpen = document.getElementById('app-banner-open');
+
+                    if (apps.length > 0) {
+                        // App is already installed
+                        appBanner.style.display = 'none';
+                        appBannerOpen.style.display = 'flex';
+                    } else {
+                        // App is not installed
+                        appBanner.style.display = 'flex';
+                        appBannerOpen.style.display = 'none';
+                    }
+                });
+            } else {
+                // Fallback for browsers without getInstalledRelatedApps
+                const appBanner = document.getElementById('app-banner');
+                const appBannerOpen = document.getElementById('app-banner-open');
+
+                // Always show install banner if install prompt is available
+                appBanner.style.display = 'flex';
+                appBannerOpen.style.display = 'none';
+            }
+        });
+
         // Register service worker
         if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.register('/au-zone/bbs/service-worker.js')
-            .then(() => console.log('Service Worker Registered'))
-            .catch(error => console.error('Service Worker Registration Failed:', error));
+            navigator.serviceWorker.register('/au-zone/bbs/service-worker.js')
+                .then(() => console.log('Service Worker Registered'))
+                .catch(error => console.error('Service Worker Registration Failed:', error));
         }
-      
-        const appBanner = document.getElementById('app-banner');
-        const appBanneropen = document.getElementById('app-banner-open');
-        const installButton = document.querySelector('.install-btn');
-      
-        // Detect if app is installed or running as a PWA
-        function isRunningAsPWA() {
-          return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-        }
-      
-        // Show the correct banner
-        if (isRunningAsPWA()) {
-          console.log('App is installed and running as a PWA');
-          appBanner.style.display = 'none';
-          appBanneropen.style.display = 'none';
-        } else {
-          // Check if app is installed using `getInstalledRelatedApps` for supported browsers
-          if ('getInstalledRelatedApps' in navigator) {
-            navigator.getInstalledRelatedApps().then(apps => {
-              if (apps.length > 0) {
-                console.log('App is installed but not running as a PWA');
-                appBanneropen.style.display = 'flex';
-              } else {
-                console.log('App is not installed');
-                appBanner.style.display = 'flex';
-              }
+
+        // Handle install button click
+        document.addEventListener('DOMContentLoaded', () => {
+            const installButtons = document.querySelectorAll('.install-btn');
+
+            installButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    if (button.textContent.toLowerCase() === 'install') {
+                        // Install app
+                        if (deferredPrompt) {
+                            deferredPrompt.prompt();
+                            deferredPrompt.userChoice.then((choiceResult) => {
+                                if (choiceResult.outcome === 'accepted') {
+                                    console.log('User accepted the install prompt');
+                                } else {
+                                    console.log('User dismissed the install prompt');
+                                }
+                                deferredPrompt = null;
+
+                                // Hide install banner
+                                document.getElementById('app-banner').style.display = 'none';
+                                document.getElementById('app-banner-open').style.display = 'flex';
+                            });
+                        }
+                    } else if (button.textContent.toLowerCase() === 'open') {
+                        // Open app in new tab
+                        window.open('https://uesiap.github.io/au-zone/bbs/', '_blank');
+                    }
+                });
             });
-          } else {
-            // Fallback for browsers without `getInstalledRelatedApps`
-            console.log('Cannot detect app installation status. Displaying install banner.');
-            appBanner.style.display = 'flex';
-          }
+        });
+
+        // Detect if app is already running as PWA
+        function isRunningAsPWA() {
+            return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
         }
-      
-        // Handle the install button click
-        if (installButton) {
-          installButton.addEventListener('click', () => {
-            if (deferredPrompt) {
-              deferredPrompt.prompt();
-              deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                  console.log('User accepted the install prompt');
-                } else {
-                  console.log('User dismissed the install prompt');
-                }
-                deferredPrompt = null;
-                appBanner.style.display = 'none';
-              });
-            }
-          });
+
+        // Hide banners if running as PWA
+        if (isRunningAsPWA()) {
+            document.getElementById('app-banner').style.display = 'none';
+            document.getElementById('app-banner-open').style.display = 'none';
         }
-      </script>      
+    </script>
 </body>
 
 </html>
