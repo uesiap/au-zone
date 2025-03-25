@@ -686,6 +686,21 @@
         .install-btn:hover {
             background-color: #0056b3;
         }
+
+        .install-btnn {
+            background-color: green;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background-color 0.3s;
+        }
+
+        .install-btnn:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 
@@ -813,7 +828,16 @@
             <div class="app-description">Submit, Edit, Generate Report</div>
         </div>&ensp;
         <button class="install-btn">Install</button>
-    </div><br>
+    </div>
+    <div class="app-banner" id="app-banner-open" style="display: none">
+        <img src="https://uesiap.github.io/au-zone/bbs/icons/icon-192.png" alt="App Icon" class="app-icon" />
+        <div class="app-info">
+            <div class="app-title">BS I/C</div>
+        </div>&ensp;
+        <button class="install-btn" onclick="window.open('https://uesiap.github.io/au-zone/bbs/', '_blank')">Open
+            App</button>
+    </div>
+    <br>
     <div
         style="display: flex;align-items: center;justify-content: left; margin-left: 1rem; margin-bottom: -1rem; margin-top: -1rem;">
         <p style="color: black;font-weight: 500;">Hello,</p>&ensp;<p id="greetings"
@@ -1263,6 +1287,7 @@
         // Detect if the app is installed
         let deferredPrompt;
         const appBanner = document.getElementById('app-banner');
+        const appBanneropen = document.getElementById('app-banner-open');
         const installButton = document.querySelector('.install-btn');
 
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -1272,6 +1297,7 @@
             // Check if app is not installed (PWA)
             if (window.matchMedia('(display-mode: standalone)').matches) {
                 console.log('App is already installed');
+                appBanneropen.style.display = 'flex';
             } else {
                 appBanner.style.display = 'flex'; // Show the banner
             }
