@@ -1286,31 +1286,12 @@
             // Stash the event so it can be triggered later
             deferredPrompt = e;
 
-            // Check if the app is already installed
-            if ('getInstalledRelatedApps' in navigator) {
-                navigator.getInstalledRelatedApps().then(apps => {
-                    const appBanner = document.getElementById('app-banner');
-                    const appBannerOpen = document.getElementById('app-banner-open');
+            const appBanner = document.getElementById('app-banner');
+            const appBannerOpen = document.getElementById('app-banner-open');
 
-                    if (apps.length > 0) {
-                        // App is already installed
-                        appBanner.style.display = 'none';
-                        appBannerOpen.style.display = 'flex';
-                    } else {
-                        // App is not installed
-                        appBanner.style.display = 'flex';
-                        appBannerOpen.style.display = 'none';
-                    }
-                });
-            } else {
-                // Fallback for browsers without getInstalledRelatedApps
-                const appBanner = document.getElementById('app-banner');
-                const appBannerOpen = document.getElementById('app-banner-open');
-
-                // Always show install banner if install prompt is available
-                appBanner.style.display = 'flex';
-                appBannerOpen.style.display = 'none';
-            }
+            // Always default to showing the install banner
+            appBanner.style.display = 'flex';
+            appBannerOpen.style.display = 'none';
         });
 
         // Register service worker
@@ -1340,7 +1321,6 @@
 
                                 // Hide install banner
                                 document.getElementById('app-banner').style.display = 'none';
-                                document.getElementById('app-banner-open').style.display = 'flex';
                             });
                         }
                     } else if (button.textContent.toLowerCase() === 'open') {
