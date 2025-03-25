@@ -1279,51 +1279,62 @@
     <script>
         // Register service worker
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/au-zone/bbs/service-worker.js')
-                .then(() => console.log('Service Worker Registered'))
-                .catch(error => console.error('Service Worker Registration Failed:', error));
+          navigator.serviceWorker.register('/au-zone/bbs/service-worker.js')
+            .then(() => console.log('Service Worker Registered'))
+            .catch(error => console.error('Service Worker Registration Failed:', error));
         }
-
-        // Detect if the app is installed
-        let deferredPrompt;
+      
         const appBanner = document.getElementById('app-banner');
         const appBanneropen = document.getElementById('app-banner-open');
         const installButton = document.querySelector('.install-btn');
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-
-            // Check if app is not installed (PWA)
-            if (window.matchMedia('(display-mode: standalone)').matches) {
-                console.log('App is already installed');
-                appBanneropen.style.display = 'flex';
-            } else {
-                appBanner.style.display = 'flex'; // Show the banner
-            }
-        });
-
-        // Handle install button click
-        installButton.addEventListener('click', () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        console.log('User accepted the install prompt');
-                    } else {
-                        console.log('User dismissed the install prompt');
-                    }
-                    deferredPrompt = null;
-                    appBanner.style.display = 'none';
-                });
-            }
-        });
-
-        // Hide banner if app is installed or running as PWA
-        if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) {
-            appBanner.style.display = 'none';
+      
+        // Detect if app is installed or running as a PWA
+        function isRunningAsPWA() {
+          return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
         }
-    </script>
+      
+        // Show the correct banner
+        if (isRunningAsPWA()) {
+          console.log('App is installed and running as a PWA');
+          appBanner.style.display = 'none';
+          appBanneropen.style.display = 'none';
+        } else {
+          // Check if app is installed using `getInstalledRelatedApps` for supported browsers
+          if ('getInstalledRelatedApps' in navigator) {
+            navigator.getInstalledRelatedApps().then(apps => {
+              if (apps.length > 0) {
+                console.log('App is installed but not running as a PWA');
+                appBanneropen.style.display = 'flex';
+              } else {
+                console.log('App is not installed');
+                appBanner.style.display = 'flex';
+              }
+            });
+          } else {
+            // Fallback for browsers without `getInstalledRelatedApps`
+            console.log('Cannot detect app installation status. Displaying install banner.');
+            appBanner.style.display = 'flex';
+          }
+        }
+      
+        // Handle the install button click
+        if (installButton) {
+          installButton.addEventListener('click', () => {
+            if (deferredPrompt) {
+              deferredPrompt.prompt();
+              deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                  console.log('User accepted the install prompt');
+                } else {
+                  console.log('User dismissed the install prompt');
+                }
+                deferredPrompt = null;
+                appBanner.style.display = 'none';
+              });
+            }
+          });
+        }
+      </script>      
 </body>
 
 </html>
