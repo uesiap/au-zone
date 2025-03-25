@@ -1279,6 +1279,24 @@
     <script>
         let deferredPrompt;
 
+        // Function to hide both banners
+        function hideBanners() {
+            const appBanner = document.getElementById('app-banner');
+            const appBannerOpen = document.getElementById('app-banner-open');
+
+            if (appBanner) appBanner.style.display = 'none';
+            if (appBannerOpen) appBannerOpen.style.display = 'none';
+        }
+
+        // Function to show the open app banner
+        function showOpenAppBanner() {
+            const appBanner = document.getElementById('app-banner');
+            const appBannerOpen = document.getElementById('app-banner-open');
+
+            if (appBanner) appBanner.style.display = 'none';
+            if (appBannerOpen) appBannerOpen.style.display = 'flex';
+        }
+
         // Capture the beforeinstallprompt event
         window.addEventListener('beforeinstallprompt', (e) => {
             // Prevent the mini-infobar from appearing
@@ -1289,9 +1307,9 @@
             const appBanner = document.getElementById('app-banner');
             const appBannerOpen = document.getElementById('app-banner-open');
 
-            // Always default to showing the install banner
-            appBanner.style.display = 'flex';
-            appBannerOpen.style.display = 'none';
+            // Show install banner
+            if (appBanner) appBanner.style.display = 'flex';
+            if (appBannerOpen) appBannerOpen.style.display = 'none';
         });
 
         // Register service worker
@@ -1301,7 +1319,7 @@
                 .catch(error => console.error('Service Worker Registration Failed:', error));
         }
 
-        // Handle install button click
+        // Handle button clicks
         document.addEventListener('DOMContentLoaded', () => {
             const installButtons = document.querySelectorAll('.install-btn');
 
@@ -1320,7 +1338,8 @@
                                 deferredPrompt = null;
 
                                 // Hide install banner
-                                document.getElementById('app-banner').style.display = 'none';
+                                const appBanner = document.getElementById('app-banner');
+                                if (appBanner) appBanner.style.display = 'none';
                             });
                         }
                     } else if (button.textContent.toLowerCase() === 'open') {
@@ -1329,6 +1348,9 @@
                     }
                 });
             });
+
+            // Always show open app banner when page loads in browser
+            showOpenAppBanner();
         });
 
         // Detect if app is already running as PWA
@@ -1338,8 +1360,7 @@
 
         // Hide banners if running as PWA
         if (isRunningAsPWA()) {
-            document.getElementById('app-banner').style.display = 'none';
-            document.getElementById('app-banner-open').style.display = 'none';
+            hideBanners();
         }
     </script>
 </body>
