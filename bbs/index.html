@@ -74,9 +74,35 @@
         })();
     </script>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BBS I/C Portal | AU ZONE</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- App Title and Description -->
+    <meta name="description" content="Submit, Edit, Generate Report using BS I/C App." />
+
+    <!-- App Theme and Colors -->
+    <meta name="theme-color" content="#fff" />
+    <meta name="background-color" content="#ffffff" />
+
+    <!-- Favicon and Icons -->
+    <link rel="icon" href="/au-zone/bbs/icons/icon-32.png" type="image/png">
+    <link rel="apple-touch-icon" href="/au-zone/bbs/icons/icon-192.png">
+
+    <!-- Web App Manifest for PWA -->
+    <link rel="manifest" href="/au-zone/bbs/manifest.json" />
+    <link rel="canonical" href="https://uesiap.github.io/au-zone/bbs/" />
+
+    <meta property="og:title" content="AU - ZONE Bibel Study I/C" />
+    <meta property="og:description" content="Submit, Edit, Generate Report using BS I/C App." />
+    <meta property="og:image" content="https://uesiap.github.io/au-zone/bbs/icons/icon-512.png" />
+    <meta property="og:url" content="https://uesiap.github.io/au-zone/bbs/" />
+    <meta property="og:type" content="website" />
+
+    <!-- Enable Standalone Mode on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="BS I/C" />
+    <title>AU - ZONE Bibel Study I/C</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
@@ -610,6 +636,56 @@
         .confirmation-dialo button:hover {
             background: #5a46a1;
         }
+
+        .app-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f7f9fc;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 16px;
+            max-width: 600px;
+            margin: 20px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .app-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+        }
+
+        .app-info {
+            flex: 1;
+            margin-left: 16px;
+        }
+
+        .app-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .app-description {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .install-btn {
+            background-color: green;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background-color 0.3s;
+        }
+
+        .install-btn:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 
@@ -729,7 +805,15 @@
         </div>
         <button id="okButton">OK</button>
     </div>
-    <br><br><br><br><br>
+    <br><br><br><br>
+    <div class="app-banner" id="app-banner">
+        <img src="https://uesiap.github.io/au-zone/bbs/icons/icon-192.png" alt="App Icon" class="app-icon" />
+        <div class="app-info">
+            <div class="app-title">BS I/C</div>
+            <div class="app-description">Submit, Edit, Generate Report</div>
+        </div>&ensp;
+        <button class="install-btn">Install</button>
+    </div><br>
     <div
         style="display: flex;align-items: center;justify-content: left; margin-left: 1rem; margin-bottom: -1rem; margin-top: -1rem;">
         <p style="color: black;font-weight: 500;">Hello,</p>&ensp;<p id="greetings"
@@ -1166,6 +1250,52 @@
                     console.error('Error saving data: ', error);
                 });
             });
+        }
+    </script>
+    <script>
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/au-zone/bbs/service-worker.js')
+                .then(() => console.log('Service Worker Registered'))
+                .catch(error => console.error('Service Worker Registration Failed:', error));
+        }
+
+        // Detect if the app is installed
+        let deferredPrompt;
+        const appBanner = document.getElementById('app-banner');
+        const installButton = document.querySelector('.install-btn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+
+            // Check if app is not installed (PWA)
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                console.log('App is already installed');
+            } else {
+                appBanner.style.display = 'flex'; // Show the banner
+            }
+        });
+
+        // Handle install button click
+        installButton.addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    } else {
+                        console.log('User dismissed the install prompt');
+                    }
+                    deferredPrompt = null;
+                    appBanner.style.display = 'none';
+                });
+            }
+        });
+
+        // Hide banner if app is installed or running as PWA
+        if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) {
+            appBanner.style.display = 'none';
         }
     </script>
 </body>
