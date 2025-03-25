@@ -1,292 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AU - ZONE Bibel Study I/C</title>
-  <meta name="theme-color" content="#1a5276">
-  <meta name="description" content="Submit Bible Study data, Edit/Review, Generate Report, etc">
-  
-  <!-- PWA Manifest -->
-  <link rel="manifest" href="/au-zone/bbs/manifest.json">
-  
-  <!-- Icons -->
-  <link rel="icon" href="/au-zone/bbs/icons/icon-32.png" type="image/png">
-  <link rel="apple-touch-icon" href="/au-zone/bbs/icons/icon-192.png">
-  
-  <!-- Styles -->
-  <style>
-    /* Main app styles */
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f5f5f5;
-      color: #333;
-    }
-    
-    /* Install button styles */
-    #install-button {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #1a5276;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      z-index: 1000;
-    }
-    
-    /* Installation dialog styles */
-    #install-dialog {
-      width: 90%;
-      max-width: 500px;
-      border-radius: 10px;
-      border: none;
-      padding: 0;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    }
-    
-    #install-dialog::backdrop {
-      background-color: rgba(0,0,0,0.5);
-    }
-    
-    #install-dialog header {
-      display: flex;
-      align-items: center;
-      padding: 15px;
-      gap: 12px;
-      background: #1a5276;
-      color: white;
-      border-radius: 10px 10px 0 0;
-    }
-    
-    #install-dialog header img {
-      width: 48px;
-      height: 48px;
-      border-radius: 8px;
-    }
-    
-    #install-dialog .heading {
-      flex: 1;
-    }
-    
-    #install-dialog .heading span:first-child {
-      font-weight: bold;
-      display: block;
-      font-size: 1.2em;
-    }
-    
-    #install-dialog .heading span:last-child {
-      font-size: 0.9em;
-      opacity: 0.9;
-    }
-    
-    #install-dialog .screenshots {
-      padding: 15px;
-      background: white;
-    }
-    
-    #install-dialog .scroll-container {
-      display: flex;
-      gap: 15px;
-      overflow-x: auto;
-      padding-bottom: 10px;
-    }
-    
-    #install-dialog .scroll-container img {
-      height: 250px;
-      border-radius: 5px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      border: 1px solid #ddd;
-    }
-    
-    #install-dialog footer {
-      padding: 15px;
-      text-align: right;
-      background: #f5f5f5;
-      border-radius: 0 0 10px 10px;
-      border-top: 1px solid #ddd;
-    }
-    
-    #native-install-button {
-      background: #1a5276;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 1em;
-    }
-    
-    #close-install-dialog {
-      background: transparent;
-      border: none;
-      color: white;
-      font-size: 1.5em;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <!-- Your Bible Study App Content -->
-  <h1>Bible Study Manager</h1>
-  
-  <!-- Install Button -->
-  <button id="install-button">
-    <span>Install App</span>
-  </button>
+    <script>
+        (function () {
+            // Keys to retain in localStorage
+            const keysToRetain = ["bbsRole", "bbsName"];
 
-  <!-- Installation Popup Dialog -->
-  <dialog id="install-dialog">
-    <section>
-      <header>
-        <img src="/au-zone/bbs/icons/icon-192.png" alt="Bible Study App Icon">
-        <div class="heading">
-          <span>Bible Study Manager</span>
-          <span>Organize your biblical studies</span>
-        </div>
-        <button id="close-install-dialog">✕</button>
-      </header>
+            // Retrieve the values of the keys to retain
+            const valuesToRetain = {};
+            keysToRetain.forEach((key) => {
+                const value = localStorage.getItem(key);
+                if (value !== null) {
+                    valuesToRetain[key] = value;
+                }
+            });
 
-      <div class="screenshots">
-        <div class="scroll-container">
-          <img src="https://uesiap.github.io/au-zone/bbs/screens/short1.jpg" alt="App Screenshot 1">
-          <img src="https://uesiap.github.io/au-zone/bbs/screens/short2.jpg" alt="App Screenshot 2">
-          <img src="https://uesiap.github.io/au-zone/bbs/screens/short3.jpg" alt="App Screenshot 3">
-          <img src="https://uesiap.github.io/au-zone/bbs/screens/short4.jpg" alt="App Screenshot 4">
-        </div>
-      </div>
+            // Clear all keys in localStorage except the specified keys
+            Object.keys(localStorage).forEach((key) => {
+                if (!keysToRetain.includes(key)) {
+                    localStorage.removeItem(key);
+                }
+            });
 
-      <footer>
-        <button id="native-install-button">Install App</button>
-      </footer>
-    </section>
-  </dialog>
+            // Restore the retained key-value pairs
+            Object.keys(valuesToRetain).forEach((key) => {
+                localStorage.setItem(key, valuesToRetain[key]);
+            });
 
-  <script>
-    // Register Service Worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/au-zone/bbs/service-worker.js')
-          .then(registration => {
-            console.log('Service Worker registered');
-          })
-          .catch(err => {
-            console.log('Service Worker registration failed: ', err);
-          });
-      });
-    }
+            console.log("LocalStorage cleared except for:", keysToRetain);
 
-    // PWA Installation Logic
-    let deferredPrompt;
-    const installButton = document.getElementById('install-button');
-    const installDialog = document.getElementById('install-dialog');
-    const closeButton = document.getElementById('close-install-dialog');
-    const nativeInstallButton = document.getElementById('native-install-button');
-    const scrollContainer = document.querySelector('.scroll-container');
-    const screenshotUrls = [
-      "https://uesiap.github.io/au-zone/bbs/screens/short1.jpg",
-      "https://uesiap.github.io/au-zone/bbs/screens/short2.jpg",
-      "https://uesiap.github.io/au-zone/bbs/screens/short3.jpg",
-      "https://uesiap.github.io/au-zone/bbs/screens/short4.jpg"
-    ];
+            // Clear sessionStorage
+            sessionStorage.clear();
+            console.log("SessionStorage cleared.");
 
-    // Create placeholder elements
-    function createPlaceholders() {
-      screenshotUrls.forEach((url, index) => {
-        const placeholder = document.createElement('div');
-        placeholder.className = 'screenshot-placeholder';
-        placeholder.innerHTML = `Screenshot ${index + 1}`;
-        placeholder.dataset.src = url;
-        scrollContainer.appendChild(placeholder);
-      });
-    }
+            // Clear IndexedDB data
+            const clearIndexedDB = () => {
+                if (!window.indexedDB) {
+                    console.warn("IndexedDB is not supported by this browser.");
+                    return;
+                }
+                indexedDB.databases().then((databases) => {
+                    databases.forEach((db) => {
+                        indexedDB.deleteDatabase(db.name);
+                        console.log(`Deleted IndexedDB: ${db.name}`);
+                    });
+                }).catch((error) => {
+                    console.error("Error clearing IndexedDB:", error);
+                });
+            };
 
-    // Load actual images when dialog opens
-    function loadScreenshots() {
-      const placeholders = document.querySelectorAll('.screenshot-placeholder');
-      placeholders.forEach(placeholder => {
-        const img = new Image();
-        img.src = placeholder.dataset.src;
-        img.alt = `App Screenshot`;
-        img.style.height = '250px';
-        img.style.borderRadius = '5px';
-        img.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-        img.style.border = '1px solid #ddd';
-        
-        img.onload = () => {
-          placeholder.replaceWith(img);
-        };
-        
-        img.onerror = () => {
-          placeholder.innerHTML = 'Failed to load';
-          placeholder.style.backgroundColor = '#ffebee';
-        };
-      });
-    }
+            // Clear browser cache
+            const clearCache = () => {
+                if ("caches" in window) {
+                    caches.keys().then((cacheNames) => {
+                        cacheNames.forEach((cacheName) => {
+                            caches.delete(cacheName);
+                            console.log(`Deleted Cache: ${cacheName}`);
+                        });
+                    }).catch((error) => {
+                        console.error("Error clearing cache:", error);
+                    });
+                } else {
+                    console.warn("Cache API is not supported by this browser.");
+                }
+            };
 
-    // Only show install button if PWA can be installed
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      installButton.style.display = 'flex';
-      createPlaceholders(); // Prepare placeholders when app is installable
-    });
+            // Execute cleanup functions
+            clearIndexedDB();
+            clearCache();
 
-    // Install button click handler
-    installButton.addEventListener('click', () => {
-      if (deferredPrompt) {
-        loadScreenshots(); // Load actual images only when dialog opens
-        installDialog.showModal();
-      } else {
-        alert("To install this app, look for 'Add to Home Screen' in your browser's menu.");
-      }
-    });
+            console.log(`All data cleared except for ${keysToRetain.join(", ")} in localStorage.`);
+        })();
+    </script>
 
-    // Close dialog
-    closeButton.addEventListener('click', () => {
-      installDialog.close();
-    });
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    // Native install button in dialog
-    nativeInstallButton.addEventListener('click', () => {
-      installDialog.close();
-      deferredPrompt.prompt();
-      
-      deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === 'accepted') {
-          console.log('User installed the app');
-          installButton.style.display = 'none';
+    <!-- App Title and Description -->
+    <meta name="description" content="Submit, Edit, Generate Report using BS I/C App." />
+
+    <!-- App Theme and Colors -->
+    <meta name="theme-color" content="#fff" />
+    <meta name="background-color" content="#ffffff" />
+
+    <!-- Favicon and Icons -->
+    <link rel="icon" href="/au-zone/bbs/icons/icon-32.png" type="image/png">
+    <link rel="apple-touch-icon" href="/au-zone/bbs/icons/icon-192.png">
+
+    <!-- Web App Manifest for PWA -->
+    <link rel="manifest" href="/au-zone/bbs/manifest.json" />
+    <link rel="canonical" href="https://uesiap.github.io/au-zone/bbs/" />
+
+    <meta property="og:title" content="AU - ZONE Bible Study I/C App" />
+    <meta property="og:description" content="Submit, Edit, Generate Report using BS I/C App." />
+    <meta property="og:image" content="https://uesiap.github.io/au-zone/bbs/icons/icon-192.png" />
+    <meta property="og:url" content="https://uesiap.github.io/au-zone/bbs/" />
+    <meta property="og:type" content="website" />
+
+    <!-- Enable Standalone Mode on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="BS I/C" />
+    <title>AU - ZONE Bible Study I/C App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .app-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f7f9fc;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 16px;
+            max-width: 600px;
+            margin: 20px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
         }
-        deferredPrompt = null;
-      });
-    });
 
-    // Hide install button after installation
-    window.addEventListener('appinstalled', () => {
-      console.log('App was installed');
-      installButton.style.display = 'none';
-      
-      // Check if we need to clean up any resources
-      if (window.matchMedia('(display-mode: standalone)').matches) {
-        // App is running in standalone mode, no need to keep screenshots
-        const images = scrollContainer.querySelectorAll('img');
-        images.forEach(img => img.remove());
-      }
-    });
+        .app-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+        }
 
-    // Check if already installed
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      installButton.style.display = 'none';
-    }
-  </script>
+        .app-info {
+            flex: 1;
+            margin-left: 16px;
+        }
+
+        .app-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .app-description {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .install-btn {
+            background-color: green;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background-color 0.3s;
+        }
+
+        .install-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .install-btnn {
+            background-color: green;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background-color 0.3s;
+        }
+
+        .install-btnn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
+</head>
+
+<body>
+    <br><br><br><br>
+    <div class="app-banner" id="app-banner" style="display: none">
+        <img src="https://uesiap.github.io/au-zone/bbs/icons/icon-192.png" alt="App Icon" class="app-icon" />
+        <div class="app-info">
+            <div class="app-title">BS I/C</div>
+            <div class="app-description">Submit, Edit, Generate Report</div>
+        </div>&ensp;
+        <button class="install-btn">Install</button>
+    </div>
+    <div class="app-banner" id="app-banner-open" style="display: none">
+        <img src="https://uesiap.github.io/au-zone/bbs/icons/icon-192.png" alt="App Icon" class="app-icon" />
+        <div class="app-info">
+            <div class="app-title">BS I/C</div>
+        </div>&ensp;
+        <button class="install-btn" onclick="window.open('https://uesiap.github.io/au-zone/bbs/', '_blank')">Open
+            App</button>
+    </div>
+    <script>
+        let deferredPrompt;
+
+        // Function to hide both banners
+        function hideBanners() {
+            const appBanner = document.getElementById('app-banner');
+            const appBannerOpen = document.getElementById('app-banner-open');
+
+            if (appBanner) appBanner.style.display = 'none';
+            if (appBannerOpen) appBannerOpen.style.display = 'none';
+        }
+
+        // Function to show the open app banner
+        function showOpenAppBanner() {
+            const appBanner = document.getElementById('app-banner');
+            const appBannerOpen = document.getElementById('app-banner-open');
+
+            if (appBanner) appBanner.style.display = 'none';
+            if (appBannerOpen) appBannerOpen.style.display = 'flex';
+        }
+
+        // Capture the beforeinstallprompt event
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing
+            e.preventDefault();
+            // Stash the event so it can be triggered later
+            deferredPrompt = e;
+
+            const appBanner = document.getElementById('app-banner');
+            const appBannerOpen = document.getElementById('app-banner-open');
+
+            // Show install banner if not in standalone mode
+            if (!isRunningAsPWA()) {
+                if (appBanner) appBanner.style.display = 'flex';
+                if (appBannerOpen) appBannerOpen.style.display = 'none';
+            }
+        });
+
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/au-zone/bbs/service-worker.js')
+                .then(() => console.log('Service Worker Registered'))
+                .catch(error => console.error('Service Worker Registration Failed:', error));
+        }
+
+        // Handle button clicks
+        document.addEventListener('DOMContentLoaded', () => {
+            const installButtons = document.querySelectorAll('.install-btn');
+
+            installButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    if (button.textContent.toLowerCase() === 'install') {
+                        // Install app
+                        if (deferredPrompt) {
+                            deferredPrompt.prompt();
+                            deferredPrompt.userChoice.then((choiceResult) => {
+                                if (choiceResult.outcome === 'accepted') {
+                                    console.log('User accepted the install prompt');
+                                } else {
+                                    console.log('User dismissed the install prompt');
+                                }
+                                deferredPrompt = null;
+
+                                // Hide install banner
+                                const appBanner = document.getElementById('app-banner');
+                                if (appBanner) appBanner.style.display = 'none';
+                            });
+                        }
+                    } else if (button.textContent.toLowerCase() === 'open') {
+                        // Open app in new tab
+                        window.open('https://uesiap.github.io/au-zone/bbs/', '_blank');
+                    }
+                });
+            });
+
+            // Show open app banner only when not in PWA mode
+            if (!isRunningAsPWA()) {
+                showOpenAppBanner();
+            }
+        });
+
+        // Detect if app is already running as PWA
+        function isRunningAsPWA() {
+            return window.matchMedia('(display-mode: standalone)').matches ||
+                navigator.standalone ||
+                window.navigator.standalone === true;
+        }
+
+        // Always hide banners if running as PWA
+        if (isRunningAsPWA()) {
+            hideBanners();
+        }
+    </script>
 </body>
-</html>
