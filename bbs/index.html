@@ -92,7 +92,7 @@
     <link rel="manifest" href="/au-zone/bbs/manifest.json" />
     <link rel="canonical" href="https://uesiap.github.io/au-zone/bbs/" />
 
-    <meta property="og:title" content="AU - ZONE Bibel Study I/C" />
+    <meta property="og:title" content="AU - ZONE Bible Study I/C App" />
     <meta property="og:description" content="Submit, Edit, Generate Report using BS I/C App." />
     <meta property="og:image" content="https://uesiap.github.io/au-zone/bbs/icons/icon-192.png" />
     <meta property="og:url" content="https://uesiap.github.io/au-zone/bbs/" />
@@ -102,7 +102,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="BS I/C" />
-    <title>AU - ZONE Bibel Study I/C</title>
+    <title>AU - ZONE Bible Study I/C App</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
@@ -701,6 +701,60 @@
         .install-btnn:hover {
             background-color: #0056b3;
         }
+
+        .shareDialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            background: #FFFFFF;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            z-index: 1002;
+            width: 290px;
+            max-width: 90%;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .shareDialog.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .shareIcon .fa-check-circle {
+            font-size: 3rem;
+            color: #4CAF50;
+            margin-bottom: 1rem;
+        }
+
+        .shareMessage {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.95rem;
+            background: #6750A4;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #5a46a1;
+        }
     </style>
 </head>
 
@@ -740,6 +794,12 @@
                 <span>Generate Report</span>
             </div>
 
+            <div class="nav-divider"></div>
+            <!-- Share Button to Open Dialog -->
+            <div class="nav-item" id="share" onclick="showDialog()">
+                <i class="fas fa-share"></i>
+                <span>Share</span>
+            </div>
             <div class="nav-divider"></div>
 
             <div class="nav-item" id="chooseBBSRoleBtn">
@@ -981,6 +1041,18 @@
             Data Uploaded Successfully!
         </div>
         <button id="okkButton" onclick="window.location.reload()">Okay</button>
+    </div>
+
+    <!-- Share Dialog Box -->
+    <div class="shareDialog" id="share-dialog">
+        <div class="shareIcon">
+            <i class="fas fa-exclamation-circle" style="color: #D32F2F; font-size: 3rem;"></i>
+        </div>
+        <div class="shareMessage confirmation-message">
+            Share only with your successor. Please Keep it Confidential.
+        </div>
+        <button id="shareButton">Share</button>
+        <button id="okkkButton" style="background-color: grey;">OK</button>
     </div>
 
     <script>
@@ -1275,6 +1347,61 @@
                 });
             });
         }
+
+        // Show the dialog
+        function showDialog() {
+            toggleDrawer();
+            const dialog = document.getElementById('share-dialog');
+            dialog.classList.add('active');
+        }
+
+        // Hide the dialog
+        function hideDialog() {
+            const dialog = document.getElementById('share-dialog');
+            dialog.classList.remove('active');
+        }
+
+        // Share the content using Web Share API
+        function shareContent() {
+            /* const dialog = document.getElementById('share-dialog');
+             dialog.classList.remove('active');
+             if (navigator.share) {
+                 try {
+                     const title = document.querySelector('meta[property="og:title"]').content;
+                     const description = document.querySelector('meta[property="og:description"]').content;
+                     const url = document.querySelector('meta[property="og:url"]').content;
+ 
+                     await navigator.share({
+                         title: title,
+                         text: `App: *${title}*\n\nDiscription: *${description}*\n\n*${url}*`,
+                     });
+ 
+                     console.log('App shared successfully');
+                 } catch (error) {
+                     console.error('Error sharing:', error);
+                 }
+             } else {
+                 alert('Sharing Not Working.');
+             }*/
+            // Retrieve the role from localStorage
+            const bbsRole = localStorage.getItem('bbsRole');
+
+            if (bbsRole) {
+                const baseUrl = "https://rahul.serv00.net/AMS/BS";
+                const finalUrl = `${baseUrl}?utm_source=${encodeURIComponent(bbsRole)}`;
+
+                // Redirect to the final URL
+                window.location.href = finalUrl;
+            } else {
+                console.error("No Portfolio found.");
+            }
+
+        }
+
+
+        // Event Listeners
+        document.getElementById('shareButton').addEventListener('click', shareContent);
+        document.getElementById('okkkButton').addEventListener('click', hideDialog);
     </script>
     <script>
         let deferredPrompt;
