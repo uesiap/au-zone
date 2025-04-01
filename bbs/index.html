@@ -128,9 +128,9 @@
 
         /* App Bar */
         .action-bar {
-            background: #FFFFFF;
-            color: #1d1d1d;
-            border-bottom: 1.5px solid #6750A4;
+            background: #6750A4;
+            color: #FFFFFF;
+            border-bottom: 2px dashed #FFFFFF;
             padding: 0.75rem 1.5rem;
             display: flex;
             align-items: center;
@@ -144,9 +144,14 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
         }
 
+        hr {
+            border-bottom: 2px dotted black;
+        }
+
         .app-title {
             font-size: 1.75rem;
             font-weight: 600;
+            color: white;
             letter-spacing: 0.025rem;
         }
 
@@ -157,6 +162,7 @@
             font-size: 2.25rem;
             cursor: pointer;
             width: 3rem;
+            color: white;
             height: 3rem;
             display: flex;
             align-items: center;
@@ -175,9 +181,9 @@
         .nav-drawer {
             position: fixed;
             top: 5rem;
-            left: -340px;
+            left: -290px;
             /* Changed from right to left */
-            width: 340px;
+            width: 290px;
             height: calc(100vh - 5rem);
             background: #FFFFFF;
             box-shadow: 2px 0 12px rgba(0, 0, 0, 0.08);
@@ -195,7 +201,7 @@
         }
 
         .nav-drawer.open {
-            transform: translateX(340px);
+            transform: translateX(290px);
             /* Changed direction */
         }
 
@@ -244,16 +250,17 @@
         }
 
         .nav-item span {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 500;
             color: #333;
         }
 
 
         .nav-divider {
-            height: 1px;
+            /*height: 1px;
             background: #e0e0e0;
-            margin: 1.25rem 0;
+            margin: 1.25rem 0;*/
+            border-bottom: 2px dashed #555;
         }
 
         /* User Info Container */
@@ -765,15 +772,16 @@
             <button class="menu-button" id="menuButton">
                 <i class="fas fa-bars"></i>
             </button>
-            <span class="app-title">AU ZONE BBS I/C</span>
+            <span class="app-title" style="color: white;">AU ZONE BBS I/C</span>
         </div>
     </div>
 
     <!-- Navigation Drawer -->
     <div class="nav-drawer" id="navDrawer">
-        <div class="nav-header" style="height: 7.5rem; margin-top: -1rem;">
-            <div class="nav-title">Welcome,</div>
-            <div class="nav-subtitle" id="greet">BBS Incharge</div>
+        <div class="nav-header"
+            style="height: 7.5rem; margin-top: -1rem; background-color: #F3EDF7; border-bottom: 2px dashed #555;">
+            <div class="nav-title" style="color: #555;">Welcome,</div>
+            <div class="nav-subtitle" id="greet" style="color: #1d1d1d;">BBS Incharge</div>
         </div>
 
         <!-- User Info Container -->
@@ -795,6 +803,7 @@
             </div>
 
             <div class="nav-divider"></div>
+            <div style="margin-bottom: 10px;"></div>
             <span id="share-app" style="display: none;">
                 <!-- Share Button to Open Dialog -->
                 <div class="nav-item" id="share" onclick="showDialog()">
@@ -802,6 +811,7 @@
                     <span>Share App</span>
                 </div>
                 <div class="nav-divider"></div>
+                <div style="margin-bottom: 10px;"></div>
             </span>
 
             <div class="nav-item" id="chooseBBSRoleBtn">
@@ -825,12 +835,12 @@
                 <div class="user-info-value" id="selectedNameDisplay">Not entered</div>
             </div>
 
-            <hr style="margin-top: 10px; margin-bottom: 10px;">
+            <div class="nav-divider" style="margin-bottom: 15px;"></div>
             <div class="nav-section-heading">Contact Admin</div>
 
             <div class="nav-item" id="mail" onclick="openMail()">
                 <i class="fa-regular fa-envelope"></i>
-                <span>mrahul.eu@gmail.com</span>
+                <span>mrahul.eu</span>
             </div>
 
             <div class="nav-item" id="wa" onclick="openWhatsApp()">
@@ -838,7 +848,7 @@
                 <span>9347450441</span>
             </div>
 
-            <hr style="margin-top: 10px; margin-bottom: 10px;">
+            <div class="nav-divider" style="margin-bottom: 15px;"></div>
             <div class="nav-section-heading">BBS App</div>
             <div class="app-version" style="margin-bottom: 1rem; margin-left: 1rem; margin-top: 1rem;">
                 <span style="font-size: 1rem; font-weight: bold;">App Version: 1.0</span>
@@ -857,10 +867,13 @@
             <option value="" selected disabled>-- Select Role --</option>
             <option value="North Boys BBS I/C">North Boys BBS I/C</option>
             <option value="North Girls BBS I/C">North Girls BBS I/C</option>
+            <option value="North Girls EBS I/C">North Girls EBS I/C</option>
             <option value="North Womens BBS I/C">North Womens BBS I/C</option>
             <option value="South Boys BBS I/C">South Boys BBS I/C</option>
             <option value="South Girls BBS I/C">South Girls BBS I/C</option>
             <option value="Maharanipet BBS I/C">Maharanipet BBS I/C</option>
+            <option value="Maharanipet EBS I/C">Maharanipet EBS I/C</option>
+            <option value="BC Hostel BBS I/C">BC Hostel BBS I/C</option>
         </select>
         <button id="confirmRoleBtn">Confirm Selection</button>
     </div>
@@ -1017,16 +1030,16 @@
                         <option value="Sun">Sunday</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="type">Bible Study Type: EBS/BBS</label>
+                <div class="form-group" id="studyTypeGroup">
+                    <label for="type" id="typeLabel">Bible Study Type:</label>
                     <select
-                        style="background-color: #f8f9fa;border-bottom: 2px solid #6750A4;border-top: 2px solid #f8f9fa;border-left: 2px solid #f8f9fa;border-right: 2px solid #f8f9fa;"
+                        style="background-color: #f8f9fa; border-bottom: 2px solid #6750A4; border-top: 2px solid #f8f9fa; border-left: 2px solid #f8f9fa; border-right: 2px solid #f8f9fa;"
                         id="type" name="type" required>
                         <option value="" selected disabled>select bible study type</option>
-                        <option value="EBS">EBS</option>
-                        <option value="BBS">BBS</option>
+                        <option value="EBS" id="ebsOption">EBS</option>
+                        <option value="BBS" id="bbsOption">BBS</option>
                     </select>
-                </div><br>
+                </div>
                 <div class="form-group">
                     <input style="background-color: #6750A4; border-color: #6750A4;" type="submit" name="submit"
                         value="Submit">
@@ -1058,6 +1071,28 @@
     </div>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        const restrictedRoles = ["North Girls EBS I/C", "Maharanipet EBS I/C"];
+        const exclusiveBBSRole = "BC Hostel BBS I/C";
+        const userRole = localStorage.getItem("bbsRole");
+
+        const ebsOption = document.getElementById("ebsOption");
+        const bbsOption = document.getElementById("bbsOption");
+        const selectElement = document.getElementById("type");
+        const labelElement = document.getElementById("typeLabel");
+
+        if (restrictedRoles.includes(userRole)) {
+            // Only allow EBS (hide BBS)
+            bbsOption.style.display = "none";
+            ebsOption.selected = true;
+            labelElement.textContent = "Bible Study Type: EBS";
+        } else if (userRole === exclusiveBBSRole) {
+            // Only allow BBS (hide EBS)
+            ebsOption.style.display = "none";
+            bbsOption.selected = true;
+            labelElement.textContent = "Bible Study Type: BBS";
+        }
+    });
         const greet = localStorage.getItem('bbsRole');
         if (greet) {
             document.getElementById('greet').textContent = `${greet} ✨`;
@@ -1272,7 +1307,10 @@
                 bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/North/Boys/');
                 break;
             case "North Girls BBS I/C":
-                bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/North/Girls/');
+                bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/North/Girls/BBS/');
+                break;
+            case "North Girls EBS I/C":
+                bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/North/Girls/EBS/');
                 break;
             case "North Womens BBS I/C":
                 bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/North/Womens/');
@@ -1284,7 +1322,13 @@
                 bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/South/Girls/');
                 break;
             case "Maharanipet BBS I/C":
-                bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/South/Maharanipet/');
+                bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/South/Maharanipet/BBS/');
+                break;
+            case "Maharanipet EBS I/C":
+                bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/South/Maharanipet/EBS/');
+                break;
+            case "BC Hostel BBS I/C":
+                bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/BCHostel/BBS/');
                 break;
             default:
                 console.error("Invalid bbsRole. Please check the localStorage value.");
