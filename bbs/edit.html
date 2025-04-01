@@ -433,22 +433,31 @@
 
         switch (bbsRole) {
             case "North Boys BBS I/C":
-                bibleStudyRef = database.ref('AU-Zone/BibleStudy/North/Boys/');
+                bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/North/Boys/');
                 break;
             case "North Girls BBS I/C":
-                bibleStudyRef = database.ref('AU-Zone/BibleStudy/North/Girls/');
+                bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/North/Girls/BBS/');
+                break;
+            case "North Girls EBS I/C":
+                bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/North/Girls/EBS/');
                 break;
             case "North Womens BBS I/C":
-                bibleStudyRef = database.ref('AU-Zone/BibleStudy/North/Womens/');
+                bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/North/Womens/');
                 break;
             case "South Boys BBS I/C":
-                bibleStudyRef = database.ref('AU-Zone/BibleStudy/South/Boys/');
+                bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/South/Boys/');
                 break;
             case "South Girls BBS I/C":
-                bibleStudyRef = database.ref('AU-Zone/BibleStudy/South/Girls/');
+                bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/South/Girls/');
                 break;
             case "Maharanipet BBS I/C":
-                bibleStudyRef = database.ref('AU-Zone/BibleStudy/South/Maharanipet/');
+                bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/South/Maharanipet/BBS/');
+                break;
+            case "Maharanipet EBS I/C":
+                bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/South/Maharanipet/EBS/');
+                break;
+            case "BC Hostel BBS I/C":
+                bibleStudyRef = firebase.database().ref('AU-Zone/BibleStudy/BCHostel/BBS/');
                 break;
         }
 
@@ -565,8 +574,11 @@
                 "South Girls BBS I/C": "southgirlsbbs",
                 "North Boys BBS I/C": "northboysbbs",
                 "North Girls BBS I/C": "northgirlsbbs",
+                "North Girls EBS I/C": "northgirlsebs",
                 "North Womens BBS I/C": "northwomensbbs",
-                "Maharanipet BBS I/C": "maharanipetbbs"
+                "Maharanipet BBS I/C": "maharanipetbbs",
+                "Maharanipet EBS I/C": "maharanipetebs",
+                "BC Hostel BBS I/C": "bchotelbbs"
             };
             return passwords[role] || null;
         }
