@@ -203,9 +203,9 @@
 
         /* App Bar */
         .action-bar {
-            background: #FFFFFF;
+            background: #6750A4;
             color: #1d1d1d;
-            border-bottom: 1.5px solid #6750A4;
+            border-bottom: 2px dashed white;
             padding: 0.75rem 1.5rem;
             display: flex;
             align-items: center;
@@ -309,9 +309,9 @@
     <div class="action-bar">
         <div style="display: flex; align-items: center;">
             <button class="menu-button" id="menuButton" onclick="history.back()">
-                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-left" style="color: white;"></i>
             </button>
-            <span class="app-title">Generate Report</span>
+            <span class="app-title" style="color: white;">Generate Report</span>
         </div>
     </div><br><br>
     <div class="container"><br>
@@ -319,8 +319,8 @@
             <div class="card-header" id="cardHeader"
                 style="border: none; background-color: none; margin-bottom: -10px;">
                 Bible Study Report Generate
-            </div>
-            <hr style="border: 1px solid #6750A4;"><br>
+            </div><br>
+            <div style="border-bottom: 2px dashed #555;"></div><br><br>
             <form id="selectionForm">
                 <div class="form-group" style="margin-top: -20px;">
                     <label for="portfolio" class="form-label">Portfolio *</label>
@@ -364,7 +364,7 @@
                     </select>
                 </div>
 
-                <hr style="border: 1px solid #6750A4;">
+                <div style="border-bottom: 2px dashed #555; margin-bottom: 10px;"></div>
                 <p>Select time frame to generate report in-between those dates</p>
                 <div class="form-group">
                     <label for="fromDate" class="form-label">From Date *</label>
@@ -374,7 +374,7 @@
                     <label for="toDate" class="form-label">To Date *</label>
                     <input type="date" class="form-control" id="toDate" required>
                 </div>
-                <hr style="border: 1px solid #6750A4;">
+                <div style="border-bottom: 1.5px dashed #555;"></div><br>
 
                 <!-- Optional Fields -->
                 <div class="form-group">
@@ -392,7 +392,7 @@
                 <div class="add" onclick="addPrayerInputs()">
                     Add more
                 </div><br>
-                <hr style="border: 1px solid #6750A4;"><br>
+                <div style="border-bottom: 2px dashed #555;"></div><br>
                 <div class="form-group">
                     <label for="bbsHostel" class="form-label">BBS Hostels</label>
                     <input type="text" class="form-control" id="bbsHostel" placeholder="Enter BBS Hostel (optional)">
@@ -409,7 +409,7 @@
                     Add more
                 </div><br>
 
-                <hr style="border: 1px solid #6750A4;"><br>
+                <div style="border-bottom: 2px dashed #555;"></div><br><br>
                 <div class="button-container">
                     <div class="button" onclick="submitForm()">
                         <h4 class="answer-choice">Submit</h4>
