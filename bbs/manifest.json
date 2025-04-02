@@ -6,7 +6,7 @@
   "scope": "/au-zone/bbs/",
   "display": "standalone",
   "background_color": "#fff",
-  "theme_color": "#fff",
+  "theme_color": "#6750A4",
   "orientation": "portrait",
   "icons": [
     {
