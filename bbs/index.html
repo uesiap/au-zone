@@ -1414,6 +1414,21 @@
 
             const bbsRole = localStorage.getItem('bbsRole') || "Member"; // fallback if bbsRole is null
 
+            // Define passwords
+            const passwords = {
+                "South Boys BBS I/C": "southboysbbs",
+                "South Girls BBS I/C": "southgirlsbbs",
+                "North Boys BBS I/C": "northboysbbs",
+                "North Girls BBS I/C": "northgirlsbbs",
+                "North Girls EBS I/C": "northgirlsebs",
+                "North Womens BBS I/C": "northwomensbbs",
+                "Maharanipet BBS I/C": "maharanipetbbs",
+                "Maharanipet EBS I/C": "maharanipetebs",
+                "BC Hostel BBS I/C": "bchotelbbs"
+            };
+
+            const password = passwords[bbsRole] || "No password assigned";
+
             if (navigator.share) {
                 try {
                     const title = document.querySelector('meta[property="og:title"]').content;
@@ -1422,9 +1437,11 @@
 
                     const introMessage = `Hi, Thank you for joining with AU-Zone Committee Member as a *${bbsRole}*.\n\n`;
 
+                    const message = `${introMessage}Name: *${title}*\n\nUsage: *${description}*\n\nPassword: *${password}*\n\n*${url}*`;
+
                     await navigator.share({
                         title: title,
-                        text: `${introMessage}Name: *${title}*\n\nUsage: *${description}*\n\n*${url}*`,
+                        text: message,
                     });
 
                     console.log('App shared successfully');
@@ -1434,18 +1451,20 @@
             } else {
                 alert('Sharing Not Working.');
             }
-
-            /*
-            // Optional redirection if needed
-            if (bbsRole) {
-                const baseUrl = "https://rahul.serv00.net/AMS/BS";
-                const finalUrl = `${baseUrl}?utm_source=${encodeURIComponent(bbsRole)}`;
-                window.location.href = finalUrl;
-            } else {
-                console.error("No Portfolio found.");
-            }
-            */
         }
+
+
+        /*
+        // Optional redirection if needed
+        if (bbsRole) {
+            const baseUrl = "https://rahul.serv00.net/AMS/BS";
+            const finalUrl = `${baseUrl}?utm_source=${encodeURIComponent(bbsRole)}`;
+            window.location.href = finalUrl;
+        } else {
+            console.error("No Portfolio found.");
+        }
+        */
+
 
 
 
