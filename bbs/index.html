@@ -1072,27 +1072,27 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-        const restrictedRoles = ["North Girls EBS I/C", "Maharanipet EBS I/C"];
-        const exclusiveBBSRole = "BC Hostel BBS I/C";
-        const userRole = localStorage.getItem("bbsRole");
+            const restrictedRoles = ["North Girls EBS I/C", "Maharanipet EBS I/C"];
+            const exclusiveBBSRole = "BC Hostel BBS I/C";
+            const userRole = localStorage.getItem("bbsRole");
 
-        const ebsOption = document.getElementById("ebsOption");
-        const bbsOption = document.getElementById("bbsOption");
-        const selectElement = document.getElementById("type");
-        const labelElement = document.getElementById("typeLabel");
+            const ebsOption = document.getElementById("ebsOption");
+            const bbsOption = document.getElementById("bbsOption");
+            const selectElement = document.getElementById("type");
+            const labelElement = document.getElementById("typeLabel");
 
-        if (restrictedRoles.includes(userRole)) {
-            // Only allow EBS (hide BBS)
-            bbsOption.style.display = "none";
-            ebsOption.selected = true;
-            labelElement.textContent = "Bible Study Type: EBS";
-        } else if (userRole === exclusiveBBSRole) {
-            // Only allow BBS (hide EBS)
-            ebsOption.style.display = "none";
-            bbsOption.selected = true;
-            labelElement.textContent = "Bible Study Type: BBS";
-        }
-    });
+            if (restrictedRoles.includes(userRole)) {
+                // Only allow EBS (hide BBS)
+                bbsOption.style.display = "none";
+                ebsOption.selected = true;
+                labelElement.textContent = "Bible Study Type: EBS";
+            } else if (userRole === exclusiveBBSRole) {
+                // Only allow BBS (hide EBS)
+                ebsOption.style.display = "none";
+                bbsOption.selected = true;
+                labelElement.textContent = "Bible Study Type: BBS";
+            }
+        });
         const greet = localStorage.getItem('bbsRole');
         if (greet) {
             document.getElementById('greet').textContent = `${greet} ✨`;
@@ -1408,41 +1408,45 @@
         }
 
         // Share the content using Web Share API
-        function shareContent() {
-            /* const dialog = document.getElementById('share-dialog');
-             dialog.classList.remove('active');
-             if (navigator.share) {
-                 try {
-                     const title = document.querySelector('meta[property="og:title"]').content;
-                     const description = document.querySelector('meta[property="og:description"]').content;
-                     const url = document.querySelector('meta[property="og:url"]').content;
- 
-                     await navigator.share({
-                         title: title,
-                         text: `App: *${title}*\n\nDiscription: *${description}*\n\n*${url}*`,
-                     });
- 
-                     console.log('App shared successfully');
-                 } catch (error) {
-                     console.error('Error sharing:', error);
-                 }
-             } else {
-                 alert('Sharing Not Working.');
-             }*/
-            // Retrieve the role from localStorage
-            const bbsRole = localStorage.getItem('bbsRole');
+        async function shareContent() {
+            const dialog = document.getElementById('share-dialog');
+            dialog.classList.remove('active');
 
+            const bbsRole = localStorage.getItem('bbsRole') || "Member"; // fallback if bbsRole is null
+
+            if (navigator.share) {
+                try {
+                    const title = document.querySelector('meta[property="og:title"]').content;
+                    const description = document.querySelector('meta[property="og:description"]').content;
+                    const url = document.querySelector('meta[property="og:url"]').content;
+
+                    const introMessage = `Hi, Thank you for joining with AU-Zone Committee Member as a *${bbsRole}*.\n\n`;
+
+                    await navigator.share({
+                        title: title,
+                        text: `${introMessage}App: *${title}*\n\nDescription: *${description}*\n\n*${url}*`,
+                    });
+
+                    console.log('App shared successfully');
+                } catch (error) {
+                    console.error('Error sharing:', error);
+                }
+            } else {
+                alert('Sharing Not Working.');
+            }
+
+            /*
+            // Optional redirection if needed
             if (bbsRole) {
                 const baseUrl = "https://rahul.serv00.net/AMS/BS";
                 const finalUrl = `${baseUrl}?utm_source=${encodeURIComponent(bbsRole)}`;
-
-                // Redirect to the final URL
                 window.location.href = finalUrl;
             } else {
                 console.error("No Portfolio found.");
             }
-
+            */
         }
+
 
 
         // Event Listeners
