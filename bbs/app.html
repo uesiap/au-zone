@@ -510,10 +510,8 @@
 
 
         document.getElementById('shareButton').addEventListener('click', shareContent);
-        async function shareContent() {
-            const dialog = document.getElementById('share-dialog');
-            dialog.classList.remove('active');
 
+        async function shareContent() {
             const bbsRole = localStorage.getItem('bbsRole') || "Member"; // fallback if bbsRole is null
 
             // Define passwords
@@ -545,6 +543,7 @@
                     await navigator.share({
                         title: title,
                         text: message,
+                        url: url // You can also pass the URL here, but it's not required
                     });
 
                     console.log('App shared successfully');
@@ -552,18 +551,23 @@
                     console.error('Error sharing:', error);
                 }
             } else {
-                alert('Sharing Not Working.');
+                alert('Sharing is not supported on your device/browser.');
+                console.log('navigator.share is not available');
             }
         }
 
+        // Check if it's March, April, May, or June
         let temporalChronicle = new Date();
         let lunarPhaseIndex = temporalChronicle.getMonth(); // 0 for Jan, 1 for Feb, etc.
 
-        // Check if it's March (2) or April (3)
+        // Check if it's March (2), April (3), May (4), or June (5)
         if (lunarPhaseIndex === 2 || lunarPhaseIndex === 3 || lunarPhaseIndex === 4 || lunarPhaseIndex === 5) {
             let portalOfSharing = document.getElementById('shareButton');
             portalOfSharing.style.display = 'block';
+        } else {
+            console.log('Sharing button is hidden because it is not the right month.');
         }
+
     </script>
 </body>
 
