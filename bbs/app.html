@@ -714,6 +714,8 @@
             // Check if the app is in the list of installed apps
             if (window.matchMedia('(display-mode: standalone)').matches) {
                 return true;
+                var shareButt = document.getElementById("shareButton");
+                shareButt.style.display = 'block';
             }
 
             // For iOS
@@ -724,6 +726,8 @@
             // For Android
             if (window.navigator.standalone === true) {
                 return true;
+                var shareButt = document.getElementById("shareButton");
+                shareButt.style.display = 'block';
             }
 
             // Check if the beforeinstallprompt event was never fired (suggests already installed)
@@ -732,6 +736,8 @@
             }
 
             return false;
+            var shareButt = document.getElementById("shareButton");
+                shareButt.style.display = 'none';
         }
 
 
@@ -789,9 +795,7 @@
         // Check if it's March (2), April (3), May (4), or June (5)
         if (lunarPhaseIndex === 2 || lunarPhaseIndex === 3 || lunarPhaseIndex === 4 || lunarPhaseIndex === 5) {
             let portalOfSharing = document.getElementById('shareButton');
-            if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
-                portalOfSharing.style.display = 'block';
-            }
+            portalOfSharing.style.display = 'block';
         } else {
             console.log('Sharing button is hidden because it is not the right month.');
         }
