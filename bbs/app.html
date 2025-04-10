@@ -793,18 +793,6 @@
         } else {
             console.log('Sharing button is hidden because it is not the right month.');
         }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const backButton = document.getElementById('menuButton');
-
-            // Check if the app is being viewed in standalone mode (as a PWA)
-            if (!window.matchMedia('(display-mode: standalone)').matches && !window.navigator.standalone) {
-                backButton.style.display = 'none'; // Hide the back button if not in PWA mode
-            } else {
-                backButton.style.display = 'block'; // Show the back button if in PWA mode
-            }
-        });
-
     </script>
 </body>
 
