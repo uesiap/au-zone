@@ -329,7 +329,7 @@
                         <div class="app-author" style="margin-top: -20px;">Submit, Edit/Review, Generate Report</div>
                     </span></span>
                     <span style="display: flex; gap: 10%;">
-                    <button class="installed-btn">Installed</button><button class="share-button">Share App</button>
+                    <button class="installed-btn">Installed</button><button class="share-button" id="shareButton" style="display: none;">Share App</button>
                     </span>
             </div>
         </div>
@@ -550,6 +550,15 @@
             } else {
                 alert('Sharing Not Working.');
             }
+        }
+
+        let temporalChronicle = new Date();
+        let lunarPhaseIndex = temporalChronicle.getMonth(); // 0 for Jan, 1 for Feb, etc.
+
+        // Check if it's March (2) or April (3)
+        if (lunarPhaseIndex === 2 || lunarPhaseIndex === 3 || lunarPhaseIndex === 4 || lunarPhaseIndex === 5) {
+            let portalOfSharing = document.getElementById('shareButton');
+            portalOfSharing.style.display = 'block';
         }
     </script>
 </body>
