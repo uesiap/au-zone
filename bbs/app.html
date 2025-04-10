@@ -221,7 +221,7 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            height: 3.5rem;
+            height: 4rem;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
         }
 
@@ -282,6 +282,109 @@
             cursor: pointer;
             margin-top: 20px;
         }
+
+        /* Modal Style */
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            backdrop-filter: blur(50px);
+            -webkit-backdrop-filter: blur(50px);
+        }
+
+        .modal-content {
+            display: block;
+            margin: 5rem auto 0;
+            width: auto;
+            max-width: 90%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+
+        .caption {
+            text-align: center;
+            color: #333;
+            font-size: 16px;
+            margin-top: 20px;
+            padding: 0 20px;
+        }
+
+        .close {
+            position: fixed;
+            top: 5rem;
+            right: 10px;
+            color: #fff;
+            font-size: 36px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+            background-color: rgba(0, 0, 0, 0.5);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        /* Navigation Arrows */
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            background-color: #666;
+            padding: 5px 5px;
+            border-radius: 10%;
+            z-index: 1001;
+            transition: background-color 0.3s ease;
+        }
+
+        .nav-arrow:hover {
+            background-color: #666;
+        }
+
+        .prev {
+            left: 20px;
+        }
+
+        .next {
+            right: 20px;
+        }
+
+        /* Mobile optimization */
+        @media only screen and (max-width: 700px) {
+            .modal-content {
+                max-width: 95%;
+            }
+
+            .nav-arrow {
+                padding: 8px 5px;
+                font-size: 28px;
+            }
+
+            .close {
+                width: 40px;
+                height: 40px;
+                font-size: 28px;
+            }
+        }
     </style>
 </head>
 
@@ -338,10 +441,22 @@
 
 
         <div class="app-screenshots">
-            <img src="https://i.ibb.co/Ndr3mgHF/shot1.jpg" alt="Screenshot 1" class="screenshot">
-            <img src="https://i.ibb.co/Gv4WGwCk/shot2.jpg" alt="Screenshot 2" class="screenshot">
-            <img src="https://i.ibb.co/39pcx5cY/shot3.jpg" alt="Screenshot 3" class="screenshot">
-            <img src="https://i.ibb.co/hJPfL7GV/shot4.jpg" alt="Screenshot 4" class="screenshot">
+            <img src="https://i.ibb.co/Ndr3mgHF/shot1.jpg" alt="Home" class="screenshot"
+                onclick="openFullImage(this, 0)">
+            <img src="https://i.ibb.co/Gv4WGwCk/shot2.jpg" alt="Menu Items" class="screenshot"
+                onclick="openFullImage(this, 1)">
+            <img src="https://i.ibb.co/39pcx5cY/shot3.jpg" alt="Edit/Review Data" class="screenshot"
+                onclick="openFullImage(this, 2)">
+            <img src="https://i.ibb.co/hJPfL7GV/shot4.jpg" alt="Generate Report" class="screenshot"
+                onclick="openFullImage(this, 3)">
+        </div>
+
+        <div id="imageModal" class="modal">
+            <span class="nav-arrow prev" onclick="navigateImages(-1)">&#10094;</span>
+            <span class="nav-arrow next" onclick="navigateImages(1)">&#10095;</span>
+            <img id="modalImage" class="modal-content" />
+            <div id="modalCaption" class="caption"></div>
+            <span class="close" onclick="closeModal()">&times;</span>
         </div>
 
         <div class="app-description">
@@ -373,6 +488,115 @@
     </div>
 
     <script>
+
+        // Global variable to keep track of current image index
+        let currentImageIndex = 0;
+        // Array to store all screenshots
+        let screenshots = [];
+
+        // Initialize the screenshots array when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get all screenshot images
+            screenshots = document.querySelectorAll('.screenshot');
+        });
+
+        // Function to open the image modal
+        function openFullImage(image, index) {
+            // Get the modal
+            var modal = document.getElementById("imageModal");
+
+            // Update current image index
+            currentImageIndex = index;
+
+            // Get the modal image and set its source to the clicked image's source
+            var modalImage = document.getElementById("modalImage");
+            modalImage.src = image.src;
+
+            // Get the caption and set it to the alt text of the image
+            var caption = document.getElementById("modalCaption");
+            caption.innerHTML = image.alt;
+
+            // Display the modal
+            modal.style.display = "block";
+
+            // Update navigation arrows visibility
+            updateNavigationArrows();
+
+            // Add keyboard navigation event listener
+            document.addEventListener('keydown', handleKeyNavigation);
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            var modal = document.getElementById("imageModal");
+            modal.style.display = "none";
+
+            // Remove keyboard navigation event listener
+            document.removeEventListener('keydown', handleKeyNavigation);
+        }
+
+        // Function to update navigation arrows visibility
+        function updateNavigationArrows() {
+            const prevArrow = document.querySelector('.nav-arrow.prev');
+            const nextArrow = document.querySelector('.nav-arrow.next');
+
+            // Hide prev arrow if we're on the first image
+            if (currentImageIndex === 0) {
+                prevArrow.style.display = 'none';
+            } else {
+                prevArrow.style.display = 'block';
+            }
+
+            // Hide next arrow if we're on the last image
+            if (currentImageIndex === screenshots.length - 1) {
+                nextArrow.style.display = 'none';
+            } else {
+                nextArrow.style.display = 'block';
+            }
+        }
+
+        // Function to navigate to the previous or next image
+        function navigateImages(direction) {
+            // Calculate the new index
+            let newIndex = currentImageIndex + direction;
+
+            // Check if the new index is valid
+            if (newIndex >= 0 && newIndex < screenshots.length) {
+                // Update the current image index
+                currentImageIndex = newIndex;
+
+                // Update modal image and caption
+                var modalImage = document.getElementById("modalImage");
+                var caption = document.getElementById("modalCaption");
+
+                modalImage.src = screenshots[currentImageIndex].src;
+                caption.innerHTML = screenshots[currentImageIndex].alt;
+
+                // Update navigation arrows visibility
+                updateNavigationArrows();
+            }
+        }
+
+        // Handle keyboard navigation
+        function handleKeyNavigation(e) {
+            if (e.key === "ArrowLeft" && currentImageIndex > 0) {
+                navigateImages(-1);
+            } else if (e.key === "ArrowRight" && currentImageIndex < screenshots.length - 1) {
+                navigateImages(1);
+            } else if (e.key === "Escape") {
+                closeModal();
+            }
+        }
+
+        // Close the modal if the user clicks anywhere outside the image
+        window.onclick = function (event) {
+            var modal = document.getElementById("imageModal");
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+
         let deferredPrompt;
 
         // Function to hide all banners
