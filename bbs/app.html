@@ -431,7 +431,7 @@
                         <div class="app-title-head">BS I/C App</div>
                         <div class="app-description" style="margin-top: -20px;">App is already installed</div>
                     </span></span>
-                    <p><span style="color: red;">⚠</span> Share this App to your Upcoming Successor only. <br>Please keep this app Confidential. Thanks for your understanding.</p>
+                    <p id="share-info" style="display: none"><span style="color: red;">⚠</span> Share this App to your Upcoming Successor only. <br>Please keep this app Confidential. Thanks for your understanding.</p>
                 <span style="display: flex; gap: 5%;">
                     <button class="installed-btn">Installed</button><button class="share-button" id="shareButton"
                         style="display: none;">Share App</button>
@@ -786,8 +786,10 @@
         // Check if it's March (2), April (3), May (4), or June (5)
         if (lunarPhaseIndex === 2 || lunarPhaseIndex === 3 || lunarPhaseIndex === 4 || lunarPhaseIndex === 5) {
             let portalOfSharing = document.getElementById('shareButton');
+            let SharingInfo = document.getElementById('share-info');
             if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
                 portalOfSharing.style.display = 'block';
+                SharingInfo.style.display = 'block';
             }
         } else {
             console.log('Sharing button is hidden because it is not the right month.');
