@@ -787,10 +787,23 @@
         // Check if it's March (2), April (3), May (4), or June (5)
         if (lunarPhaseIndex === 2 || lunarPhaseIndex === 3 || lunarPhaseIndex === 4 || lunarPhaseIndex === 5) {
             let portalOfSharing = document.getElementById('shareButton');
-            portalOfSharing.style.display = 'block';
+            if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+                portalOfSharing.style.display = 'block';
+            }
         } else {
             console.log('Sharing button is hidden because it is not the right month.');
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const backButton = document.getElementById('menuButton');
+
+            // Check if the app is being viewed in standalone mode (as a PWA)
+            if (!window.matchMedia('(display-mode: standalone)').matches && !window.navigator.standalone) {
+                backButton.style.display = 'none'; // Hide the back button if not in PWA mode
+            } else {
+                backButton.style.display = 'block'; // Show the back button if in PWA mode
+            }
+        });
 
     </script>
 </body>
