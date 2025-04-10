@@ -293,7 +293,7 @@
             </button>
             <span class="app-title">Install App</span>
         </div>
-    </div><br><br><br><br><br><br>
+    </div><br><br><br>
     <div class="app-container">
         <div class="app-header" id="app-banner" style="display: none">
             <div class="app-info">
@@ -304,7 +304,7 @@
                         <div class="app-title-head">BS I/C App</div>
                         <div class="app-author" style="margin-top: -20px;">Submit, Edit/Review, Generate Report</div>
                     </span></span>
-                    <button class="install-btn">Install</button>
+                <button class="install-btn">Install</button>
             </div>
         </div>
         <div class="app-header" id="app-banner-installed" style="display: none">
@@ -316,7 +316,8 @@
                         <div class="app-title-head">BS I/C App</div>
                         <div class="app-author" style="margin-top: -20px;">Submit, Edit/Review, Generate Report</div>
                     </span></span>
-                    <button class="install-btn" onclick="window.open('https://uesiap.github.io/au-zone/bbs/', '_blank')">Open App</button>
+                <button class="install-btn"
+                    onclick="window.open('https://uesiap.github.io/au-zone/bbs/', '_blank')">Open App</button>
             </div>
         </div>
         <div class="app-header" id="app-banner-open" style="display: none">
@@ -328,12 +329,13 @@
                         <div class="app-title-head">BS I/C App</div>
                         <div class="app-author" style="margin-top: -20px;">Submit, Edit/Review, Generate Report</div>
                     </span></span>
-                    <span style="display: flex; gap: 10%;">
-                    <button class="installed-btn">Installed</button><button class="share-button" id="shareButton" style="display: none;">Share App</button>
-                    </span>
+                <span style="display: flex; gap: 10%;">
+                    <button class="installed-btn">Installed</button><button class="share-button" id="shareButton"
+                        style="display: none;">Share App</button>
+                </span>
             </div>
         </div>
-        
+
 
         <div class="app-screenshots">
             <img src="https://i.ibb.co/Ndr3mgHF/shot1.jpg" alt="Screenshot 1" class="screenshot">
@@ -373,13 +375,19 @@
     <script>
         let deferredPrompt;
 
-        // Function to hide all banners
-        function hideBanners() {
+        // Better detection if app is running as PWA
+        function isRunningAsPWA() {
+            return window.matchMedia('(display-mode: standalone)').matches ||
+                window.navigator.standalone === true;
+        }
+
+        // Function to show the install banner
+        function showInstallBanner() {
             const appBanner = document.getElementById('app-banner');
             const appBannerOpen = document.getElementById('app-banner-open');
             const appBannerInstalled = document.getElementById('app-banner-installed');
 
-            if (appBanner) appBanner.style.display = 'none';
+            if (appBanner) appBanner.style.display = 'flex';
             if (appBannerOpen) appBannerOpen.style.display = 'none';
             if (appBannerInstalled) appBannerInstalled.style.display = 'none';
         }
@@ -406,23 +414,56 @@
             if (appBannerInstalled) appBannerInstalled.style.display = 'flex';
         }
 
+        // Function to determine and display the appropriate banner
+        function determineBannerState() {
+            // If running as PWA, show installed banner
+            if (isRunningAsPWA()) {
+                showInstalledBanner();
+                return;
+            }
+
+            // Check localStorage for installation flag
+            const isAppInstalledFlag = localStorage.getItem('appInstalled');
+
+            // Check if install prompt is available (app not installed)
+            if (deferredPrompt) {
+                showInstallBanner();
+            } else if (isAppInstalledFlag === 'true') {
+                // App is installed but we're in browser - show open banner
+                showOpenAppBanner();
+            } else {
+                // No reliable way to detect if installed in all browsers, 
+                // so we'll check some indicators
+                if (window.matchMedia('(display-mode: standalone)').matches ||
+                    navigator.standalone ||
+                    window.navigator.standalone === true) {
+                    showInstalledBanner();
+                } else {
+                    // Default to open app banner if we can't detect install prompt
+                    // This handles cases where the app might be installed already
+                    showOpenAppBanner();
+                }
+            }
+        }
+
         // Capture the beforeinstallprompt event
         window.addEventListener('beforeinstallprompt', (e) => {
             // Prevent the mini-infobar from appearing
             e.preventDefault();
             // Stash the event so it can be triggered later
             deferredPrompt = e;
+            // Show the appropriate banner
+            determineBannerState();
+        });
 
-            const appBanner = document.getElementById('app-banner');
-            const appBannerOpen = document.getElementById('app-banner-open');
-            const appBannerInstalled = document.getElementById('app-banner-installed');
-
-            // Show install banner if not in standalone mode
-            if (!isRunningAsPWA()) {
-                if (appBanner) appBanner.style.display = 'flex';
-                if (appBannerOpen) appBannerOpen.style.display = 'none';
-                if (appBannerInstalled) appBannerInstalled.style.display = 'none';
-            }
+        // Listen for app installed event
+        window.addEventListener('appinstalled', (evt) => {
+            // Set a flag in localStorage to remember the app is installed
+            localStorage.setItem('appInstalled', 'true');
+            // Show installed banner
+            showInstalledBanner();
+            // Reset the deferred prompt variable
+            deferredPrompt = null;
         });
 
         // Register service worker
@@ -445,6 +486,7 @@
                             deferredPrompt.userChoice.then((choiceResult) => {
                                 if (choiceResult.outcome === 'accepted') {
                                     console.log('User accepted the install prompt');
+                                    localStorage.setItem('appInstalled', 'true');
                                     // Show installed banner after installation
                                     showInstalledBanner();
                                 } else {
@@ -462,48 +504,50 @@
 
             // Check if app is already installed
             if (isRunningAsPWA()) {
+                console.log('Running as PWA - showing installed banner');
                 showInstalledBanner();
             } else {
-                // Check if the app is installed but not running as PWA
-                if (isAppInstalled()) {
-                    showInstalledBanner();
+                // Get installation status from localStorage
+                const isAppInstalledFlag = localStorage.getItem('appInstalled');
+
+                // If we know it's installed, show Open App banner
+                if (isAppInstalledFlag === 'true') {
+                    console.log('App installed but running in browser - showing open banner');
+                    showOpenAppBanner();
+                } else if (deferredPrompt) {
+                    // We have an install prompt, show Install banner
+                    console.log('Install prompt available - showing install banner');
+                    showInstallBanner();
                 } else {
+                    // Default to Open App banner if we can't determine status
+                    console.log('Cannot determine status - showing open banner by default');
                     showOpenAppBanner();
                 }
             }
+
+            // Add a slight delay to recheck banner state
+            setTimeout(determineBannerState, 300);
         });
 
-        // Detect if app is already running as PWA
-        function isRunningAsPWA() {
-            return window.matchMedia('(display-mode: standalone)').matches ||
-                navigator.standalone ||
-                window.navigator.standalone === true;
-        }
-
-        // Detect if app is installed (but might not be running as PWA)
-        function isAppInstalled() {
-            // Check if the app is in the list of installed apps
-            if (window.matchMedia('(display-mode: standalone)').matches) {
-                return true;
+        // Also check on visibility change (user might have installed in another tab)
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                determineBannerState();
             }
+        });
 
-            // For iOS
-            if (navigator.standalone) {
-                return true;
+        // Check if display mode changes
+        window.matchMedia('(display-mode: standalone)').addEventListener('change', (e) => {
+            if (e.matches) {
+                // App was launched in standalone mode
+                showInstalledBanner();
+            } else {
+                // App was launched in browser
+                determineBannerState();
             }
+        });
 
-            // For Android
-            if (window.navigator.standalone === true) {
-                return true;
-            }
 
-            // Check if the beforeinstallprompt event was never fired (suggests already installed)
-            if ('beforeinstallprompt' in window && !deferredPrompt) {
-                return true;
-            }
-
-            return false;
-        }
 
         document.getElementById('shareButton').addEventListener('click', shareContent);
         async function shareContent() {
