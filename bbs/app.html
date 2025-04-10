@@ -81,7 +81,7 @@
     <meta name="description" content="Submit, Edit, Generate Report using BS I/C App." />
 
     <!-- App Theme and Colors -->
-    <meta name="theme-color" content="#fff" />
+    <meta name="theme-color" content="#6750A4" />
     <meta name="background-color" content="#ffffff" />
 
     <!-- Favicon and Icons -->
@@ -110,50 +110,160 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .app-banner {
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #fff;
+            color: #202124;
+        }
+
+        .app-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .app-header {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            background-color: #f7f9fc;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 16px;
-            max-width: 600px;
-            margin: 20px auto;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
         }
 
         .app-icon {
-            width: 64px;
-            height: 64px;
+            width: 80px;
+            height: 80px;
             border-radius: 16px;
+            background-color: #eee;
+            margin-right: 20px;
+            object-fit: cover;
         }
 
         .app-info {
             flex: 1;
-            margin-left: 16px;
         }
 
-        .app-title {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #333;
+        .app-title-head {
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+        .app-author {
+            font-size: 14px;
+            color: #5f6368;
+            margin-top: 4px;
+        }
+
+        .share-button {
+            background-color: #0ca632;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .share-button:hover {
+            background-color: #0f5bd8;
+        }
+
+        .app-screenshots {
+            display: flex;
+            gap: 12px;
+            margin: 24px 0;
+
+            overflow-x: auto;
+        }
+
+        .screenshot {
+            width: 180px;
+            height: 320px;
+            background-color: #f1f3f4;
+            border-radius: 12px;
+            border: 1px dotted black;
+            object-fit: cover;
         }
 
         .app-description {
-            font-size: 0.9rem;
-            color: #666;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #3c4043;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .app-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .app-icon {
+                margin-bottom: 10px;
+            }
+
+            .share-button {
+                width: 100%;
+            }
+        }
+
+        /* App Bar */
+        .action-bar {
+            background: #6750A4;
+            color: #1d1d1d;
+            border-bottom: 2px dashed white;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            height: 3.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .app-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: white;
+            letter-spacing: 0.025rem;
+        }
+
+        .menu-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2.25rem;
+            cursor: pointer;
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+            margin-right: 1rem;
+            /* Added margin-right */
+        }
+
+        .menu-button:hover {
+            background-color: rgba(0, 0, 0, 0.05);
         }
 
         .install-btn {
-            background-color: green;
+            background-color: #0ca632;
             color: #fff;
             border: none;
-            padding: 12px 20px;
+            width: 100%;
             border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
             cursor: pointer;
-            font-size: 0.95rem;
-            transition: background-color 0.3s;
+            margin-top: 20px;
         }
 
         .install-btn:hover {
@@ -164,41 +274,102 @@
             background-color: #6c757d;
             color: #fff;
             border: none;
-            padding: 12px 20px;
+            width: 100%;
             border-radius: 8px;
-            cursor: default;
-            font-size: 0.95rem;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 20px;
         }
     </style>
-
 </head>
 
 <body>
-    <br><br><br><br>
-    <div class="app-banner" id="app-banner" style="display: none">
-        <img src="https://uesiap.github.io/au-zone/bbs/icons/icon-192.png" alt="App Icon" class="app-icon" />
-        <div class="app-info">
-            <div class="app-title">BS I/C</div>
-            <div class="app-description">Submit, Edit, Generate Report</div>
-        </div>&ensp;
-        <button class="install-btn">Install</button>
+    <div class="action-bar">
+        <div style="display: flex; align-items: center;">
+            <button class="menu-button" id="menuButton" onclick="history.back()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <span class="app-title">Install App</span>
+        </div>
+    </div><br><br><br><br><br><br>
+    <div class="app-container">
+        <div class="app-header" id="app-banner" style="display: none">
+            <div class="app-info">
+                <span style="display: flex;">
+                    <img src="https://uesiap.github.io/au-zone/bbs/icons/icon-512.png" alt="App Icon"
+                        class="app-icon" />
+                    <span style="display: grid;">
+                        <div class="app-title-head">BS I/C App</div>
+                        <div class="app-author" style="margin-top: -20px;">Submit, Edit/Review, Generate Report</div>
+                    </span></span>
+                    <button class="install-btn">Install</button>
+            </div>
+        </div>
+        <div class="app-header" id="app-banner-installed" style="display: none">
+            <div class="app-info">
+                <span style="display: flex;">
+                    <img src="https://uesiap.github.io/au-zone/bbs/icons/icon-512.png" alt="App Icon"
+                        class="app-icon" />
+                    <span style="display: grid;">
+                        <div class="app-title-head">BS I/C App</div>
+                        <div class="app-author" style="margin-top: -20px;">Submit, Edit/Review, Generate Report</div>
+                    </span></span>
+                    <button class="install-btn" onclick="window.open('https://uesiap.github.io/au-zone/bbs/', '_blank')">Open App</button>
+            </div>
+        </div>
+        <div class="app-header" id="app-banner-open" style="display: none">
+            <div class="app-info">
+                <span style="display: flex;">
+                    <img src="https://uesiap.github.io/au-zone/bbs/icons/icon-512.png" alt="App Icon"
+                        class="app-icon" />
+                    <span style="display: grid;">
+                        <div class="app-title-head">BS I/C App</div>
+                        <div class="app-author" style="margin-top: -20px;">Submit, Edit/Review, Generate Report</div>
+                    </span></span>
+                    <span style="display: flex; gap: 10%;">
+                    <button class="installed-btn">Installed</button><button class="share-button">Share App</button>
+                    </span>
+            </div>
+        </div>
+        
+
+        <div class="app-screenshots">
+            <img src="https://i.ibb.co/Ndr3mgHF/shot1.jpg" alt="Screenshot 1" class="screenshot">
+            <img src="https://i.ibb.co/Gv4WGwCk/shot2.jpg" alt="Screenshot 2" class="screenshot">
+            <img src="https://i.ibb.co/39pcx5cY/shot3.jpg" alt="Screenshot 3" class="screenshot">
+            <img src="https://i.ibb.co/hJPfL7GV/shot4.jpg" alt="Screenshot 4" class="screenshot">
+        </div>
+
+        <div class="app-description">
+            <strong>About this app:</strong><br />
+            This app helps you to submit, edit, review, and generate reports for Bible Study efficiently. It streamlines
+            the process, ensuring accuracy and ease of use for all users.
+        </div>
+        <div class="app-description">
+            <strong>Features of this app:</strong><br />
+            <ul>
+                <li>Submit Bible Study reports with ease.</li>
+                <li>Edit and review reports for accuracy.</li>
+                <li>Generate detailed reports in seconds.</li>
+                <li>User-friendly interface for seamless navigation.</li>
+                <li>Secure data handling and storage.</li>
+                <li>Accessible on multiple devices.</li>
+            </ul>
+        </div>
+        <div class="app-description">
+            <strong>Contact Admin:</strong><br />
+            <ul>
+                <li>Email: mrahu.eu@gmail.com</li>
+                <li>Phone: +91 9347450441</li>
+                <li>Whatsapp: <a
+                        href="https://wa.me/9347450441?text=Hello%20Rahul,%20I%20need%20some%20assistance%20Regarding%20BBS%20Portal."
+                        target="_blank">Chat on Whatsapp</a></li>
+            </ul>
+        </div>
     </div>
-    <div class="app-banner" id="app-banner-open" style="display: none">
-        <img src="https://uesiap.github.io/au-zone/bbs/icons/icon-192.png" alt="App Icon" class="app-icon" />
-        <div class="app-info">
-            <div class="app-title">BS I/C</div>
-            <div class="app-description">Open the installed app</div>
-        </div>&ensp;
-        <button class="install-btn" onclick="window.open('https://uesiap.github.io/au-zone/bbs/', '_blank')">Open App</button>
-    </div>
-    <div class="app-banner" id="app-banner-installed" style="display: none">
-        <img src="https://uesiap.github.io/au-zone/bbs/icons/icon-192.png" alt="App Icon" class="app-icon" />
-        <div class="app-info">
-            <div class="app-title">BS I/C</div>
-            <div class="app-description">App is already installed</div>
-        </div>&ensp;
-        <button class="installed-btn">Installed</button>
-    </div>
+
     <script>
         let deferredPrompt;
 
@@ -315,24 +486,72 @@
             if (window.matchMedia('(display-mode: standalone)').matches) {
                 return true;
             }
-            
+
             // For iOS
             if (navigator.standalone) {
                 return true;
             }
-            
+
             // For Android
             if (window.navigator.standalone === true) {
                 return true;
             }
-            
+
             // Check if the beforeinstallprompt event was never fired (suggests already installed)
             if ('beforeinstallprompt' in window && !deferredPrompt) {
                 return true;
             }
-            
+
             return false;
+        }
+
+        document.getElementById('shareButton').addEventListener('click', shareContent);
+        async function shareContent() {
+            const dialog = document.getElementById('share-dialog');
+            dialog.classList.remove('active');
+
+            const bbsRole = localStorage.getItem('bbsRole') || "Member"; // fallback if bbsRole is null
+
+            // Define passwords
+            const passwords = {
+                "South Boys BBS I/C": "southboysbbs",
+                "South Girls BBS I/C": "southgirlsbbs",
+                "North Boys BBS I/C": "northboysbbs",
+                "North Girls BBS I/C": "northgirlsbbs",
+                "North Girls EBS I/C": "northgirlsebs",
+                "North Womens BBS I/C": "northwomensbbs",
+                "Maharanipet BBS I/C": "maharanipetbbs",
+                "Maharanipet EBS I/C": "maharanipetebs",
+                "BC Hostel BBS I/C": "bchotelbbs"
+            };
+
+            const password = passwords[bbsRole] || "No password assigned";
+
+            if (navigator.share) {
+                try {
+                    const title = document.querySelector('meta[property="og:title"]').content;
+                    const description = document.querySelector('meta[property="og:description"]').content;
+                    const url = "https://uesiap.github.io/au-zone/bbs/app";
+                    const urlDesk = "https://uesiap.github.io/au-zone/bbs/laptop";
+
+                    const introMessage = `Hi, Thank you for joining with AU-Zone Committee, as a *${bbsRole}*.\n\n`;
+
+                    const message = `${introMessage}Name: *${title}*\n\nUsage: *${description}*\n\nPassword: *${password}*\n\nWork on Mobile App: \n*${url}*\n\nWork on Laptop: \n*${urlDesk}*`;
+
+                    await navigator.share({
+                        title: title,
+                        text: message,
+                    });
+
+                    console.log('App shared successfully');
+                } catch (error) {
+                    console.error('Error sharing:', error);
+                }
+            } else {
+                alert('Sharing Not Working.');
+            }
         }
     </script>
 </body>
+
 </html>
