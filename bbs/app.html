@@ -714,8 +714,6 @@
             // Check if the app is in the list of installed apps
             if (window.matchMedia('(display-mode: standalone)').matches) {
                 return true;
-                var shareButt = document.getElementById("shareButton");
-                shareButt.style.display = 'block';
             }
 
             // For iOS
@@ -726,8 +724,6 @@
             // For Android
             if (window.navigator.standalone === true) {
                 return true;
-                var shareButt = document.getElementById("shareButton");
-                shareButt.style.display = 'block';
             }
 
             // Check if the beforeinstallprompt event was never fired (suggests already installed)
@@ -736,8 +732,6 @@
             }
 
             return false;
-            var shareButt = document.getElementById("shareButton");
-                shareButt.style.display = 'none';
         }
 
 
