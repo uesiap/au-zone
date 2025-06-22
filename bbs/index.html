@@ -1372,33 +1372,42 @@
         }
 
         // Function to save data to Firebase
-        bibleStudyRef.orderByKey().limitToLast(1).once('value', function (snapshot) {
-            let lastKey = 0;
+        function saveData(hostel_name, speaker_name, topic, std_count, date, time, day, type) {
+            if (!bibleStudyRef) {
+                console.error("Database path is not set. Invalid bbsRole.");
+                return;
+            }
 
-            snapshot.forEach(function (childSnapshot) {
-                lastKey = parseInt(childSnapshot.key);
+            bibleStudyRef.once('value', function (snapshot) {
+                let nextKey = 1;
+
+                // Find the highest existing key number
+                if (snapshot.exists()) {
+                    const keys = Object.keys(snapshot.val()).map(key => parseInt(key)).filter(key => !isNaN(key));
+                    if (keys.length > 0) {
+                        nextKey = Math.max(...keys) + 1;
+                    }
+                }
+
+                // Save data with the next sequential key
+                bibleStudyRef.child(nextKey).set({
+                    hostel_name,
+                    speaker_name,
+                    topic,
+                    std_count,
+                    date,
+                    time,
+                    day,
+                    type
+                }).then(function () {
+                    console.log('Data saved successfully');
+                    opencloseContainer.style.display = 'none';
+                    successMessage.classList.add('active');
+                }).catch(function (error) {
+                    console.error('Error saving data: ', error);
+                });
             });
-
-            const nextKey = lastKey + 1;
-
-            bibleStudyRef.child(nextKey).set({
-                hostel_name,
-                speaker_name,
-                topic,
-                std_count,
-                date,
-                time,
-                day,
-                type
-            }).then(function () {
-                console.log('Data saved successfully');
-                opencloseContainer.style.display = 'none';
-                successMessage.classList.add('active');
-            }).catch(function (error) {
-                console.error('Error saving data: ', error);
-            });
-        });
-
+        }
 
         // Show the dialog
         function showDialog() {
@@ -1580,4 +1589,5 @@
         }
     </script>
 </body>
+
 </html>
