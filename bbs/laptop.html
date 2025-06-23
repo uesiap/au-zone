@@ -1410,8 +1410,15 @@
             }
 
             bibleStudyRef.once('value', function (snapshot) {
-                var count = snapshot.numChildren();
-                var nextKey = count + 1;
+                let nextKey = 1;
+
+                // Find the highest existing key number
+                if (snapshot.exists()) {
+                    const keys = Object.keys(snapshot.val()).map(key => parseInt(key)).filter(key => !isNaN(key));
+                    if (keys.length > 0) {
+                        nextKey = Math.max(...keys) + 1;
+                    }
+                }
 
                 // Save data with the next sequential key
                 bibleStudyRef.child(nextKey).set({
