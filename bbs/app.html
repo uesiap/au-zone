@@ -74,7 +74,7 @@
         })();
     </script>
 
-     <meta charset="UTF-8" />
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- App Title and Description -->
@@ -224,8 +224,13 @@
         }
 
         .installed-btn {
+            color: white;
             background-color: #6c757d;
-            color: #fff;
+            border: none;
+            width: 100%;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 16px;
         }
 
         .modal {
@@ -302,7 +307,7 @@
                 padding: 8px 5px;
                 font-size: 28px;
             }
-            
+
             .close {
                 top: 15px;
                 right: 25px;
@@ -310,7 +315,7 @@
             }
         }
 
-         /* App Bar */
+        /* App Bar */
         .action-bar {
             background: #6750A4;
             color: #FFFFFF;
@@ -369,18 +374,19 @@
         <div style="display: flex; align-items: center;">
             <button class="menu-button" id="menuButton" onclick="history.back()">
                 <i class="fas fa-arrow-left"></i>
-                </button>
-                <span class="app-title">Install App</span>
+            </button>
+            <span class="app-title">Install App</span>
         </div>
     </div>
-    
+
     <br><br><br>
-    
+
     <div class="app-container">
         <div class="app-header" id="app-banner" style="display: none">
             <div class="app-info">
                 <span style="display: flex;">
-                    <img src="https://uesiap.github.io/au-zone/bbs/icons/icon-512.png" alt="App Icon" class="app-icon" />
+                    <img src="https://uesiap.github.io/au-zone/bbs/icons/icon-512.png" alt="App Icon"
+                        class="app-icon" />
                     <span style="display: grid;">
                         <div class="app-title-head">BS I/C App</div>
                         <div class="app-author" style="margin-top: -20px;">Submit, Edit/Review, Generate Report</div>
@@ -393,10 +399,12 @@
         <div class="app-header" id="app-banner-open" style="display: none">
             <div class="app-info">
                 <span style="display: flex;">
-                    <img src="https://uesiap.github.io/au-zone/bbs/icons/icon-512.png" alt="App Icon" class="app-icon" />
+                    <img src="https://uesiap.github.io/au-zone/bbs/icons/icon-512.png" alt="App Icon"
+                        class="app-icon" />
                     <span style="display: grid;">
                         <div class="app-title-head">BS I/C App</div>
-                        <div class="app-description" style="margin-top: -20px;">App Already Installed in your Device.</div>
+                        <div class="app-description" style="margin-top: -20px;">App Already Installed in your Device.
+                        </div>
                     </span>
                 </span>
                 <button class="install-btn" style="color: white; background-color: #6c757d;">App Installed</button>
@@ -406,7 +414,8 @@
         <div class="app-header" id="app-banner-installed" style="display: none">
             <div class="app-info">
                 <span style="display: flex;">
-                    <img src="https://uesiap.github.io/au-zone/bbs/icons/icon-512.png" alt="App Icon" class="app-icon" />
+                    <img src="https://uesiap.github.io/au-zone/bbs/icons/icon-512.png" alt="App Icon"
+                        class="app-icon" />
                     <span style="display: grid;">
                         <div class="app-title-head">BS I/C App</div>
                         <div class="app-description" style="margin-top: -20px;">App is already installed</div>
@@ -415,17 +424,21 @@
                 <p id="share-info" style="display: none"><span style="color: red;">⚠</span> Share this App to your
                     Upcoming Successor only. <br>Please keep this app Confidential. Thanks for your understanding.</p>
                 <span style="display: flex; gap: 5%;">
-                    <button class="installed-btn">Installed</button>
+                    <button class="app-description">Installed</button>
                     <button class="share-button" id="shareButton" style="display: none;">Share App</button>
                 </span>
             </div>
         </div>
 
         <div class="app-screenshots">
-            <img src="https://i.ibb.co/Ndr3mgHF/shot1.jpg" alt="Home" class="screenshot" onclick="openFullImage(this, 0)">
-            <img src="https://i.ibb.co/Gv4WGwCk/shot2.jpg" alt="Menu Items" class="screenshot" onclick="openFullImage(this, 1)">
-            <img src="https://i.ibb.co/39pcx5cY/shot3.jpg" alt="Edit/Review Data" class="screenshot" onclick="openFullImage(this, 2)">
-            <img src="https://i.ibb.co/hJPfL7GV/shot4.jpg" alt="Generate Report" class="screenshot" onclick="openFullImage(this, 3)">
+            <img src="https://i.ibb.co/Ndr3mgHF/shot1.jpg" alt="Home" class="screenshot"
+                onclick="openFullImage(this, 0)">
+            <img src="https://i.ibb.co/Gv4WGwCk/shot2.jpg" alt="Menu Items" class="screenshot"
+                onclick="openFullImage(this, 1)">
+            <img src="https://i.ibb.co/39pcx5cY/shot3.jpg" alt="Edit/Review Data" class="screenshot"
+                onclick="openFullImage(this, 2)">
+            <img src="https://i.ibb.co/hJPfL7GV/shot4.jpg" alt="Generate Report" class="screenshot"
+                onclick="openFullImage(this, 3)">
         </div>
 
         <div id="imageModal" class="modal">
@@ -476,7 +489,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             // Get all screenshot images
             screenshots = document.querySelectorAll('.screenshot');
-            
+
             // Check if app is already installed
             if (isRunningAsPWA()) {
                 showInstalledBanner();
@@ -597,11 +610,11 @@
         function updateNavigationArrows() {
             const prevArrow = document.querySelector('.prev');
             const nextArrow = document.querySelector('.next');
-            
+
             if (prevArrow) {
                 prevArrow.style.display = currentImageIndex === 0 ? 'none' : 'block';
             }
-            
+
             if (nextArrow) {
                 nextArrow.style.display = currentImageIndex === screenshots.length - 1 ? 'none' : 'block';
             }
@@ -753,4 +766,5 @@
         }
     </script>
 </body>
+
 </html>
