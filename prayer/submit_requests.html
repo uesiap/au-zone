@@ -331,10 +331,10 @@
        
     </div>
 </div>
-<div class="mb-3">
+<!--<div class="mb-3">
     <label for="phoneNumber" class="form-label">Phone Number:</label>
     <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" required>
-</div>
+</div>-->
 <div class="mb-3">
     <label for="gender" class="form-label">🧑|👧 Gender:</label>
     <select class="form-control" id="gender" name="gender" required>
@@ -540,14 +540,14 @@
             const branch = document.getElementById('courseBranch').value;
             const combinedClassBranch = `${branch}`;
             const phoneNumberElement = document.getElementById('phoneNumber');
-            const phoneNumber = phoneNumberElement.value;
+            //const phoneNumber = phoneNumberElement.value;
 
             // Store student details
             db.ref(`${year}/${month}/students/details/${uniqueId}`).set({
                 name: name,
                 gender: gender,
-                classAndBranch: combinedClassBranch,
-                phoneNumber: phoneNumber
+                classAndBranch: combinedClassBranch
+                //phoneNumber: phoneNumber
             }).then(() => {
                 if (praisingPoints.length > 0) {
                     // Store praising points if available
