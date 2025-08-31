@@ -2,143 +2,85 @@
 <html lang="en">
 
 <head>
+       
     <meta charset="UTF-8">
+       
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AU ZONE MPCs List 2025-26</title>
+        <title>AU ZONE MPCs List 2025-26</title>
+       
     <meta name="description" content="List of MPCs in AU ZONE for the academic year 2025-26.">
+        <!-- Firebase v8.10.0 SDK -->
+       
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+       
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+        <!-- Google Fonts -->
+       
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
+        <!-- Custom Styles -->
+        <style>
         body {
             font-family: Google Sans, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-
-        .header {
-            margin-top: -1.5rem;
-            background-color: white;
-            padding: 10px;
-            box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2);
-            position: fixed;
-            width: 100%;
-            height: 70px;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-        }
-
-        .header img {
-            margin-left: 12px;
-            padding: 5px;
-        }
-
-        .header h2 {
-            margin: 0 0 0 5px;
-            font-family: 'Google Sans', sans-serif;
-            font-size: 24px;
-            color: black;
+            background-color: #f9f9f9;
         }
 
         table {
-            width: 95%;
-            margin: 140px auto 20px auto;
             border-collapse: collapse;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            font-size: 14px;
+            width: 100%;
+            margin: 0 auto;
+            max-width: 1200px;
+
         }
 
         th,
         td {
-            border: 1px solid #ddd;
+            border: 1px solid black;
             padding: 10px;
             text-align: left;
-            word-wrap: break-word;
         }
 
-        thead {
-            background-color: #007bff;
-            color: white;
-        }
-
-        tbody tr:nth-child(even) {
+        th {
             background-color: #f2f2f2;
-        }
-
-        tbody tr:hover {
-            background-color: #e9e9e9;
-        }
-
-        .meet-count {
-            text-align: center;
             font-weight: bold;
         }
 
-        footer {
-            margin-bottom: 30px;
-            width: 100%;
-            background-color: #fff;
-            color: #333;
+        td.meet-count {
             text-align: center;
-            padding: 10px 0;
-            margin-top: 30px;
-        }
-
-        footer p {
-            margin: 0;
-            font-family: 'Google Sans', sans-serif;
-            font-size: 16px;
-        }
-
-        footer a {
-            color: blue;
-            text-decoration: none;
-        }
-
-        @media (max-width: 600px) {
-            .header h2 {
-                font-size: 18px;
-            }
-
-            table {
-                font-size: 12px;
-            }
-
-            th,
-            td {
-                padding: 8px;
-            }
         }
     </style>
 </head>
 
 <body>
-    <div class="header">
-        <img src="/au-zone/prayer/au-logo.png" width="75" height="75" alt="AU ZONE">
-        <h2>AU ZONE MPCs List</h2>
-    </div>
+        <div style="margin-top: -1.5rem; background-color: white; padding: 10px; box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2); position: fixed; width: 100%;height: 70px; z-index: 1000;">
+                <div style="display: flex; align-items: center;">
+                        <img src="/au-zone/prayer/au-logo.png" width="75" height="75"                
+                style="margin-left: 12px; padding: 5px;" alt="AU ZONE">
+                        <h2
+                style="margin: 0 0 0 5px; font-family: 'Google Sans', sans-serif; font-size: 24px; color: black;">
+                                AU ZONE MPCs List
+                            </h2>
+                    </div>
+            </div><br><br><br><br>
+        <table id="mpcTable">
+                <thead>
+                        <tr>
+                                <th>Sl No.</th>
+                                <th>Graduate</th>
+                                <th>Students</th>
+                                <th>No. of times Met</th>
+                            </tr>
+                    </thead>
+                <tbody>
+                        <!-- Rows will be dynamically populated here -->
+                    </tbody>
+            </table>
+        <footer
+        style="margin-bottom: 30px; width: 100%; background-color: #fff; color: #333; text-align: center; padding: 10px 0; margin-top: 30px">
+                <p style="margin: 0; font-family: 'Google Sans', sans-serif; font-size: 16px;">© Designed with ❤️ by
+            <strong style="color: blue"><a href="https://rahul.serv00.net/profile">Rahul</a></strong>&ensp;</p>
+            </footer>
 
-    <table id="mpcTable">
-        <thead>
-            <tr>
-                <th>Sl No.</th>
-                <th>Graduate</th>
-                <th>Students</th>
-                <th>No. of times Met</th>
-            </tr>
-        </thead>
-        <tbody>
-            </tbody>
-    </table>
-
-    <footer>
-        <p>© Designed with ❤️ by <strong><a href="https://rahul.serv00.net/profile">Rahul</a></strong>&ensp;</p>
-    </footer>
-
+       
     <script>
         // Firebase configuration
         const firebaseConfig = {
@@ -172,9 +114,10 @@
             }
 
             // Sort the cells based on the 'Freq' (No. of times Met) in descending order.
+            // Use optional chaining (?.) to handle cases where 'Freq' might not exist.
             cells.sort((a, b) => (b.data.Freq || 0) - (a.data.Freq || 0));
 
-            cells.forEach((cell, cellIndex) => {
+            cells.forEach((cell, cellIndex) => { // Use cellIndex to generate the serial number
                 const students = Object.values(cell.data.Students || {}).filter(Boolean);
                 const numRows = Math.max(students.length, 1);
 
