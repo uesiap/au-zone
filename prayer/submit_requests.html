@@ -192,7 +192,7 @@
             <div class="mb-3">
                 <label for="currentMonth" class="form-label">Month:</label>
                 <p class="form-label" style="color: brown; font-size: 12px">Please select the month.</p>
-                <input type="text" class="form-control" id="currentMonth" name="currentMonth">
+                <select class="form-control" id="currentMonth" name="currentMonth" required></select>
             </div>
             <div class="mb-3">
                 <label for="category" class="form-label">Select Category:</label>
@@ -296,8 +296,29 @@
 
         const currentDate = new Date();
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        const currentMonth = monthNames[currentDate.getMonth()] + " " + currentDate.getFullYear();
-        document.getElementById("currentMonth").value = currentMonth;
+        
+        const currentMonthIndex = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
+        const lastMonthIndex = currentMonthIndex === 0 ? 11 : currentMonthIndex - 1;
+        const lastMonthYear = currentMonthIndex === 0 ? currentYear - 1 : currentYear;
+        
+        const monthSelect = document.getElementById("currentMonth");
+        
+        // Add last month option (e.g. October 2025)
+        const lastMonthOption = document.createElement("option");
+        lastMonthOption.value = `${monthNames[lastMonthIndex]} ${lastMonthYear}`;
+        lastMonthOption.textContent = `${monthNames[lastMonthIndex]} ${lastMonthYear}`;
+        monthSelect.appendChild(lastMonthOption);
+        
+        // Add current month option (e.g. November 2025)
+        const currentMonthOption = document.createElement("option");
+        currentMonthOption.value = `${monthNames[currentMonthIndex]} ${currentYear}`;
+        currentMonthOption.textContent = `${monthNames[currentMonthIndex]} ${currentYear}`;
+        monthSelect.appendChild(currentMonthOption);
+        
+        // Default to current month
+        monthSelect.value = currentMonthOption.value;
+
 
         document.getElementById('prayerRequestForm').addEventListener('submit', function (event) {
             event.preventDefault();
