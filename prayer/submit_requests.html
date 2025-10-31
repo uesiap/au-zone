@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
-        window.onload = function() {
+        window.onload = function () {
             localStorage.clear();
         };
     </script>
@@ -12,7 +13,8 @@
     <meta property="og:title" content="AU Zone EU & EGF Prayer Requests Submit Page.">
     <meta property="og:description" content="Submit Your Prayer and Praising Points in this Form">
     <meta property="og:url" content="https://Melam.Rahul">
-    <meta property="og:image" content="https://firebasestorage.googleapis.com/v0/b/melam-rahul.appspot.com/o/AU%20Zone%20Treasurer%2FH8N0BqBc4inq.jpg?alt=media&token=963f79a2-0de4-4bbc-8c23-6fdec1d763b6">
+    <meta property="og:image"
+        content="https://firebasestorage.googleapis.com/v0/b/melam-rahul.appspot.com/o/AU%20Zone%20Treasurer%2FH8N0BqBc4inq.jpg?alt=media&token=963f79a2-0de4-4bbc-8c23-6fdec1d763b6">
     <meta property="og:image:width" content="32">
     <meta property="og:image:height" content="32">
     <meta property="og:type" content="website">
@@ -152,12 +154,18 @@
             background-color: #45a049;
             /* Slightly darker shade on hover */
         }
+
         textarea {
-            resize: none; /* Disable manual resiing */
-            overflow-wrap: break-word; /* Wrap text within the lines */
-            width: calc(100% - 20px); /* Adjust width to reduce the right side space */
-            max-width: 100%; /* Ensure textarea does not exceed container width */
-            margin-right: 10px; /* Reduce the width from the right side */
+            resize: none;
+            /* Disable manual resiing */
+            overflow-wrap: break-word;
+            /* Wrap text within the lines */
+            width: calc(100% - 20px);
+            /* Adjust width to reduce the right side space */
+            max-width: 100%;
+            /* Ensure textarea does not exceed container width */
+            margin-right: 10px;
+            /* Reduce the width from the right side */
         }
 
         @keyframes spin {
@@ -173,20 +181,20 @@
 </head>
 
 <body class="bg-gray-100" style="margin-top: -15px;">
-<div style="margin-top: 0; background-color: white; padding: 10px;
+    <div style="margin-top: 0; background-color: white; padding: 10px;
     box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2); position: fixed; width: 100%;height: 80px; top: -10; z-index: 1000;">
-    <div style="display: flex; align-items: center;">
-        <img src="/au-zone/prayer/au-logo.png" width="75" height="75"
-            style="margin-left: 12px; padding: 5px;" alt="AU ZONE">
-        <h2 style="margin: 0 0 0 5px; font-family: 'Google Sans', sans-serif; font-size: 24px; color: black;">
-            AU ZONE Prayer Requests
-        </h2>
+        <div style="display: flex; align-items: center;">
+            <img src="/au-zone/prayer/au-logo.png" width="75" height="75" style="margin-left: 12px; padding: 5px;"
+                alt="AU ZONE">
+            <h2 style="margin: 0 0 0 5px; font-family: 'Google Sans', sans-serif; font-size: 24px; color: black;">
+                AU ZONE Prayer Requests
+            </h2>
+        </div>
     </div>
-</div>
 
-<!-- Spacer to avoid overlap -->
-<div style="height: 1px; margin-bottom: -6px"></div>
- <div class="container mx-auto mt-5" style="margin-top: 0px;">
+    <!-- Spacer to avoid overlap -->
+    <div style="height: 1px; margin-bottom: -6px"></div>
+    <div class="container mx-auto mt-5" style="margin-top: 0px;">
         <div class="divider"></div>
         <form id="prayerRequestForm" style="display: block;">
             <div class="mb-3">
@@ -296,26 +304,26 @@
 
         const currentDate = new Date();
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        
+
         const currentMonthIndex = currentDate.getMonth();
         const currentYear = currentDate.getFullYear();
         const lastMonthIndex = currentMonthIndex === 0 ? 11 : currentMonthIndex - 1;
         const lastMonthYear = currentMonthIndex === 0 ? currentYear - 1 : currentYear;
-        
+
         const monthSelect = document.getElementById("currentMonth");
-        
-        // Add last month option (e.g. October 2025)
+
+        // Add last month option
         const lastMonthOption = document.createElement("option");
         lastMonthOption.value = `${monthNames[lastMonthIndex]} ${lastMonthYear}`;
         lastMonthOption.textContent = `${monthNames[lastMonthIndex]} ${lastMonthYear}`;
         monthSelect.appendChild(lastMonthOption);
-        
-        // Add current month option (e.g. November 2025)
+
+        // Add current month option
         const currentMonthOption = document.createElement("option");
         currentMonthOption.value = `${monthNames[currentMonthIndex]} ${currentYear}`;
         currentMonthOption.textContent = `${monthNames[currentMonthIndex]} ${currentYear}`;
         monthSelect.appendChild(currentMonthOption);
-        
+
         // Default to current month
         monthSelect.value = currentMonthOption.value;
 
@@ -345,25 +353,25 @@
                     
                     
                     <h4 class="form-label">Course & Personal Details</h4>
-<div class="mb-3">
-    <label for="courseBranch" class="form-label">Course & Branch:</label>
-    <div class="input-group">
-        <input type="text" class="form-control" id="courseBranch" name="courseBranch" required>
-       
-    </div>
-</div>
-<!--<div class="mb-3">
-    <label for="phoneNumber" class="form-label">Phone Number:</label>
-    <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" required>
-</div>-->
-<div class="mb-3">
-    <label for="gender" class="form-label">🧑|👧 Gender:</label>
-    <select class="form-control" id="gender" name="gender" required>
-        <option value="" disabled selected>Select Gender</option>
-        <option value="male">🧑 Male</option>
-        <option value="female">👧 Female</option>
-    </select>
-</div>
+                    <div class="mb-3">
+                        <label for="courseBranch" class="form-label">Course & Branch:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="courseBranch" name="courseBranch" required>
+                           
+                        </div>
+                    </div>
+                    <!--<div class="mb-3">
+                        <label for="phoneNumber" class="form-label">Phone Number:</label>
+                        <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" required>
+                    </div>-->
+                    <div class="mb-3">
+                        <label for="gender" class="form-label">🧑|👧 Gender:</label>
+                        <select class="form-control" id="gender" name="gender" required>
+                            <option value="" disabled selected>Select Gender</option>
+                            <option value="male">🧑 Male</option>
+                            <option value="female">👧 Female</option>
+                        </select>
+                    </div>
                     
                     
                     
@@ -454,9 +462,9 @@
         // Generate dynamic fields for praising and prayer points
         // Generate dynamic fields for praising and prayer points
         function generateDynamicFields(section, count) {
-        let fieldsHTML = '';
-        for (let i = 1; i <= count; i++) {
-            fieldsHTML += `
+            let fieldsHTML = '';
+            for (let i = 1; i <= count; i++) {
+                fieldsHTML += `
             <div class="mb-3 input-group ${section}-field">
                 <span class="dynamic-field-number">${i}:</span>
                 <input type="text" class="form-control" id="${section}${i}" name="${section}[]">
@@ -465,16 +473,16 @@
                 </button>
             </div>
         `;
-    }
-    return fieldsHTML;
+            }
+            return fieldsHTML;
         }
 
 
         // Function to dynamically add fields
         function addField(section, containerId) {
-    const container = document.getElementById(containerId);
-    const newFieldIndex = container.querySelectorAll('.input-group').length + 1;
-    const newFieldHTML = `
+            const container = document.getElementById(containerId);
+            const newFieldIndex = container.querySelectorAll('.input-group').length + 1;
+            const newFieldHTML = `
         <div class="mb-3 input-group" id="${section}${newFieldIndex}Container">
             <span class="dynamic-field-number">${newFieldIndex}:</span>
             <input type="text" class="form-control" id="${section}${newFieldIndex}" name="${section}[]">
@@ -483,7 +491,7 @@
             </button>
         </div>
     `;
-    container.insertAdjacentHTML('beforeend', newFieldHTML);
+            container.insertAdjacentHTML('beforeend', newFieldHTML);
         }
 
         // Function to handle long press for delete confirmation
@@ -514,146 +522,147 @@
 
         // Handle form submission with Firebase and loader
         function submitForm() {
-    // Show the confirmation dialog
-    const confirmationDialog = new bootstrap.Modal(document.getElementById('confirmationDialog'));
-    confirmationDialog.show();
+            // Show the confirmation dialog
+            const confirmationDialog = new bootstrap.Modal(document.getElementById('confirmationDialog'));
+            confirmationDialog.show();
 
-    // Handle the confirmation
-    document.getElementById('confirmSubmit').onclick = function () {
-        confirmationDialog.hide();
+            // Handle the confirmation
+            document.getElementById('confirmSubmit').onclick = function () {
+                confirmationDialog.hide();
 
-        // Show loading screen
-        document.getElementById('loaderContainer').style.display = 'block';
+                // Show loading screen
+                document.getElementById('loaderContainer').style.display = 'block';
+                const selectedValue = document.getElementById("currentMonth").value;
+                const [selectedMonthName, selectedYear] = selectedValue.split(" ");
 
-        // Proceed with form submission
-        const category = document.getElementById('category').value;
-        const name = document.getElementById('name').value;
+                // Proceed with form submission
+                const category = document.getElementById('category').value;
+                const name = document.getElementById('name').value;
 
-        const gender = category === 'student' ? document.getElementById('gender').value : null;
+                const gender = category === 'student' ? document.getElementById('gender').value : null;
 
-        const today = new Date();
-        const month = today.getMonth() + 1;
-        const year = today.getFullYear();
+                const month = monthNames.indexOf(selectedMonthName) + 1;
+                const year = parseInt(selectedYear);
 
-        // Collect all praising points inputs (now using consistent naming)
-        const praisingPoints = Array.from(document.querySelectorAll('input[name="praisingPoints[]"]'))
-                                    .map(input => input.value.trim())
-                                    .filter(point => point.length > 0); // Filter out empty points
+                // Collect all praising points inputs (now using consistent naming)
+                const praisingPoints = Array.from(document.querySelectorAll('input[name="praisingPoints[]"]'))
+                    .map(input => input.value.trim())
+                    .filter(point => point.length > 0); // Filter out empty points
 
-        // Collect all prayer points inputs (now using consistent naming)
-        const prayerPoints = Array.from(document.querySelectorAll('input[name="prayerPoints[]"]'))
-                                  .map(input => input.value.trim())
-                                  .filter(point => point.length > 0); // Filter out empty points
+                // Collect all prayer points inputs (now using consistent naming)
+                const prayerPoints = Array.from(document.querySelectorAll('input[name="prayerPoints[]"]'))
+                    .map(input => input.value.trim())
+                    .filter(point => point.length > 0); // Filter out empty points
 
-        // Function to generate a unique ID based on text
-        const generateId = (text, category) => {
-            const prefix = category === 'student' ? 'stu_' : 'grad_'; // Prefix based on category
-            return prefix + text
-                .trim()
-                .replace(/[^\w\s]/g, '') // Remove non-alphanumeric characters except spaces
-                .replace(/\s+/g, '_')    // Replace spaces with underscores
-                .toLowerCase();         // Convert to lowercase
-        };
+                // Function to generate a unique ID based on text
+                const generateId = (text, category) => {
+                    const prefix = category === 'student' ? 'stu_' : 'grad_'; // Prefix based on category
+                    return prefix + text
+                        .trim()
+                        .replace(/[^\w\s]/g, '') // Remove non-alphanumeric characters except spaces
+                        .replace(/\s+/g, '_')    // Replace spaces with underscores
+                        .toLowerCase();         // Convert to lowercase
+                };
 
-        const uniqueId = generateId(name, category); // Pass category to generateId
+                const uniqueId = generateId(name, category); // Pass category to generateId
 
-        if (category === 'student') {
-            const branch = document.getElementById('courseBranch').value;
-            const combinedClassBranch = `${branch}`;
-            const phoneNumberElement = document.getElementById('phoneNumber');
-            //const phoneNumber = phoneNumberElement.value;
+                if (category === 'student') {
+                    const branch = document.getElementById('courseBranch').value;
+                    const combinedClassBranch = `${branch}`;
+                    const phoneNumberElement = document.getElementById('phoneNumber');
+                    //const phoneNumber = phoneNumberElement.value;
 
-            // Store student details
-            db.ref(`${year}/${month}/students/details/${uniqueId}`).set({
-                name: name,
-                gender: gender,
-                classAndBranch: combinedClassBranch
-                //phoneNumber: phoneNumber
-            }).then(() => {
-                if (praisingPoints.length > 0) {
-                    // Store praising points if available
-                    return db.ref(`${year}/${month}/students/PraisingPoints/${uniqueId}`).set({
-                        points: praisingPoints
+                    // Store student details
+                    db.ref(`${year}/${month}/students/details/${uniqueId}`).set({
+                        name: name,
+                        gender: gender,
+                        classAndBranch: combinedClassBranch
+                        //phoneNumber: phoneNumber
+                    }).then(() => {
+                        if (praisingPoints.length > 0) {
+                            // Store praising points if available
+                            return db.ref(`${year}/${month}/students/PraisingPoints/${uniqueId}`).set({
+                                points: praisingPoints
+                            });
+                        }
+                    }).then(() => {
+                        if (prayerPoints.length > 0) {
+                            // Store prayer points if available
+                            return db.ref(`${year}/${month}/students/PrayerPoints/${uniqueId}`).set({
+                                points: prayerPoints
+                            });
+                        }
+                    }).then(() => {
+                        document.getElementById('loaderContainer').style.display = 'none';
+                        document.getElementById('successMessage').style.display = 'block';
+                        document.getElementById('prayerRequestForm').reset();
+                        document.getElementById('dynamicFields').innerHTML = '';
+                        document.getElementById('prayerRequestForm').style.display = 'none';
+                    }).catch(error => {
+                        console.error("Error writing student data to Firebase Database", error);
+                        document.getElementById('loaderContainer').style.display = 'none';
                     });
-                }
-            }).then(() => {
-                if (prayerPoints.length > 0) {
-                    // Store prayer points if available
-                    return db.ref(`${year}/${month}/students/PrayerPoints/${uniqueId}`).set({
-                        points: prayerPoints
-                    });
-                }
-            }).then(() => {
-                document.getElementById('loaderContainer').style.display = 'none';
-                document.getElementById('successMessage').style.display = 'block';
-                document.getElementById('prayerRequestForm').reset();
-                document.getElementById('dynamicFields').innerHTML = '';
-                document.getElementById('prayerRequestForm').style.display = 'none';
-            }).catch(error => {
-                console.error("Error writing student data to Firebase Database", error);
-                document.getElementById('loaderContainer').style.display = 'none';
-            });
 
-        } else if (category === 'graduate') {
-            // Store graduate details (no phoneNumber for graduates)
-            db.ref(`${year}/${month}/graduates/details/${uniqueId}`).set({
-                name: name
-            }).then(() => {
-                if (praisingPoints.length > 0) {
-                    // Store praising points if available
-                    return db.ref(`${year}/${month}/graduates/PraisingPoints/${uniqueId}`).set({
-                        points: praisingPoints
+                } else if (category === 'graduate') {
+                    // Store graduate details (no phoneNumber for graduates)
+                    db.ref(`${year}/${month}/graduates/details/${uniqueId}`).set({
+                        name: name
+                    }).then(() => {
+                        if (praisingPoints.length > 0) {
+                            // Store praising points if available
+                            return db.ref(`${year}/${month}/graduates/PraisingPoints/${uniqueId}`).set({
+                                points: praisingPoints
+                            });
+                        }
+                    }).then(() => {
+                        if (prayerPoints.length > 0) {
+                            // Store prayer points if available
+                            return db.ref(`${year}/${month}/graduates/PrayerPoints/${uniqueId}`).set({
+                                points: prayerPoints
+                            });
+                        }
+                    }).then(() => {
+                        document.getElementById('loaderContainer').style.display = 'none';
+                        document.getElementById('successMessage').style.display = 'block';
+                        document.getElementById('prayerRequestForm').reset();
+                        document.getElementById('dynamicFields').innerHTML = '';
+                        document.getElementById('prayerRequestForm').style.display = 'none';
+                    }).catch(error => {
+                        console.error("Error writing graduate data to Firebase Database", error);
+                        document.getElementById('loaderContainer').style.display = 'none';
                     });
+                } else {
+                    console.error("Invalid category value:", category);
+                    document.getElementById('loaderContainer').style.display = 'none';
                 }
-            }).then(() => {
-                if (prayerPoints.length > 0) {
-                    // Store prayer points if available
-                    return db.ref(`${year}/${month}/graduates/PrayerPoints/${uniqueId}`).set({
-                        points: prayerPoints
-                    });
-                }
-            }).then(() => {
-                document.getElementById('loaderContainer').style.display = 'none';
-                document.getElementById('successMessage').style.display = 'block';
-                document.getElementById('prayerRequestForm').reset();
-                document.getElementById('dynamicFields').innerHTML = '';
-                document.getElementById('prayerRequestForm').style.display = 'none';
-            }).catch(error => {
-                console.error("Error writing graduate data to Firebase Database", error);
-                document.getElementById('loaderContainer').style.display = 'none';
-            });
-        } else {
-            console.error("Invalid category value:", category);
-            document.getElementById('loaderContainer').style.display = 'none';
+            };
         }
-    };
-                                          }
 
         // Speech recognition setup with dual language detection
         function startDictation(fieldId) {
-    if (window.SpeechRecognition || window.webkitSpeechRecognition) {
-        const recognition = window.SpeechRecognition ? new window.SpeechRecognition() : new window.webkitSpeechRecognition();
-        recognition.lang = 'en-US'; // Use English language for transcription
+            if (window.SpeechRecognition || window.webkitSpeechRecognition) {
+                const recognition = window.SpeechRecognition ? new window.SpeechRecognition() : new window.webkitSpeechRecognition();
+                recognition.lang = 'en-US'; // Use English language for transcription
 
-        recognition.onresult = function (event) {
-            const text = event.results[0][0].transcript;
-            const capitalizedText = text.charAt(0).toUpperCase() + text.slice(1);
-            document.getElementById(fieldId).value = capitalizedText;
-        };
+                recognition.onresult = function (event) {
+                    const text = event.results[0][0].transcript;
+                    const capitalizedText = text.charAt(0).toUpperCase() + text.slice(1);
+                    document.getElementById(fieldId).value = capitalizedText;
+                };
 
-        recognition.onend = function () {
-            document.getElementById('micFeedback').style.display = 'none';
-        };
+                recognition.onend = function () {
+                    document.getElementById('micFeedback').style.display = 'none';
+                };
 
-        // Slight delay before starting recognition
-        setTimeout(() => {
-            recognition.start();
-            document.getElementById('micFeedback').style.display = 'block';
-        }, 300);  // Delay by 300ms
-    } else {
-        alert('Speech Recognition not supported in this browser.');
-    }
-                }
+                // Slight delay before starting recognition
+                setTimeout(() => {
+                    recognition.start();
+                    document.getElementById('micFeedback').style.display = 'block';
+                }, 300);  // Delay by 300ms
+            } else {
+                alert('Speech Recognition not supported in this browser.');
+            }
+        }
 
 
         function removeField(button) {
@@ -668,7 +677,7 @@
     <!-- Include Bootstrap JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script defer>
-            localStorage.clear();
+        localStorage.clear();
     </script>
 </body>
 
