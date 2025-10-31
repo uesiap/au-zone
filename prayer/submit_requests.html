@@ -13,8 +13,7 @@
     <meta property="og:title" content="AU Zone EU & EGF Prayer Requests Submit Page.">
     <meta property="og:description" content="Submit Your Prayer and Praising Points in this Form">
     <meta property="og:url" content="https://Melam.Rahul">
-    <meta property="og:image"
-        content="https://firebasestorage.googleapis.com/v0/b/melam-rahul.appspot.com/o/AU%20Zone%20Treasurer%2FH8N0BqBc4inq.jpg?alt=media&token=963f79a2-0de4-4bbc-8c23-6fdec1d763b6">
+    <meta property="og:image" content="https://uesiap.github.io/au-zone/prayer/banner.jpg">
     <meta property="og:image:width" content="32">
     <meta property="og:image:height" content="32">
     <meta property="og:type" content="website">
@@ -223,7 +222,7 @@
         /* Text below spinner */
         #loader p {
             margin-top: 16px;
-            font-size: 1.05rem;
+            margin-left: 30px;
             letter-spacing: 0.5px;
         }
 
@@ -280,21 +279,18 @@
         }
 
         .success-message-container {
-            background: linear-gradient(135deg, rgb(170, 245, 176), #f8fff9);
-            border: 1px solid #4caf50;
             border-radius: 12px;
             padding: 25px 20px;
             text-align: center;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             animation: fadeIn 0.8s ease-out forwards;
         }
 
         /* Animated tick */
         .success-icon {
-            width: 70px;
-            height: 70px;
+            width: 100px;
+            height: 100px;
             stroke-width: 7;
             stroke: #4caf50;
             fill: none;
@@ -306,13 +302,13 @@
         .success-icon circle {
             stroke-dasharray: 283;
             stroke-dashoffset: 283;
-            animation: drawCircle 1s ease forwards;
+            animation: drawCircle 1.1s ease forwards;
         }
 
         .success-icon path {
             stroke-dasharray: 100;
             stroke-dashoffset: 100;
-            animation: drawCheck 0.8s 0.8s ease forwards;
+            animation: drawCheck 1s 1s ease forwards;
         }
 
         .success-message-container h1 {
@@ -397,7 +393,7 @@
 
     <!-- Spacer to avoid overlap -->
     <div style="height: 1px; margin-bottom: -6px"></div>
-    <div class="container mx-auto mt-5" style="margin-top: 0px;">
+    <div class="container mx-auto mt-5" style="margin-top: 0px;" id="main-container">
         <div class="divider"></div>
         <form id="prayerRequestForm" style="display: block;">
             <div class="mb-3">
@@ -420,17 +416,6 @@
             <input type="submit" value="Submit " class="btn btn-primary" style="display: block; margin: 0 auto;">
 
         </form>
-
-        <div id="successMessage" style="display: none; margin-top: 20px;">
-            <div class="success-message-container">
-                <svg class="success-icon" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="45" />
-                    <path d="M30 52 L45 67 L75 37" />
-                </svg>
-                <h1>🎉 Successful Submission!</h1>
-                <p style="font-weight: bold">Thank you for sharing your heart. 🙏</p>
-            </div>
-        </div>
         <!-- Confirmation Dialog -->
         <div class="modal fade" id="confirmationDialog" tabindex="-1" aria-labelledby="confirmationDialogLabel"
             aria-hidden="true">
@@ -453,13 +438,25 @@
             </div>
         </div>
 
+        <div id="successMessage" style="display: none;">
+            <div class="success-message-container">
+                <svg class="success-icon" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" />
+                    <path d="M30 52 L45 67 L75 37" />
+                </svg>
+                <h1>Successful Submission! 🎉 </h1>
+                <p style="font-weight: bold">🙏 Thank you for sharing your heart.</p><br>
+                <p>Your prayer and praising points are submitted successfully. 🤝</p>
+            </div>
+        </div>
 
     </div>
 
-    <footer
+    <footer id="my_name"
         style="margin-bottom: 30px; width: 100%; background-color: #fff; color: #333; text-align: center; padding: 10px 0; margin-top: 30px">
-        <p style="margin: 0; font-family: 'Google Sans', sans-serif; font-size: 16px;">© Designed with ❤️ by <strong><a
-                    href="https://rahul.serv00.net/profile">Rahul</a></strong>&ensp;</p>
+        <p style="margin: 0; font-family: 'Google Sans', sans-serif; font-size: 16px;">© Designed for ❤️ <strong><a
+                    style="text-decoration: none;" href="https://rahul.serv00.net/profile">Soli Deo
+                    Gloria</a></strong>&ensp;</p>
     </footer>
 
     <!-- Mic Feedback Popup -->
@@ -503,7 +500,8 @@
                 <div></div>
                 <div></div>
             </div>
-            <p>Submitting...</p>
+            <div style="height: 10px;"></div>
+            <p style="font-size: 1.4rem;">Submitting...</p>
         </div>
     </div>
 
@@ -819,6 +817,7 @@
                         document.getElementById('prayerRequestForm').reset();
                         document.getElementById('dynamicFields').innerHTML = '';
                         document.getElementById('prayerRequestForm').style.display = 'none';
+                        document.getElementById('main-container').style.display = 'none';
                     }).catch(error => {
                         console.error("Error writing student data to Firebase Database", error);
                         document.getElementById('loaderContainer').style.display = 'none';
