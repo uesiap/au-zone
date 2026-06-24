@@ -413,7 +413,8 @@
 
             <div id="dynamicFields"></div>
             <div class="divider"></div>
-            <input type="submit" value="Submit " class="btn btn-outline-success" style="display: block; margin: 0 auto;">
+            <input type="submit" value="Submit " class="btn btn-outline-success"
+                style="display: block; margin: 0 auto;">
 
         </form>
         <!-- Confirmation Dialog -->
@@ -531,6 +532,50 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+
+        async function cleanupOldMonthsOnce() {
+            const now = new Date();
+            const cleanupKey = `${now.getFullYear()}-${now.getMonth() + 1}`;
+
+            const cleanupRef = db.ref("system/lastCleanup");
+            const cleanupSnap = await cleanupRef.once("value");
+
+            if (cleanupSnap.val() === cleanupKey) {
+                return; // Already cleaned this month
+            }
+
+            const snapshot = await db.ref().once("value");
+            const months = [];
+
+            snapshot.forEach(yearSnap => {
+                if (yearSnap.key === "system") return;
+
+                if (!/^\d{4}$/.test(yearSnap.key)) return;
+
+                yearSnap.forEach(monthSnap => {
+                    months.push({
+                        year: parseInt(yearSnap.key),
+                        month: parseInt(monthSnap.key)
+                    });
+                });
+            });
+
+            months.sort((a, b) =>
+                a.year === b.year
+                    ? a.month - b.month
+                    : a.year - b.year
+            );
+
+            // Keep latest 3 months
+            const monthsToDelete = months.slice(0, -3);
+
+            for (const item of monthsToDelete) {
+                await db.ref(`${item.year}/${item.month}`).remove();
+                console.log(`Deleted ${item.year}/${item.month}`);
+            }
+
+            await cleanupRef.set(cleanupKey);
+        }
 
         const currentDate = new Date();
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -851,7 +896,8 @@
                                 points: prayerPoints
                             });
                         }
-                    }).then(() => {
+                    }).then(async () => {
+                        await cleanupOldMonthsOnce();
                         document.getElementById('loaderContainer').style.display = 'none';
                         document.getElementById('successMessage').style.display = 'block';
                         document.getElementById('prayerRequestForm').reset();
